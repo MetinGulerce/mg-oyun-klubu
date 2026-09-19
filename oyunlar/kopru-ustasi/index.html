@@ -119,6 +119,27 @@ body.sim #buildBar,body:not(.sim) #driveBar{display:none}
 #padBrake{background:#fff0a8}
 #padFast{background:linear-gradient(180deg,#ffc36b,#ff7eb6);color:#fff}
 #hornBtn{background:#d9c4ff}
+#padFwd{background:linear-gradient(180deg,#b6f2cf,#6fd6a0)}
+#padJump{background:#ffd6a8;display:none}
+body.trans #padJump{display:flex}
+.gt{position:relative}
+.gt .dd{position:absolute;right:5px;top:2px;font-size:10px;color:var(--muted)}
+#picker{position:absolute;left:10px;right:10px;bottom:10px;z-index:4;max-width:780px;margin:0 auto;background:#fff;border:2px solid var(--line);border-radius:20px;box-shadow:0 10px 30px rgba(120,40,90,.25);padding:10px 12px 12px}
+#picker[hidden]{display:none}
+#picker .ph{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;margin-bottom:8px}
+#picker .ph small{font-weight:500;font-size:12.5px;color:var(--muted)}
+#picker .ph button{margin-left:auto;flex:none;width:32px;height:32px;border-radius:50%;background:var(--panel2)}
+#picker .pl{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.pc{flex:none;width:148px;padding:8px 10px;border-radius:16px;background:var(--panel2);border:3px solid transparent;text-align:left}
+.pc:hover{border-color:var(--line)}
+.pc.on{border-color:var(--accent);background:#ffd0e4}
+.pc canvas{width:100%;height:30px;display:block;border-radius:8px;background:linear-gradient(#e3f4ff,#fdeaf4)}
+.pc .pe{font-size:30px;line-height:30px;text-align:center}
+.pc .pn{font-weight:800;font-size:14px;margin:5px 0 3px}
+.pc .pm{display:flex;align-items:center;gap:3px;font-size:12px;line-height:17px}
+.pc .pm i{display:inline-block;width:10px;height:10px;border-radius:50%;background:#ecd9e4}
+.pc .pm i.f{background:var(--accent)}
+.pc .pd{font-size:11.5px;color:var(--muted);line-height:1.3;margin-top:3px}
 #zoomUI{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:8px;z-index:2}
 #zoomUI button{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 3px 10px rgba(160,60,120,.22);font-size:22px;display:grid;place-items:center}
 #zoomUI button:active{transform:scale(.92)}
@@ -248,6 +269,7 @@ body.sim #buildBar,body:not(.sim) #driveBar{display:none}
     <div id="hint"></div>
     <div id="zoomUI"><button id="zIn" title="Yakınlaştır (+)">➕</button><button id="zOut" title="Uzaklaştır (−)">➖</button><button id="zFit" title="Hepsini gör (0)">🏠</button></div>
     <div id="radio" hidden></div>
+    <div id="picker" hidden></div>
     <div id="toast"></div>
     <div id="celebrate" hidden></div>
     <div id="modal" hidden><div class="card" id="card"></div></div>
@@ -258,7 +280,6 @@ body.sim #buildBar,body:not(.sim) #driveBar{display:none}
       <div id="mats"></div>
       <div class="sep"></div>
       <div class="tiles">
-        <button class="tile" id="roadBtn" title="Yolun rengini seç"><span class="ic">🛣️</span><span class="tl">Yol rengi</span></button>
         <button class="tile" id="delBtn" title="Silgi: dokunduğun parçayı siler (sağ tık da siler)"><span class="ic">🧽</span><span class="tl">Silgi</span></button>
         <button class="tile" id="undoBtn" title="Geri al (Ctrl+Z)"><span class="ic">↩️</span><span class="tl">Geri al</span></button>
         <button class="tile" id="clearBtn" title="Bütün köprüyü sil"><span class="ic">🧹</span><span class="tl">Temizle</span></button>
@@ -268,8 +289,10 @@ body.sim #buildBar,body:not(.sim) #driveBar{display:none}
     <div id="driveBar">
       <button class="pad" id="padBack" title="Geri git (←)"><span class="ic">⏪</span>Geri</button>
       <button class="pad" id="padBrake" title="Fren (↓)"><span class="ic">✋</span>Dur</button>
-      <button class="pad" id="padFast" title="Hızlan (→)"><span class="ic">🚀</span>Hızlan</button>
-      <button class="pad" id="hornBtn" title="Korna (K)"><span class="ic">📯</span>Korna</button>
+      <button class="pad" id="padFwd" title="İleri git (→)"><span class="ic">▶️</span>İleri</button>
+      <button class="pad" id="padFast" title="Hızlı git (Ctrl + →)"><span class="ic">🚀</span>Hızlı</button>
+      <button class="pad" id="padJump" title="Zıpla (↑)"><span class="ic">⤴️</span>Zıpla</button>
+      <button class="pad" id="hornBtn" title="Korna (Shift, basılı tut)"><span class="ic">📯</span>Korna</button>
       <button id="stopBtn" class="big back" title="Köprüye geri dön (Boşluk)"><span class="ic">🔧</span>Köprüye dön</button>
     </div>
   </footer>
@@ -282,14 +305,40 @@ body.sim #buildBar,body:not(.sim) #driveBar{display:none}
 /* ------------------------------------------------------------------ veri */
 const G = 9.8, SUB = 16, FIXED_DT = 1 / 60;
 
-const MAT = {
-  road:   {name:'Yol',         cost:120, maxLen:4,  density:8,   EA:8e5,   strength:4000, key:'1', sw:'#3a404c', h:7},
-  wood:   {name:'Ahşap',       cost:80,  maxLen:4,  density:3.5, EA:3e5,   strength:3800, key:'2', sw:'#b07a40', h:5},
-  iron:   {name:'Demir',       cost:140, maxLen:4,  density:7,   EA:5e5,   strength:6000, key:'3', sw:'#5d5762', h:5},
-  steel:  {name:'Çelik',       cost:220, maxLen:5,  density:8,   EA:7e5,   strength:9000, key:'4', sw:'#9fb0c0', h:5},
-  cable:  {name:'Halat',       cost:100, maxLen:10, density:1,   EA:2.5e5, strength:2200, key:'5', sw:'#b08a5a', h:2, tensionOnly:true},
-  scable: {name:'Çelik Halat', cost:180, maxLen:14, density:2,   EA:6e5,   strength:5200, key:'6', sw:'#7d8a98', h:3, tensionOnly:true},
+// Malzemeler gruplar hâlinde. rate: [uzunluk, sağlamlık, fiyat] — 1'den 5'e
+const GROUPS = {
+  yol:   {name:'Yol',      ic:'🛣️', desc:'Araba yalnızca yolun üstünde gider.'},
+  kiris: {name:'Kirişler', ic:'🪵', desc:'Yolu alttan ya da üstten tutan sert parçalar.'},
+  halat: {name:'Halatlar', ic:'🪢', desc:'Uzun ve hafif; yalnızca çekerek tutar.'},
+  yapi:  {name:'Yapılar',  ic:'🏗️', desc:'Yeni bağlantı noktaları. Pahalıdır!'},
 };
+const MAT = {
+  road:     {grp:'yol',   name:'Asfalt',        ic:'🛣️', cost:120, maxLen:4,  density:8,   EA:8e5,   strength:4000,  deck:true, strip:'#3a404c', col:'#8f95a3', rate:[2, 3, 3]},
+  rcandy:   {grp:'yol',   name:'Pamuk Şeker',   ic:'🍭', cost:100, maxLen:3,  density:5,   EA:6e5,   strength:3000,  deck:true, strip:'#ffb3d9', col:'#ffb3d9', rate:[1, 2, 2]},
+  rcloud:   {grp:'yol',   name:'Bulut',         ic:'☁️', cost:150, maxLen:5,  density:2,   EA:5e5,   strength:3200,  deck:true, strip:'#ffffff', col:'#ffffff', rate:[3, 2, 3]},
+  rrain:    {grp:'yol',   name:'Gökkuşağı',     ic:'🌈', cost:220, maxLen:5,  density:6,   EA:9e5,   strength:5500,  deck:true, strip:'#c9a7ff', col:'#c9a7ff', rate:[3, 4, 4]},
+  rchoc:    {grp:'yol',   name:'Çikolata',      ic:'🍫', cost:80,  maxLen:3,  density:9,   EA:6e5,   strength:2800,  deck:true, strip:'#7a4a2e', col:'#7a4a2e', rate:[1, 2, 1]},
+  rflower:  {grp:'yol',   name:'Çiçekli',       ic:'🌷', cost:140, maxLen:4,  density:7,   EA:8e5,   strength:4300,  deck:true, strip:'#e9d7c4', col:'#e9d7c4', rate:[2, 3, 3]},
+  rcrystal: {grp:'yol',   name:'Kristal',       ic:'🔮', cost:300, maxLen:6,  density:6,   EA:1.1e6, strength:7000,  deck:true, strip:'#bff1ff', col:'#bff1ff', rate:[4, 5, 5]},
+  bamboo:   {grp:'kiris', name:'Bambu',         ic:'🎋', cost:50,  maxLen:3,  density:2,   EA:2.5e5, strength:2600,  col:'#8cc56a', rate:[1, 1, 1]},
+  wood:     {grp:'kiris', name:'Tahta',         ic:'🪵', cost:80,  maxLen:4,  density:3.5, EA:3e5,   strength:3800,  col:'#b98247', rate:[2, 2, 2]},
+  iron:     {grp:'kiris', name:'Demir',         ic:'🔩', cost:140, maxLen:4,  density:7,   EA:5e5,   strength:6000,  col:'#77707f', rate:[2, 3, 3]},
+  steel:    {grp:'kiris', name:'Çelik',         ic:'🏗️', cost:220, maxLen:5,  density:8,   EA:7e5,   strength:9000,  col:'#a9b8c6', rate:[3, 4, 4]},
+  crystal:  {grp:'kiris', name:'Elmas',         ic:'💎', cost:400, maxLen:6,  density:5,   EA:9e5,   strength:14000, col:'#bff1ff', rate:[4, 5, 5]},
+  ribbon:   {grp:'halat', name:'Kurdele',       ic:'🎀', cost:50,  maxLen:6,  density:0.5, EA:1.5e5, strength:1400,  col:'#ff7eb6', rate:[2, 1, 1], tensionOnly:true},
+  cable:    {grp:'halat', name:'Halat',         ic:'🪢', cost:100, maxLen:10, density:1,   EA:2.5e5, strength:2200,  col:'#d6b98a', rate:[3, 2, 2], tensionOnly:true},
+  scable:   {grp:'halat', name:'Çelik Halat',   ic:'⛓️', cost:180, maxLen:14, density:2,   EA:6e5,   strength:5200,  col:'#c5d0da', rate:[4, 4, 4], tensionOnly:true},
+  magic:    {grp:'halat', name:'Sihirli Halat', ic:'✨', cost:320, maxLen:16, density:1.5, EA:8e5,   strength:8000,  col:'#e6c9ff', rate:[5, 5, 5], tensionOnly:true},
+};
+// Yapılar: sabit bağlantı noktası ekler
+const STRUCT = {
+  destek: {grp:'yapi', name:'Destek noktası', ic:'📍', cost:600,  desc:'Kıyıya ya da kayaya yeni bir bağlantı noktası çakar.'},
+  kule:   {grp:'yapi', name:'Kule',           ic:'🗼', cost:1500, desc:'Yere yüksek bir direk diker. Dokunduğun yükseklikte olur.'},
+  ayak:   {grp:'yapi', name:'Köprü ayağı',    ic:'🏛️', cost:2500, desc:'Suya taş ayak koyar; tepesi yeni bir bağlantı noktası olur.'},
+};
+const TOOL_INFO = k => MAT[k] || STRUCT[k];
+const toolGroup = k => (TOOL_INFO(k) || {}).grp;
+const EMOF = '"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
 
 const VEHICLES = {
   bug:      {name:'Pembe Vosvos',     icon:'🌸', mass:50,  wb:1.8, r:0.36, speed:4.0, prize:300,  wheel:'heart', roof:[0.1,-1.48],  rear:[-1.4,-0.85],  side:[-1.3,1.3,-0.32],   ex:-1.45},
@@ -300,12 +349,7 @@ const VEHICLES = {
 };
 const VEH_KEYS = Object.keys(VEHICLES);
 
-const ROAD_STYLES = {
-  asphalt: {name:'Asfalt',      icon:'🛣️', strip:'#3a404c'},
-  candy:   {name:'Pamuk Şeker', icon:'🍭', strip:'#ffb3d9'},
-  cloud:   {name:'Bulut',       icon:'☁️', strip:'#ffffff'},
-  rainbow: {name:'Gökkuşağı',   icon:'🌈', strip:'#c9a7ff'},
-};
+const OLD_ROAD = {candy:'rcandy', cloud:'rcloud', rainbow:'rrain'};   // eski "yol stili" kayıtları için
 const DECOR = {
   garland:   {name:'Çiçek Kolye', icon:'🌸', price:400},
   balloons:  {name:'Balonlar',    icon:'🎈', price:600},
@@ -373,7 +417,7 @@ const SAY = {
   baby:          ['bebek', 'Agu agu! 👶'],
   king_stronger: ['kral', 'Köprüyü daha sağlam yapalım! 💪'],
 };
-const HORN_TXT = {bug:'Bip bip! 🎵', princess:'La la laa! 🎶', icecream:'Dondurmaaa! 🍦🎵', carriage:'Ta ta taaa! 🎺', unicorn:'Hiii-haa! ✨'};
+const HORN_TXT = {bug:'Bip biiip! 📯', princess:'Düt düüüt! 📯', icecream:'Dııt dııııt! 📯', carriage:'Düüüüüt! 📯', unicorn:'DOOOT DOOT! 📯'};
 
 /* --------------------------------------------------------------- durum */
 const $ = s => document.querySelector(s);
@@ -389,23 +433,33 @@ let drag = null, hoverNode = null, hoverBeam = null;
 const mouse = {x:0, y:0, inside:false};
 let undoStack = [];
 let sim = null, trans = null, hornT = -9, sceneDX = 0, sceneDY = 0;
-const keys = {right:false, left:false, down:false};
-const isFast = () => boost || keys.right;
+const keys = {right:false, left:false, down:false, fast:false};
+let padFwd = false, structs = [];
+const fwdHeld = () => keys.right || padFwd || boost;
+const isFast = () => fwdHeld() && (keys.fast || boost);
 
 let TEST_MODE = /[?&]test/.test(location.search);   // ?test → ayrı kayıt alanı (gerçek oyunu bozmadan denemek için)
 let STORE_KEY = TEST_MODE ? 'kopru-ustasi-test' : 'kopru-ustasi-v1';
-const freshStore = () => ({designs:{}, done:{}, earn:{}, spent:0, owned:{}, equipped:{}, roadStyle:'asphalt', muted:false, vehicle:'princess', seenHelp:false, storySeen:{}, level:0});
+const freshStore = () => ({designs:{}, done:{}, earn:{}, spent:0, bonus:0, owned:{}, equipped:{}, lastTool:{yol:'road', kiris:'wood', halat:'cable', yapi:'kule'}, muted:false, vehicle:'princess', seenHelp:false, storySeen:{}, level:0});
 let store = freshStore();
 function adoptStore(o){   // kayıt verisini doğrulayıp yükle
   if (!o || typeof o !== 'object' || Array.isArray(o)) return false;
   store = Object.assign(freshStore(), o);
   for (const k of ['designs', 'done', 'earn', 'owned', 'equipped', 'storySeen']) if (!store[k] || typeof store[k] !== 'object') store[k] = {};
   if (!VEHICLES[store.vehicle]) store.vehicle = 'princess';
-  if (!ROAD_STYLES[store.roadStyle]) store.roadStyle = 'asphalt';
+  const lt = Object.assign({yol:'road', kiris:'wood', halat:'cable', yapi:'kule'}, store.lastTool && typeof store.lastTool === 'object' ? store.lastTool : {});
+  for (const g of Object.keys(lt)) if (toolGroup(lt[g]) !== g) lt[g] = {yol:'road', kiris:'wood', halat:'cable', yapi:'kule'}[g];
+  store.lastTool = lt;
+  if (OLD_ROAD[store.roadStyle]){   // eskiden yol görünümü tek bir ayardı: yolları o türe çevir
+    for (const d of Object.values(store.designs)) for (const b of (d && d.b) || []) if (b[2] === 'road') b[2] = OLD_ROAD[store.roadStyle];
+    store.lastTool.yol = OLD_ROAD[store.roadStyle];
+  }
+  delete store.roadStyle; store.bonus = +store.bonus || 0;
   store.spent = +store.spent || 0; store.level = store.level | 0;
   return true;
 }
 try { adoptStore(JSON.parse(localStorage.getItem(STORE_KEY))); } catch (e) {}
+tool = store.lastTool.yol;
 const slotKey = n => `kopru-ustasi-${TEST_MODE ? 'test-' : ''}slot-${n}`;
 function readSlot(n){ try { const d = JSON.parse(localStorage.getItem(slotKey(n))); return d && d.store ? d : null; } catch (e) { return null; } }
 function saveStore(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) {} }
@@ -424,6 +478,27 @@ function tone(f, dur, type = 'sine', vol = 0.12, when = 0, slide = 0){
   o.type = type; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, f + slide), t + dur);
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
   o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.03);
+}
+// korna: iki kalın ve biraz kirli ton (gerçek araba kornası gibi); basılı tuttukça çalar
+const HORN_F = {bug:[523, 659], princess:[440, 554], icecream:[392, 494], carriage:[349, 440], unicorn:[233, 294]};
+let hornNode = null, hornCurve = null;
+function hornStart(){
+  if (sim && sim.rescue) return;
+  hornT = performance.now() / 1000;
+  const a = audio(); if (!a || hornNode) return;
+  const [f1, f2] = HORN_F[sim ? sim.kind : store.vehicle] || HORN_F.princess, t = a.currentTime;
+  if (!hornCurve){ hornCurve = new Float32Array(512); for (let i = 0; i < 512; i++) hornCurve[i] = Math.tanh((i / 256 - 1) * 3.2); }
+  const g = a.createGain(), sh = a.createWaveShaper(), bp = a.createBiquadFilter(), lp = a.createBiquadFilter();
+  sh.curve = hornCurve; bp.type = 'bandpass'; bp.frequency.value = f1 * 2.3; bp.Q.value = 0.6; lp.type = 'lowpass'; lp.frequency.value = 3400;
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.2, t + 0.012);
+  const oscs = [f1, f2].map(f => { const o = a.createOscillator(), og = a.createGain(); o.type = 'sawtooth'; o.frequency.value = f; og.gain.value = 0.45; o.connect(og); og.connect(sh); o.start(t); return o; });
+  sh.connect(bp); bp.connect(lp); lp.connect(g); g.connect(a.destination);
+  hornNode = {oscs, g};
+}
+function hornStop(){
+  const h = hornNode; hornNode = null; if (!h || !actx) return;
+  const t = actx.currentTime; h.g.gain.cancelScheduledValues(t); h.g.gain.setValueAtTime(h.g.gain.value, t); h.g.gain.linearRampToValueAtTime(0, t + 0.05);
+  h.oscs.forEach(o => o.stop(t + 0.08));
 }
 function noise(dur, vol, freq){
   const a = audio(); if (!a) return;
@@ -459,16 +534,9 @@ const SFX = {
   saved(){ [784, 988, 1175, 1568].forEach((f, i) => tone(f, .22, 'sine', .11, i * .12)); },
   pick(){ tone(880, .08, 'sine', .08); tone(1175, .12, 'sine', .08, .07); },
   pop(){ if (lim('pop', 90)){ noise(.12, .1, 3200); tone(320 + Math.random() * 300, .3, 'sine', .04, 0, -160); } },
-  horn(k){
-    const h = {
-      bug(){ tone(740, .12, 'square', .06); tone(740, .18, 'square', .06, .17); },
-      princess(){ [784, 988, 1175, 988].forEach((f, i) => tone(f, .17, 'sine', .12, i * .13)); },
-      icecream(){ [659, 784, 659, 523, 587, 659].forEach((f, i) => tone(f, .15, 'triangle', .12, i * .14)); },
-      carriage(){ [523, 523, 523, 784].forEach((f, i) => tone(f, i === 3 ? .5 : .12, 'sawtooth', .05, i * .15)); },
-      unicorn(){ tone(500, .5, 'sine', .11, 0, 1300); [1568, 1976, 2349].forEach((f, i) => tone(f, .16, 'sine', .06, .38 + i * .08)); },
-    };
-    if (lim('horn', 350)) (h[k] || h.bug)();
-  },
+  build(){ tone(220, .12, 'square', .06); noise(.2, .18, 700); tone(440, .15, 'triangle', .07, .08); },
+  jump(){ tone(300, .28, 'sine', .12, 0, 520); },
+  bump(){ if (lim('bump', 200)){ noise(.2, .25, 500); tone(150, .16, 'square', .05, 0, -60); } },
 };
 
 const fmt = n => Math.round(n).toLocaleString('tr-TR') + ' ₺';
@@ -477,34 +545,92 @@ const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 
 // kazanç: ağır araç = büyük ödül; kumbaradaki para bütçeye eklenir, süs dükkânında da harcanır
 const prize = (kind, li) => Math.round(VEHICLES[kind].prize * (1 + 0.25 * li) / 50) * 50;
-const wallet = () => Math.max(0, Object.values(store.earn).reduce((a, b) => a + b, 0) - (store.spent || 0));
+const wallet = () => Math.max(0, Object.values(store.earn).reduce((a, b) => a + b, 0) + (store.bonus || 0) - (store.spent || 0));
 const bonusFor = () => wallet();
 const effBudget = () => level.budget + bonusFor(levelIndex);
 
 /* ------------------------------------------------------------ tasarım */
+// düğüm sırası: bölümün sabit noktaları, yapıların noktaları, sonra serbest düğümler
 function serialize(){
   const idx = new Map(nodes.map((n, i) => [n, i]));
   return {n: nodes.filter(n => !n.fixed).map(n => [n.x, n.y]),
-          b: beams.map(b => [idx.get(b.a), idx.get(b.b), b.type])};
+          b: beams.map(b => [idx.get(b.a), idx.get(b.b), b.type]),
+          x: structs.map(s => ({t:s.t, x:s.x, y:s.y}))};
 }
-function makeRects(L){
+function makeRects(L, st){
   const rc = [{x1:-1e3, x2:0, top:0, kind:'bank'}, {x1:L.right, x2:1e3, top:L.rightTop, kind:'bank'}];
   for (const p of (L.pillars || [])) rc.push({x1:p.x1, x2:p.x2, top:p.top, kind:'pillar'});
+  for (const s of (st || [])) if (s.t === 'ayak') rc.push({x1:s.x - 0.9, x2:s.x + 0.9, top:s.y, kind:'pier'});
   return rc;
 }
 function designObjects(L, d){
+  const st = (d.x || []).filter(s => STRUCT[s.t]).map(s => ({t:s.t, x:s.x, y:s.y}));
   const ns = L.anchors.map(([x, y]) => ({x, y, fixed:true})), bs = [];
+  for (const s of st){ s.node = {x:s.x, y:s.y, fixed:true}; ns.push(s.node); }
   for (const [x, y] of (d.n || [])) ns.push({x, y, fixed:false});
   for (const [i, j, t] of (d.b || [])) if (ns[i] && ns[j] && i !== j && MAT[t]) bs.push({a:ns[i], b:ns[j], type:t});
-  return {nodes:ns, beams:bs};
+  return {nodes:ns, beams:bs, structs:st, rects:makeRects(L, st)};
 }
-function applyDesign(d){ const o = designObjects(level, d); nodes = o.nodes; beams = o.beams; }
+function applyDesign(d){ const o = designObjects(level, d); nodes = o.nodes; beams = o.beams; structs = o.structs; rects = o.rects; }
+const anchorList = () => level.anchors.concat(structs.map(s => [s.x, s.y]));
+const nodeAtXY = (x, y) => nodes.find(n => Math.abs(n.x - x) < 1e-6 && Math.abs(n.y - y) < 1e-6);
+function structPlan(t, p){
+  const mk = (x, y, extra) => Object.assign({t, x, y, ok:!nodeAtXY(x, y)}, extra);
+  if (t === 'ayak'){   // suya taş ayak
+    const x = Math.round(p.x), y = clamp(Math.round(p.y), 0, Math.floor(level.water - 1));
+    const o = mk(x, y);
+    o.ok = o.ok && x - 0.9 > 0.4 && x + 0.9 < level.right - 0.4
+      && !rects.some(r => (r.kind === 'pillar' || r.kind === 'pier') && x + 0.9 > r.x1 - 0.4 && x - 0.9 < r.x2 + 0.4)
+      && !nodes.some(n => !n.fixed && n.x > x - 1 && n.x < x + 1 && n.y > y - 0.1);
+    return o;
+  }
+  if (t === 'kule'){   // yerde durur; dokunulan yükseklikte tepe noktası
+    const x = Math.round(p.x), base = groundTopAt(x);
+    if (!(base < level.water)) return {t, x, y:Math.round(p.y), ok:false};
+    const y = p.y < base - 1.5 ? clamp(Math.round(p.y), base - 9, base - 2) : base - 5;
+    const o = mk(x, y, {base}); o.ok = o.ok && !structs.some(q => q.t === 'kule' && q.x === x); return o;
+  }
+  let best = null, bd = 1.3;   // destek: kıyının ya da kayanın üstüne veya yan yüzüne
+  for (const r of rects){
+    const c = [[clamp(Math.round(p.x), Math.ceil(r.x1), Math.floor(r.x2)), r.top]], fy = clamp(Math.round(p.y), Math.ceil(r.top), Math.floor(level.water - 0.5));
+    if (r.x2 < 500) c.push([r.x2, fy]);
+    if (r.x1 > -500) c.push([r.x1, fy]);
+    for (const [x, y] of c){ const d = Math.hypot(p.x - x, p.y - y); if (d < bd){ bd = d; best = [x, y]; } }
+  }
+  return best ? mk(best[0], best[1]) : {t, x:Math.round(p.x), y:Math.round(p.y), ok:false};
+}
+function addStruct(pl){
+  if (!pl.ok){ SFX.nope(); toast('Buraya olmaz 🙈'); return; }
+  pushUndo();
+  const st = {t:pl.t, x:pl.x, y:pl.y, node:{x:pl.x, y:pl.y, fixed:true}};
+  nodes.splice(level.anchors.length + structs.length, 0, st.node);
+  structs.push(st); rects = makeRects(level, structs);
+  SFX.build(); persist();
+}
+function structAt(p){
+  for (let i = structs.length - 1; i >= 0; i--){
+    const q = structs[i];
+    if (q.t === 'destek' && Math.hypot(p.x - q.x, p.y - q.y) < 0.45) return i;
+    if (q.t === 'kule' && Math.abs(p.x - q.x) < 0.5 && p.y > q.y - 0.45 && p.y < groundTopAt(q.x)) return i;
+    if (q.t === 'ayak' && p.x > q.x - 0.9 && p.x < q.x + 0.9 && p.y > q.y - 0.45 && p.y < level.water + 3) return i;
+  }
+  return -1;
+}
+function removeStruct(i){
+  const q = structs[i], dead = new Set([q]);
+  if (q.t === 'ayak') for (const o of structs) if (o !== q && o.x >= q.x - 0.95 && o.x <= q.x + 0.95 && o.y <= q.y + 0.01) dead.add(o);   // üstündekiler de gider
+  pushUndo();
+  const dn = new Set([...dead].map(o => o.node));
+  beams = beams.filter(b => !dn.has(b.a) && !dn.has(b.b)); nodes = nodes.filter(n => !dn.has(n));
+  structs = structs.filter(o => !dead.has(o)); rects = makeRects(level, structs);
+  SFX.del(); cleanupOrphans(); persist();
+}
 function persist(){ store.designs[levelIndex] = serialize(); saveStore(); updateUI(); }
 function pushUndo(){ undoStack.push(JSON.stringify(serialize())); if (undoStack.length > 200) undoStack.shift(); }
 function undo(){ if (mode !== 'build' || !undoStack.length) return; applyDesign(JSON.parse(undoStack.pop())); drag = null; persist(); }
 
 function beamCost(b){ return Math.round(dist(b.a, b.b) * MAT[b.type].cost); }
-function totalCost(){ let c = 0; for (const b of beams) c += beamCost(b); return c; }
+function totalCost(){ let c = structs.reduce((a, q) => a + STRUCT[q.t].cost, 0); for (const b of beams) c += beamCost(b); return c; }
 
 const unlocked = i => i === 0 || store.done[i - 1] != null;
 function setLevel(i, quiet){
@@ -574,6 +700,7 @@ function cleanupOrphans(){
   nodes = nodes.filter(n => n.fixed || used.has(n));
 }
 function deleteAt(p){
+  const si = structAt(p); if (si >= 0){ removeStruct(si); return; }
   const n = nodeAt(p, 0.4);
   if (n){
     const att = beams.filter(b => b.a === n || b.b === n);
@@ -588,6 +715,7 @@ function deleteAt(p){
 
 /* --------------------------------------------------------------- fizik */
 function startSim(){
+  closePicker();
   if (totalCost() > effBudget()){ toast('Bütçe aşıldı — önce maliyeti düşür.'); return; }
   closeModal();
   const V = VEHICLES[store.vehicle];
@@ -602,12 +730,12 @@ function startSim(){
   const mk = x => ({x, y:-V.r, px:x, py:-V.r, vx:0, vy:0, r:V.r, w:2 / V.mass, contact:false, nx:0, ny:-1, angle:0});
   sim = {nodes:sn, beams:sb, t:0, V, kind:store.vehicle, car:{wheels:[mk(-2.5 - V.wb), mk(-2.5)]}, drive:true,
          maxStress:0, broken:0, result:null, shown:false, particles:[], cost:totalCost(), lastX:-99, lastMoveT:0,
-         puffs:[], rings:[], rescue:null, puffAcc:0, sparkAcc:0, bubAcc:0, bubT:0, splashN:0};
+         puffs:[], rings:[], rescue:null, puffAcc:0, sparkAcc:0, bubAcc:0, bubT:0, splashN:0, started:false, lastGround:0};
   mode = 'sim'; drag = null; document.body.classList.add('sim'); updateUI();
 }
 function stopSim(){
   if (sim && sim.rescue) stopVoice();
-  sim = null; boost = false; keys.right = keys.left = keys.down = false; if (trans){ trans = null; resetCam(); computeView(); } mode = 'build'; document.body.classList.remove('sim'); closeModal(); stopCelebrate(); updateUI();
+  hornStop(); sim = null; boost = false; padFwd = false; keys.right = keys.left = keys.down = keys.fast = false; if (trans){ trans = null; resetCam(); computeView(); } mode = 'build'; document.body.classList.remove('sim', 'trans'); closeModal(); stopCelebrate(); updateUI();
 }
 
 function collideWheel(wh, ax, ay, bx, by, na, nb){
@@ -667,7 +795,7 @@ function substep(dt){
       if (r.x1 > -500) collideWheel(w, r.x1, r.top, r.x1, r.top + 100);
       if (r.x2 < 500) collideWheel(w, r.x2, r.top, r.x2, r.top + 100);
     }
-    for (const b of S.beams) if (b.type === 'road') collideWheel(w, b.a.x, b.a.y, b.b.x, b.b.y, b.a, b.b);
+    for (const b of S.beams) if (b.mat.deck) collideWheel(w, b.a.x, b.a.y, b.b.x, b.b.y, b.a, b.b);
   }
 
   // düğüm – zemin
@@ -699,12 +827,11 @@ function substep(dt){
   }
 
   // sürüş
-  let target = 0, acc = 7;
-  if (S.trans){ target = 6; acc = 10; }
-  else if (S.drive){
-    const fast = isFast(); target = S.V.speed * (fast ? 2.3 : 1); if (fast) acc = 14;
-    if (keys.left) target = ws[0].x > -6 ? -S.V.speed * 0.7 : 0;
-    if (keys.down) target = 0;
+  let target = 0, acc = 2.2;   // tuşa basılmazsa araç yavaşça durur
+  if (S.drive){
+    if (fwdHeld()){ const fast = isFast(); target = S.V.speed * (fast ? 2.3 : 1); acc = fast ? 14 : 7; }
+    if (keys.left){ const minX = S.trans && trans ? trans.x0 - 3 : -6; target = ws[0].x > minX ? -S.V.speed * 0.7 : 0; acc = 7; }
+    if (keys.down){ target = 0; acc = 12; }
   }
   for (const w of ws){
     if (w.contact){
@@ -724,7 +851,7 @@ function substep(dt){
 function breakBeam(b){
   const S = sim; S.beams.splice(S.beams.indexOf(b), 1); S.broken++;
   const a = b.a, c = b.b, mx = (a.x + c.x) / 2, my = (a.y + c.y) / 2;
-  const col = {wood:'#b98247', road:'#8f95a3', iron:'#77707f', steel:'#a9b8c6', cable:'#d6b98a', scable:'#c5d0da'}[b.type] || '#ddd';
+  const col = b.mat.col || '#ddd';
   SFX.crack();
   for (let i = 0; i < 9; i++) S.particles.push({x:mx, y:my, vx:(Math.random() - .5) * 5, vy:-Math.random() * 4 - 1, life:1, col});
   if (b.rest < 1) return;
@@ -798,6 +925,8 @@ function simStep(){
   S.particles = S.particles.filter(p => p.life > 0);
 
   const [r, f] = S.car.wheels;
+  if (r.contact || f.contact) S.lastGround = S.t;
+  if (fwdHeld()) S.started = true;
   // suya düşenler sıçratır
   for (const n of S.nodes) if (!n.wet && !n.fixed && n.y > water){ n.wet = true; if (S.splashN++ < 40) splash(n.x, 0.3); }
   for (const w of [r, f]) if (!w.wet && w.y > water){ w.wet = true; splash(w.x, 1); }
@@ -828,19 +957,24 @@ function simStep(){
   S.rings = S.rings.filter(g => g.life > 0);
   if (S.rescue) updateRescue(FIXED_DT);
 
-  if (S.trans && trans){   // sonraki bölüme kayarak geçiş: kamera arabayı izler
-    const T = trans, p = clamp((f.x - T.x0) / (T.x1 - T.x0), 0, 1), e = p * p * (3 - 2 * p), L = (a, b) => a + (b - a) * e;
-    view.s = L(T.from.s, T.to.s); view.ox = W / 2 - L(T.from.cx, T.to.cx) * view.s; view.oy = H / 2 - L(T.from.cy, T.to.cy) * view.s; T.bgW = L(T.from.w, T.to.w);
-    if (f.x >= T.x1){ const ni = T.ni; trans = null; setLevel(ni); return; }
+  if (S.trans && trans){   // köprüler arasındaki yol: kamera arabayı izler, sonunda yeni bölüme oturur
+    const T = trans, p = clamp((f.x - T.x0) / (T.x1 - T.x0), 0, 1), e = p * p * (3 - 2 * p), Lr = (a, b) => a + (b - a) * e, sm = k => k * k * (3 - 2 * k);
+    const sc = Lr(T.from.s, T.to.s), follow = f.x + W * 0.2 / sc;
+    let cx = T.from.cx + (follow - T.from.cx) * sm(clamp(p / 0.15, 0, 1)); cx += (T.to.cx - cx) * sm(clamp((p - 0.8) / 0.2, 0, 1));
+    view.s = sc; view.ox = W / 2 - cx * sc; view.oy = H / 2 - Lr(T.from.cy, T.to.cy) * sc; T.bgW = Lr(T.from.w, T.to.w);
+    roadStep(FIXED_DT);
+    if (f.x >= T.x1){
+      const ni = T.ni, bonus = T.bonus; trans = null; store.bonus = (store.bonus || 0) + bonus; saveStore(); setLevel(ni);
+      if (bonus) toast(`🐷 Yol bonusu: +${fmt(bonus)} kumbaraya!`); return;
+    }
     updateHint(); return;
   }
   if (!S.result){
-    if (Math.abs(f.x - S.lastX) > 0.4 || keys.left || keys.down){ S.lastX = f.x; S.lastMoveT = S.t; }
+    if (!fwdHeld() || Math.abs(f.x - S.lastX) > 0.4){ S.lastX = f.x; S.lastMoveT = S.t; }   // yalnızca ileri basarken ilerleyemezse takıldı sayılır
     const falling = !r.contact && !f.contact && (r.y + f.y) / 2 - V.r > Math.max(0, level.rightTop) + 1.7 && r.vy > 1;
     if (r.y > water || f.y > water || falling) startRescue();
     else if (r.x > level.right + 4) finish(true);
-    else if (S.t - S.lastMoveT > 7) finish(false, 'Araç takıldı, karşıya ulaşamadı.');
-    else if (S.t > 70) finish(false, 'Süre doldu.');
+    else if (S.t - S.lastMoveT > 6) finish(false, 'Araç takıldı, karşıya ulaşamadı.');
   } else if (!S.shown && (S.result.rescue ? S.rescue.done : S.t - S.result.at > (S.result.win ? 3.4 : 0.9))){ S.shown = true; showResult(); }
   updateHint();
 }
@@ -944,24 +1078,80 @@ function showEnding(){
     [{label:'🔈 Dinle', action:() => voice('ending')}, {label:'Yaşasın! 🎉', primary:true, action:() => { stopVoice(); stopSim(); launchFireworks(10, 3); }}]);
   setTimeout(() => voice('ending'), 700);
 }
+function roadStep(dt){
+  const T = trans, S = sim, [r, f] = S.car.wheels, cx = (r.x + f.x) / 2;
+  T.spawnT -= dt;   // gökten bonus yağar
+  if (T.spawnT <= 0){
+    T.spawnT = 0.7 + Math.random() * 0.9;
+    const x = cx + 3 + Math.random() * 11;
+    if (x < T.x1 - 2){ const q = Math.random(), it = q < .55 ? ['🪙', 50] : q < .8 ? ['⭐', 100] : q < .93 ? ['🎁', 150] : ['💎', 250];
+      T.items.push({x, y:T.gy - 9 - Math.random() * 2, vy:1.6 + Math.random() * 1.2, e:it[0], v:it[1], life:4, ph:Math.random() * 6, landed:false}); }
+  }
+  const [bx, by] = carPoint(0, -0.8);
+  for (const it of T.items){
+    if (!it.landed){ it.y += it.vy * dt; it.x += Math.sin(S.t * 2 + it.ph) * 0.3 * dt; if (it.y >= T.gy - 0.4){ it.y = T.gy - 0.4; it.landed = true; } }
+    else it.life -= dt;
+    if (Math.hypot(it.x - bx, it.y - by) < 1.3){
+      it.got = true; T.bonus += it.v; SFX.coin(); T.floats.push({x:it.x, y:it.y - 0.5, text:'+' + it.v, life:1});
+      for (let i = 0; i < 8; i++) puff(it.x, it.y, (Math.random() - .5) * 3, -1 - Math.random() * 2, 0.09, '#ffe27a', 'star', 0.8, true);
+    }
+  }
+  T.items = T.items.filter(it => !it.got && it.life > 0);
+  for (const fl of T.floats){ fl.y -= dt * 0.8; fl.life -= dt; }
+  T.floats = T.floats.filter(fl => fl.life > 0);
+  for (const o of T.obs){   // engele çarpan araba geri seker: ⬆ ile üstünden zıpla
+    if (S.t - o.hitT < 0.8) continue;
+    for (const w of [f, r]) if (w.x < o.x && o.x - w.x < o.w / 2 + w.r * 0.7 && w.y + w.r > T.gy - o.h + 0.08){   // yalnızca soldan gelen tekerlek çarpar
+      o.hitT = S.t; SFX.bump();
+      for (const q of [r, f]){ q.vx = -3.2; q.x -= 0.25; }
+      T.floats.push({x:o.x, y:T.gy - o.h - 1, text:'Hop! ⬆ Zıpla!', life:1.4}); break;
+    }
+  }
+}
+function jump(){
+  if (!sim || !sim.trans || !trans || sim.t - sim.lastGround > 0.12) return;   // köprüde zıplamak yok
+  for (const w of sim.car.wheels){ w.vy = -7; w.y -= 0.03; }
+  SFX.jump();
+}
+function drawRoadStuff(t){
+  const T = trans;
+  for (const [type, x] of T.deco){ ctx.save(); ctx.translate(x, T.gy); SCN[type](ctx, t); ctx.restore(); }
+  screenT(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const k = view.s, sx = x => x * k + view.ox, sy = y => y * k + view.oy;
+  for (const o of T.obs){
+    const hit = sim.t - o.hitT < 0.4; ctx.font = `${o.h * k * 1.4}px ${EMOF}`;
+    ctx.fillText(o.e, sx(o.x) + (hit ? Math.sin(t * 60) * 3 : 0), sy(T.gy - o.h * 0.5));
+  }
+  for (const it of T.items){
+    if (it.landed && it.life < 1.2 && Math.sin(t * 20) > 0) continue;
+    ctx.save(); ctx.translate(sx(it.x), sy(it.y)); ctx.rotate(Math.sin(t * 3 + it.ph) * 0.2); ctx.font = `${0.85 * k}px ${EMOF}`; ctx.fillText(it.e, 0, 0); ctx.restore();
+  }
+  ctx.font = `800 ${Math.max(15, 0.55 * k)}px Fredoka, system-ui, sans-serif`; ctx.lineWidth = 4; ctx.strokeStyle = '#fff'; ctx.fillStyle = '#ff4f9a';
+  for (const fl of T.floats){ ctx.globalAlpha = Math.min(1, fl.life * 1.5); ctx.strokeText(fl.text, sx(fl.x), sy(fl.y)); ctx.fillText(fl.text, sx(fl.x), sy(fl.y)); }
+  ctx.globalAlpha = 1; worldT();
+}
 function goNext(){
   const ni = levelIndex + 1; closeModal(); stopCelebrate();
   if (!sim || !sim.result || !sim.result.win || !W){ setLevel(ni); return; }
-  const BL = LEVELS[ni], B = Object.assign({level:BL, rects:makeRects(BL)}, designObjects(BL, store.designs[ni] || {}));
-  const dx = level.right + 15, dy = level.rightTop, vb = viewFor(BL), f = sim.car.wheels[1];
-  trans = {B, ni, dx, dy, x0:f.x, x1:dx - 2.5, bgW:level.water,
+  const BL = LEVELS[ni], B = Object.assign({level:BL}, designObjects(BL, store.designs[ni] || {}));
+  const ROAD = 44, dx = level.right + ROAD, dy = level.rightTop, vb = viewFor(BL), f = sim.car.wheels[1], x0 = f.x, x1 = dx - 2.5;
+  const kinds = [['🪨', 0.9, 0.7], ['🪵', 1.1, 0.55], ['🍄', 0.7, 0.75], ['🐢', 0.9, 0.6], ['🌵', 0.7, 0.8]], obs = [], deco = [];
+  for (let x = x0 + 8; x < x1 - 6; x += 5 + Math.random() * 3.5){ const [e, w, h] = kinds[Math.random() * kinds.length | 0]; obs.push({x, e, w, h, hitT:-9}); }
+  for (let x = level.right + 13; x < dx - 11; x += 5 + Math.random() * 5) deco.push([['tree', 'bush', 'blossom', 'mushroom', 'pine', 'bush'][Math.random() * 6 | 0], x]);
+  trans = {B, ni, dx, dy, x0, x1, gy:level.rightTop, obs, deco, items:[], floats:[], bonus:0, spawnT:1, seam:level.right + ROAD / 2, bgW:level.water,
     from:{s:view.s, cx:(W / 2 - view.ox) / view.s, cy:(H / 2 - view.oy) / view.s, w:level.water},
     to:{s:vb.s, cx:(W / 2 - vb.ox) / vb.s + dx, cy:(H / 2 - vb.oy) / vb.s + dy, w:BL.water + dy}};
-  sim.drive = true; sim.trans = true; updateUI();
+  sim.drive = true; sim.trans = true; sim.started = false; document.body.classList.add('trans'); updateUI();
+  toast('🪙 Düşen bonusları topla, ⬆ ile engellerin üstünden zıpla!');
 }
-function horn(){
+function horn(){   // kısa korna (dokunma / K tuşu)
   if (sim && sim.rescue) return;
-  hornT = performance.now() / 1000; SFX.horn(sim ? sim.kind : store.vehicle);
+  hornStart(); setTimeout(hornStop, 380);
   if (sim && mode === 'sim') for (let i = 0; i < 6; i++){ const [x, y] = carPoint(0.5 + Math.random() * 0.8, -1.6 - Math.random() * 0.5); puff(x, y, (Math.random() - .3) * 1.5, -1.2 - Math.random(), 0.09 + Math.random() * 0.06, PASTEL[i % 6], 'star', 1); }
 }
 
 function progressText(st){
-  const done = Object.keys(st.done || {}).length, money = Math.max(0, Object.values(st.earn || {}).reduce((a, b) => a + b, 0) - (st.spent || 0)), L = LEVELS[clamp(st.level | 0, 0, LEVELS.length - 1)];
+  const done = Object.keys(st.done || {}).length, money = Math.max(0, Object.values(st.earn || {}).reduce((a, b) => a + b, 0) + (st.bonus || 0) - (st.spent || 0)), L = LEVELS[clamp(st.level | 0, 0, LEVELS.length - 1)];
   return `${L.emoji} ${L.name} · ${done}/${LEVELS.length} köprü · 🐷 ${fmt(money)}`;
 }
 function loadStoreObject(o){
@@ -1018,17 +1208,19 @@ function showHelp(){
   setTimeout(() => voice('help'), 250);
   showModal(`<h2>Nasıl oynanır? 🌈</h2>
   <div class="kid">
-    <div><b>👆</b>Pembe noktaya dokun, parmağını sürükle: köprü parçası koyarsın.</div>
-    <div><b>🛣️</b>Araba sadece <u>yol</u> üstünde gider. Tahta, demir ve halat yolu tutar.</div>
-    <div><b>🔺</b>Üçgenler çok sağlamdır!</div>
-    <div><b>🚗</b>Hazır olunca kocaman <u>Sür!</u> düğmesine bas.</div>
-    <div><b>🔍</b>İki parmakla yakınlaştır, ➕ ➖ ile büyüt küçült.</div>
+    <div><b>👆</b><span>Pembe noktaya dokun, parmağını sürükle: köprü parçası koyarsın.</span></div>
+    <div><b>🛣️</b><span>Araba sadece <u>yol</u> üstünde gider. Tahta, demir ve halat yolu tutar.</span></div>
+    <div><b>🔺</b><span>Üçgenler çok sağlamdır!</span></div>
+    <div><b>🧰</b><span>Alttaki gruplara (Yol, Kirişler, Halatlar, Yapılar) bir daha dokun: yeni çeşitler çıkar!</span></div>
+    <div><b>🚗</b><span>Hazır olunca <u>Sür!</u>'e bas, sonra arabayı sen sür: sağ ok ya da ▶ İleri.</span></div>
+    <div><b>🔍</b><span>İki parmakla yakınlaştır, ➕ ➖ ile büyüt küçült.</span></div>
   </div>
   <details><summary>Anne-babalar için ayrıntılar</summary><ul>
     <li><b>Amaç:</b> aracı karşı kıyıdaki bayrağa ulaştıracak bir köprü kur — bütçeyi aşmadan.</li>
-    <li>Noktaya bir kez dokunup sonra hedeflere dokunarak zincirleme de çizebilirsin (Esc ile bırak). Sağ tık siler, Ctrl+Z geri alır, 1–6 malzeme seçer, Boşluk sürer/durdurur.</li>
+    <li>Noktaya bir kez dokunup sonra hedeflere dokunarak zincirleme de çizebilirsin (Esc ile bırak). Sağ tık siler, Ctrl+Z geri alır, 1–4 malzeme grubu seçer (gruba bir daha dokununca çeşitleri açılır), Boşluk sürer/durdurur.</li>
     <li>Yakınlaştırma: fare tekerleği, iki parmak, ➕ ➖ 🏠 düğmeleri ya da + − 0 tuşları. Boş yerde sürükleyince ekran kayar.</li>
-    <li>Sürüş: → hızlan, ← geri, ↓ dur, K korna (dokunmatikte alttaki büyük düğmeler).</li>
+    <li>Sürüş: → ileri, Ctrl + → hızlı, ← geri, ↓ fren, Shift korna (basılı tut). Köprüler arasındaki yolda ↑ ya da Boşluk ile zıplanır ve düşen bonuslar toplanır. Dokunmatikte alttaki büyük düğmeler.</li>
+    <li>Yapılar: 📍 destek noktası kıyıya ya da kayaya, 🗼 kule yere (dokunduğun yükseklikte), 🏛️ köprü ayağı suya konur. Silgiyle dokununca kaldırılır.</li>
     <li>Ağır araçlar daha çok para kazandırır; 🐷 kumbara bütçeye eklenir, garajdaki süs dükkânında da harcanır.</li>
     <li>📻 Radyo: K-Pop istasyonu resmi YouTube videolarını çalar (oyun internetten açılınca), Pamuk Pop istasyonu internetsiz çalar.</li>
     <li>☰ Menü: oyun otomatik kaydedilir; kayıt yuvaları, sıfırdan başlama ve dosyaya yedekleme menüde.</li>
@@ -1071,21 +1263,6 @@ function showGarage(){
   });
 }
 
-function showRoadStyles(){
-  showModal(`<h2>🛣️ Yol stili</h2><p>Yolun nasıl görünsün? (Sağlamlığı değişmez, sadece görünüşü.)</p><div id="roads"></div>`, [{label:'Kapat', primary:true, action:closeModal}]);
-  const g = $('#roads');
-  for (const [k, R] of Object.entries(ROAD_STYLES)){
-    const b = document.createElement('button'); b.className = 'deco' + (k === store.roadStyle ? ' on' : '');
-    b.innerHTML = `<canvas></canvas><span class="dn">${R.icon} ${R.name}</span>`;
-    b.onclick = () => { store.roadStyle = k; saveStore(); updateUI(); closeModal(); SFX.pick(); };
-    g.appendChild(b);
-    const cvs = b.querySelector('canvas'), r = cvs.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1), sc = r.width / 4.6;
-    cvs.width = r.width * d; cvs.height = r.height * d;
-    const c = cvs.getContext('2d'), old = ctx; c.setTransform(d * sc, 0, 0, d * sc, 0, 0);
-    ctx = c; ctx.lineCap = 'round'; drawRoad(0.4, r.height / sc * 0.45, 4.2, r.height / sc * 0.45, 1, k); ctx = old;
-  }
-}
-
 function showResult(){
   const S = sim, R = S.result, last = levelIndex === LEVELS.length - 1;
   const stats = `<div class="stats">
@@ -1113,9 +1290,9 @@ function showResult(){
 
 function updateHint(){
   const h = $('#hint');
-  if (trans) h.innerHTML = '🌈 Yeni maceraya doğru…';
+  if (trans) h.innerHTML = `🪙 Yol bonusu: <b>${fmt(trans.bonus)}</b><span class="keyhelp"> · <b>→</b> ileri · <b>Ctrl+→</b> hızlı · <b>↑</b> zıpla · <b>Shift</b> korna</span>`;
   else if (mode === 'sim' && sim){
-    h.innerHTML = `💪 Yük: <b>%${Math.min(100, Math.round(sim.maxStress * 100))}</b> · 💥 <b>${sim.broken}</b><span class="keyhelp"> · <b>→</b> hızlan · <b>←</b> geri · <b>↓</b> dur · <b>K</b> korna</span>`;
+    h.innerHTML = `💪 Yük: <b>%${Math.min(100, Math.round(sim.maxStress * 100))}</b> · 💥 <b>${sim.broken}</b><span class="keyhelp"> · <b>→</b> ileri · <b>Ctrl+→</b> hızlı · <b>←</b> geri · <b>↓</b> fren · <b>Shift</b> korna</span>`;
   } else h.innerHTML = '<span class="say" title="Dinle">🔈</span>💡 ' + level.hint;
 }
 
@@ -1129,12 +1306,15 @@ function updateUI(){
   $('#barFill').style.width = Math.min(100, c / B * 100) + '%';
   $('#vehBtn').textContent = `${V.icon} ${V.name} ▾`;
   $('#bank').textContent = `🐷 ${fmt(wallet())}`;
-  $('#roadBtn .ic').textContent = ROAD_STYLES[store.roadStyle].icon;
   $('#muteBtn').textContent = store.muted ? '🔇' : '🔊';
   $('#levelName').textContent = `${level.emoji} ${level.name}`; renderJourney();
   const best = store.done[levelIndex];
   $('#levelSub').textContent = `${level.right} m açıklık · ödül: ${fmt(prize(store.vehicle, levelIndex))}` + (best != null ? ` · en ucuz: ${fmt(best)}` : '');
-  document.querySelectorAll('.tool').forEach(el => el.classList.toggle('active', el.dataset.k === tool));
+  document.querySelectorAll('.gt').forEach(el => {
+    const g = el.dataset.g, m = TOOL_INFO(store.lastTool[g]);
+    el.querySelector('.ic').textContent = m.ic; el.classList.toggle('active', toolGroup(tool) === g);
+    el.title = `${GROUPS[g].name}: ${m.name}` + (m.rate ? ` — en çok ${m.maxLen} m, ${m.cost} ₺/m` : ` — ${fmt(m.cost)}`) + ' · Bir daha dokun: çeşitler';
+  });
   $('#delBtn').classList.toggle('active', tool === 'delete');
   cv.style.cursor = mode === 'sim' ? 'default' : 'crosshair';
   updateHint();
@@ -1151,19 +1331,47 @@ function renderJourney(){   // numarasız yolculuk haritası: kalpler = geçilen
   });
   const e = document.createElement('span'); e.className = 'stop end'; e.textContent = '🏰'; e.title = 'Gökkuşağı Şatosu'; lv.appendChild(e);
 }
-const MAT_UI = {road:['🛣️', 'Yol'], wood:['🪵', 'Tahta'], iron:['🔩', 'Demir'], steel:['🏗️', 'Çelik'], cable:['🪢', 'Halat'], scable:['⛓️', 'Çelik halat']};
+/* malzeme grupları: gruba dokun → o grupta en son seçilen tür; bir daha dokun → çeşitler */
+let pickerG = null;
+function selectTool(k){ tool = k; const g = toolGroup(k); if (g){ store.lastTool[g] = k; saveStore(); } drag = null; updateUI(); }
+function groupTap(g){ if (toolGroup(tool) === g) togglePicker(g); else { selectTool(store.lastTool[g]); SFX.pick(); } }
+function togglePicker(g){ if (pickerG === g) closePicker(); else openPicker(g); }
+function closePicker(){ pickerG = null; const el = $('#picker'); if (el) el.hidden = true; }
+const meter = (icon, n, tip) => `<div class="pm" title="${tip}">${icon} ${[1, 2, 3, 4, 5].map(i => `<i class="${i <= n ? 'f' : ''}"></i>`).join('')}</div>`;
+function openPicker(g){
+  pickerG = g; const el = $('#picker'), G = GROUPS[g];
+  el.innerHTML = `<div class="ph">${G.ic} ${G.name} <small>${G.desc}</small><button title="Kapat">✕</button></div><div class="pl"></div>`;
+  el.hidden = false; el.querySelector('.ph button').onclick = closePicker;
+  const pl = el.querySelector('.pl');
+  for (const [k, m] of Object.entries(g === 'yapi' ? STRUCT : MAT).filter(([, m]) => m.grp === g)){
+    const b = document.createElement('button'); b.className = 'pc' + (k === tool ? ' on' : '');
+    b.innerHTML = (m.rate ? '<canvas></canvas>' : `<div class="pe">${m.ic}</div>`) + `<div class="pn">${m.ic} ${m.name}</div>`
+      + (m.rate ? meter('📏', m.rate[0], `Uzunluk: en çok ${m.maxLen} m`) + meter('💪', m.rate[1], 'Sağlamlık') + meter('💰', m.rate[2], `Fiyat: ${m.cost} ₺/m`)
+                : `<div class="pm">💰 <b>${fmt(m.cost)}</b></div><div class="pd">${m.desc}</div>`);
+    b.onclick = () => { selectTool(k); SFX.pick(); closePicker(); };
+    pl.appendChild(b);
+    if (m.rate){
+      const c = b.querySelector('canvas'), r = c.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1), sc = r.height / 1.1;
+      c.width = r.width * d; c.height = r.height * d;
+      const g2 = c.getContext('2d'), old = ctx; g2.setTransform(d * sc, 0, 0, d * sc, 0, 0); ctx = g2; drawBeam(0.45, 0.55, r.width / sc - 0.45, 0.55, k, 0, 1); ctx = old;
+    }
+  }
+}
 function buildUI(){
   const ms = $('#mats');
-  for (const [k, m] of Object.entries(MAT)){
-    const b = document.createElement('button'); b.className = 'tool'; b.dataset.k = k;
-    b.className = 'tile tool'; b.title = `${m.name} — ${m.cost} ₺/m, en çok ${m.maxLen} m (${m.key} tuşu)`;
-    b.innerHTML = `<span class="ic">${MAT_UI[k][0]}</span><span class="tl">${MAT_UI[k][1]}</span><span class="bar" style="background:${m.sw}"></span>`;
-    b.onclick = () => { tool = k; updateUI(); };
+  for (const [g, G] of Object.entries(GROUPS)){
+    const b = document.createElement('button'); b.className = 'tile tool gt'; b.dataset.g = g;
+    b.innerHTML = `<span class="ic">${G.ic}</span><span class="tl">${G.name}</span><span class="dd">▾</span>`;
+    b.onclick = () => groupTap(g);
     ms.appendChild(b);
   }
-  $('#delBtn').onclick = () => { tool = tool === 'delete' ? 'road' : 'delete'; drag = null; updateUI(); };
+  $('#delBtn').onclick = () => { closePicker(); tool = tool === 'delete' ? store.lastTool.yol : 'delete'; drag = null; updateUI(); };
   $('#undoBtn').onclick = undo;
-  $('#clearBtn').onclick = () => { if (!beams.length) return; pushUndo(); beams = []; cleanupOrphans(); persist(); toast('Temizlendi — Ctrl+Z ile geri alabilirsin.'); };
+  $('#clearBtn').onclick = () => {
+    if (!beams.length && !structs.length) return;
+    pushUndo(); beams = []; const dn = new Set(structs.map(q => q.node)); nodes = nodes.filter(n => !dn.has(n)); structs = []; rects = makeRects(level, structs);
+    cleanupOrphans(); persist(); toast('Temizlendi — Ctrl+Z ile geri alabilirsin.');
+  };
   $('#testBtn').onclick = () => startSim();
   $('#stopBtn').onclick = () => stopSim();
   $('#hint').addEventListener('click', () => { if (mode === 'build') voice('hint' + levelIndex); });
@@ -1178,12 +1386,13 @@ function buildUI(){
   };
   hold($('#padBack'), () => { keys.left = true; }, () => { keys.left = false; });
   hold($('#padBrake'), () => { keys.down = true; }, () => { keys.down = false; });
+  hold($('#padFwd'), () => { padFwd = true; }, () => { padFwd = false; });
   hold($('#padFast'), () => { boost = true; }, () => { boost = false; });
+  $('#padJump').addEventListener('pointerdown', e => { e.preventDefault(); jump(); });
+  hold($('#hornBtn'), hornStart, hornStop);
   $('#helpBtn').onclick = showHelp;
   $('#menuBtn').onclick = showMenu;
   $('#muteBtn').onclick = () => { store.muted = !store.muted; saveStore(); if (store.muted){ stopVoice(); radioStop(); } updateUI(); if (!store.muted) SFX.pick(); };
-  $('#roadBtn').onclick = showRoadStyles;
-  $('#hornBtn').addEventListener('pointerdown', horn);
   $('#vehBtn').onclick = () => { if (mode === 'sim') stopSim(); showGarage(); };
 }
 
@@ -1327,16 +1536,18 @@ cv.addEventListener('pointerdown', e => {
   ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
   if (ptrs.size === 2){   // ikinci parmak: çizimi bırak, yakınlaştırmaya geç
     if (drag && !drag.sticky) drag = null;
-    boost = false; pan = null; pinch = pinchInfo(); try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+    padFwd = false; pan = null; pinch = pinchInfo(); try { cv.setPointerCapture(e.pointerId); } catch (_) {}
     return;
   }
   if (ptrs.size > 2) return;
-  if (mode === 'sim'){ if (e.button === 0){ boost = true; try { cv.setPointerCapture(e.pointerId); } catch (_) {} } return; }
+  if (mode === 'sim'){ if (e.button === 0){ padFwd = true; try { cv.setPointerCapture(e.pointerId); } catch (_) {} } return; }
   if (mode !== 'build') return;
   const p = toWorld(e); mouse.x = p.x; mouse.y = p.y; mouse.inside = true;
   if (e.button === 2){ if (drag) drag = null; else deleteAt(p); return; }
   if (e.button !== 0) return;
+  if (pickerG) closePicker();
   if (tool === 'delete'){ deleteAt(p); return; }
+  if (STRUCT[tool]){ addStruct(structPlan(tool, p)); return; }
   if (drag && drag.sticky){
     const t = dragTarget(drag.from, p, tool), to = commitBeam(drag.from, t, tool);
     drag = to ? {from:to, sticky:true, target:null} : null;
@@ -1364,16 +1575,16 @@ cv.addEventListener('pointermove', e => {
   }
   hoverNode = nodeAt(p); hoverBeam = hoverNode ? null : beamAt(p);
 });
-cv.addEventListener('pointercancel', e => { boost = false; ptrs.delete(e.pointerId); pinch = null; pan = null; });
+cv.addEventListener('pointercancel', e => { padFwd = false; ptrs.delete(e.pointerId); pinch = null; pan = null; });
 cv.addEventListener('pointerup', e => {
   ptrs.delete(e.pointerId);
-  if (pinch){ if (ptrs.size < 2) pinch = null; boost = false; return; }
+  if (pinch){ if (ptrs.size < 2) pinch = null; padFwd = false; return; }
   if (pan){   // kaydırma değil de dokunuşsa: arabaya dokunmak korna çalar
     const q = pan.p, V = VEHICLES[store.vehicle], moved = pan.moved; pan = null;
     if (!moved && q.y < 0.1 && q.y > -2.4 && q.x > -2.5 - V.wb - 1 && q.x < -1.5) horn();
     return;
   }
-  boost = false;
+  padFwd = false;
   if (mode !== 'build' || !drag || drag.sticky || e.button !== 0) return;
   const t = dragTarget(drag.from, toWorld(e), tool);
   if (drag.moved && t.ok){ commitBeam(drag.from, t, tool); drag = null; }
@@ -1382,22 +1593,38 @@ cv.addEventListener('pointerup', e => {
 });
 cv.addEventListener('pointerleave', () => { mouse.inside = false; hoverNode = hoverBeam = null; });
 
-const KEYMAP = {ArrowRight:'right', ArrowLeft:'left', ArrowDown:'down'};
-window.addEventListener('keyup', e => { if (KEYMAP[e.key]) keys[KEYMAP[e.key]] = false; if (e.key === 'Shift') boost = false; });
-window.addEventListener('blur', () => { boost = false; keys.right = keys.left = keys.down = false; });
+// sürüş: → ileri, Ctrl+→ hızlı, ← geri, ↓ fren, ↑ zıpla (yalnızca köprüler arası yolda), Shift korna
+window.addEventListener('keyup', e => {
+  if (e.key === 'ArrowRight'){ keys.right = false; keys.fast = false; }
+  else if (e.key === 'ArrowLeft') keys.left = false;
+  else if (e.key === 'ArrowDown') keys.down = false;
+  else if (e.key === 'Control') keys.fast = false;
+  else if (e.key === 'Shift') hornStop();
+});
+window.addEventListener('blur', () => { boost = false; padFwd = false; keys.right = keys.left = keys.down = keys.fast = false; hornStop(); });
 window.addEventListener('keydown', e => {
-  if (KEYMAP[e.key]){ if (mode === 'sim'){ keys[KEYMAP[e.key]] = true; e.preventDefault(); } return; }
-  if (e.key === 'Shift' && mode === 'sim'){ boost = true; return; }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+    if (mode === 'sim'){
+      e.preventDefault();
+      if (e.key === 'ArrowRight'){ keys.right = true; if (e.ctrlKey) keys.fast = true; }
+      else if (e.key === 'ArrowLeft') keys.left = true;
+      else if (e.key === 'ArrowDown') keys.down = true;
+      else jump();
+    }
+    return;
+  }
+  if (e.key === 'Control'){ if (keys.right) keys.fast = true; return; }
+  if (e.key === 'Shift'){ if (!e.repeat && $('#modal').hidden) hornStart(); return; }
   if ((e.key === 'k' || e.key === 'K' || e.key === 'h' || e.key === 'H') && $('#modal').hidden){ horn(); return; }
   if ((e.key === '+' || e.key === '=') && $('#modal').hidden){ zoomAt(W / 2, H / 2, 1.25); return; }
   if ((e.key === '-' || e.key === '_') && $('#modal').hidden){ zoomAt(W / 2, H / 2, 0.8); return; }
   if (e.key === '0' && $('#modal').hidden){ resetCam(); computeView(); return; }
   if (e.key === 'Escape'){ if (!$('#modal').hidden && mode === 'build') closeModal(); drag = null; return; }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){ e.preventDefault(); undo(); return; }
-  if (e.code === 'Space'){ e.preventDefault(); if (mode === 'sim') stopSim(); else if ($('#modal').hidden) startSim(); return; }
+  if (e.code === 'Space'){ e.preventDefault(); if (e.repeat) return; if (trans) jump(); else if (mode === 'sim') stopSim(); else if ($('#modal').hidden) startSim(); return; }   // yolda Boşluk da zıplatır
   if (mode !== 'build') return;
-  for (const [k, m] of Object.entries(MAT)) if (e.key === m.key){ tool = k; updateUI(); }
-  if (e.key.toLowerCase() === 'x' || e.key === 'Delete'){ tool = tool === 'delete' ? 'road' : 'delete'; drag = null; updateUI(); }
+  const gi = ['1', '2', '3', '4'].indexOf(e.key); if (gi >= 0) groupTap(Object.keys(GROUPS)[gi]);
+  if (e.key.toLowerCase() === 'x' || e.key === 'Delete'){ tool = tool === 'delete' ? store.lastTool.yol : 'delete'; drag = null; updateUI(); }
 });
 
 /* -------------------------------------------------------------- çizim */
@@ -1513,7 +1740,7 @@ function drawScenery(t){
 function drawTerrain(t){
   const yB = (H - view.oy) / view.s + 1 - sceneDY, xL = -view.ox / view.s - 1 - sceneDX, xR = (W - view.ox) / view.s + 1 - sceneDX;
   // kuleler (zeminin üstündeki ankrajlar)
-  for (const [ax, ay] of level.anchors){
+  for (const [ax, ay] of anchorList()){
     const gt = groundTopAt(ax);
     if (ay < gt - 0.01 && gt < 1e8){
       ctx.fillStyle = '#d8ccea'; ctx.fillRect(ax - 0.28, ay - 0.1, 0.56, gt - ay + 0.1);
@@ -1523,10 +1750,11 @@ function drawTerrain(t){
   }
   for (const r of rects){
     const x1 = Math.max(r.x1, xL), x2 = Math.min(r.x2, xR); if (x2 <= x1) continue;
-    if (r.kind === 'pillar'){
-      ctx.fillStyle = '#b3a6c9'; ctx.fillRect(x1, r.top, x2 - x1, yB - r.top);
-      ctx.fillStyle = '#9d8fb6'; ctx.fillRect(x1 + (x2 - x1) * 0.62, r.top, (x2 - x1) * 0.38, yB - r.top);
-      ctx.fillStyle = '#cbbfe0'; ctx.fillRect(x1 - 0.15, r.top, x2 - x1 + 0.3, 0.35);
+    if (r.kind === 'pillar' || r.kind === 'pier'){
+      const pc = r.kind === 'pier' ? ['#e9c1d5', '#d8a7c0', '#f6d9e7'] : ['#b3a6c9', '#9d8fb6', '#cbbfe0'];
+      ctx.fillStyle = pc[0]; ctx.fillRect(x1, r.top, x2 - x1, yB - r.top);
+      ctx.fillStyle = pc[1]; ctx.fillRect(x1 + (x2 - x1) * 0.62, r.top, (x2 - x1) * 0.38, yB - r.top);
+      ctx.fillStyle = pc[2]; ctx.fillRect(x1 - 0.15, r.top, x2 - x1 + 0.3, 0.35);
       ctx.strokeStyle = 'rgba(0,0,0,.12)'; ctx.lineWidth = 0.04;
       for (let y = r.top + 1; y < yB; y += 0.9){ ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke(); }
     } else {
@@ -1544,7 +1772,7 @@ function drawTerrain(t){
         circ(ctx, px, py, 0.035, col === '#ffd36e' ? '#fff' : '#ffd36e');
       }
       // sokak: asfalt yaklaşım
-      ctx.fillStyle = ROAD_STYLES[store.roadStyle].strip; ctx.fillRect(x1, r.top - 0.02, x2 - x1, 0.16);
+      ctx.fillStyle = MAT[store.lastTool.yol].strip; ctx.fillRect(x1, r.top - 0.02, x2 - x1, 0.16);
     }
   }
   drawScenery(t || 0);
@@ -1558,7 +1786,7 @@ function drawTerrain(t){
 function drawWater(t){
   const yB = (H - view.oy) / view.s + 1 - sceneDY, wy = level.water, R = level.right;
   const wave = x => wy + 0.07 * Math.sin(x * 1.3 + t * 1.6) + 0.04 * Math.sin(x * 2.9 - t * 1.1);
-  const onPillar = x => (level.pillars || []).some(p => x > p.x1 - 0.7 && x < p.x2 + 0.7);
+  const onPillar = x => rects.some(p => (p.kind === 'pillar' || p.kind === 'pier') && x > p.x1 - 0.7 && x < p.x2 + 0.7);
   ctx.save(); ctx.beginPath(); ctx.rect(0, -1e3, R, 2e3); ctx.clip();   // su yalnızca iki kıyının arasında
   // zıplayan balık
   const cyc = 7, n = Math.floor(t / cyc), ph = (t % cyc) / 1.1, fr = Math.abs(Math.sin(n * 12.9898) * 43758.5453) % 1, fx0 = 1 + fr * (R - 3.6);
@@ -1586,33 +1814,79 @@ function drawWater(t){
 function strokeSeg(ax, ay, bx, by, col, lw, dash){
   ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
 }
-function drawRoad(ax, ay, bx, by, seed, style){
-  const st = style || store.roadStyle;
-  if (st === 'asphalt'){ strokeSeg(ax, ay, bx, by, '#2e333d', 0.34); ctx.lineCap = 'butt'; strokeSeg(ax, ay, bx, by, '#f0c64a', 0.05, [0.35, 0.35]); ctx.lineCap = 'round'; return; }
-  const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy) || 1e-9; let nx = -dy / len, ny = dx / len; if (ny < 0){ nx = -nx; ny = -ny; }
-  if (st === 'rainbow'){
-    ['#ff7eb6', '#ffb13d', '#ffe95c', '#8fe3a1', '#7cc8ff', '#c9a7ff'].forEach((col, i) => { const o = (i - 1.5) * 0.075; strokeSeg(ax + nx * o, ay + ny * o, bx + nx * o, by + ny * o, col, 0.095); });
-    return;
+// yollar: ortası kesik çizgili şerit; her tür kendi temasında
+function drawDeck(ax, ay, bx, by, type, seed){
+  const L = Math.hypot(bx - ax, by - ay) || 1e-6, T = 0.17, c = ctx;
+  c.save(); c.translate(ax, ay); c.rotate(Math.atan2(by - ay, bx - ax));
+  const band = (y0, y1, col) => { c.fillStyle = col; c.fillRect(0, y0, L, y1 - y0); };
+  const ends = col => { circ(c, 0, 0, T, col); circ(c, L, 0, T, col); };
+  const dashes = (col, w = 0.05) => { c.fillStyle = col; for (let x = 0.12; x < L - 0.1; x += 0.62) c.fillRect(x, -w / 2, Math.min(0.32, L - 0.1 - x), w); };
+  switch (type){
+    case 'rcandy':
+      ends('#ffc2dc'); band(-T, T, '#ffc2dc');
+      for (let x = 0, i = 0; x < L; x += 0.2, i++){ c.fillStyle = i % 2 ? '#ffffff' : '#ff5fa2'; c.fillRect(x, -T, Math.min(0.2, L - x), 0.065); c.fillRect(x, T - 0.065, Math.min(0.2, L - x), 0.065); }
+      dashes('#ffffff'); break;
+    case 'rcloud':
+      for (let x = 0, i = 0; x <= L + 0.01; x += 0.32, i++) circ(c, x, T * 0.6, 0.13 + ((i + seed) % 3) * 0.03, '#e3f1ff');
+      ends('#ffffff'); band(-T, T * 0.7, '#ffffff'); band(-T, -T + 0.04, '#cfe4f7'); dashes('#9fd4ff'); break;
+    case 'rrain': {
+      const cols = ['#ff7eb6', '#ffb13d', '#ffe95c', '#8fe3a1', '#7cc8ff', '#c9a7ff'], h = 2 * T / cols.length;
+      ends(cols[0]); circ(c, L, 0, T, cols[3]); cols.forEach((col, i) => band(-T + i * h, -T + (i + 1) * h + 0.003, col));
+      band(-T, -T + 0.03, '#ffffff'); dashes('rgba(255,255,255,.95)', 0.045); break; }
+    case 'rchoc':
+      ends('#6b3b22'); band(-T, T, '#7a4a2e');
+      c.fillStyle = '#5e3721'; for (let x = 0.45; x < L; x += 0.45) c.fillRect(x - 0.02, -T, 0.04, 2 * T);
+      band(-T, -T + 0.05, '#fff1dc'); for (let x = 0.15; x < L; x += 0.3) circ(c, x, -T + 0.05, 0.035, '#fff1dc');
+      dashes('#ffd6a0', 0.04); break;
+    case 'rflower':
+      ends('#e9d7c4'); band(-T, T, '#efe0cf'); band(-T, -T + 0.06, '#8fd48a'); band(T - 0.05, T, '#8fd48a');
+      for (let x = 0.25, i = seed; x < L; x += 0.55, i++){
+        const col = ['#ff7eb6', '#ffd36e', '#c9a7ff', '#ffffff'][i % 4];
+        for (let k = 0; k < 4; k++) circ(c, x + Math.cos(k * 1.571) * 0.045, -T + 0.02 + Math.sin(k * 1.571) * 0.045, 0.035, col);
+        circ(c, x, -T + 0.02, 0.025, '#ffd36e');
+      }
+      dashes('#ffffff', 0.04); break;
+    case 'rcrystal': {
+      const g = c.createLinearGradient(0, -T, 0, T); g.addColorStop(0, '#e6fbff'); g.addColorStop(1, '#8fdcf5');
+      ends('#bff1ff'); band(-T, T, g);
+      c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 0.03; for (let x = 0.2; x < L; x += 0.6){ c.beginPath(); c.moveTo(x, T); c.lineTo(x + 0.25, -T); c.stroke(); }
+      dashes('#ffffff', 0.04); break; }
+    default:   // asfalt
+      ends('#2e333d'); band(-T, T, '#2e333d'); band(-T, -T + 0.035, '#555c69'); dashes('#f0c64a');
   }
-  const n = Math.max(2, Math.round(len / 0.3)), candy = st === 'candy';
-  if (!candy) for (let i = 0; i <= n; i++){ const t = i / n; circ(ctx, ax + dx * t + nx * 0.24, ay + dy * t + ny * 0.24, 0.2 + 0.05 * ((i * 5 + seed) % 3) / 2, '#cfe4f7'); }
-  for (let i = 0; i <= n; i++){
-    const t = i / n, rad = 0.2 + 0.07 * ((i * 7 + seed * 3) % 5) / 4;
-    circ(ctx, ax + dx * t + nx * 0.12, ay + dy * t + ny * 0.12, rad, candy ? ((i + seed) % 2 ? '#ffb3d9' : '#b9e4ff') : ((i + seed) % 2 ? '#ffffff' : '#f1f8ff'));
-  }
-  strokeSeg(ax, ay, bx, by, candy ? '#ffe3f1' : '#ffffff', 0.13);
+  c.restore();
 }
 function drawBeam(ax, ay, bx, by, type, stress, seed){
-  ctx.lineCap = 'round';
-  let lw;
-  if (type === 'road'){ lw = 0.34; drawRoad(ax, ay, bx, by, seed || 0); }
+  const m = MAT[type] || MAT.wood; ctx.lineCap = 'round'; let lw;
+  if (m.deck){ lw = 0.34; drawDeck(ax, ay, bx, by, type, seed || 0); }
+  else if (type === 'bamboo'){
+    lw = 0.2; strokeSeg(ax, ay, bx, by, '#5f9e3e', lw); strokeSeg(ax, ay, bx, by, '#a6d97a', 0.07);
+    const L = Math.hypot(bx - ax, by - ay) || 1e-6, ux = (bx - ax) / L, uy = (by - ay) / L;
+    ctx.strokeStyle = '#3f7a2a'; ctx.lineWidth = 0.04;
+    for (let d = 0.45; d < L - 0.1; d += 0.6){ const x = ax + ux * d, y = ay + uy * d; ctx.beginPath(); ctx.moveTo(x - uy * 0.1, y + ux * 0.1); ctx.lineTo(x + uy * 0.1, y - ux * 0.1); ctx.stroke(); }
+  }
   else if (type === 'wood'){ lw = 0.24; strokeSeg(ax, ay, bx, by, '#7d5026', lw); strokeSeg(ax, ay, bx, by, '#bb8549', 0.11); }
-  else if (type === 'steel'){ lw = 0.22; strokeSeg(ax, ay, bx, by, '#4c5866', lw); strokeSeg(ax, ay, bx, by, '#a9b9c8', 0.08); }
   else if (type === 'iron'){ lw = 0.22; strokeSeg(ax, ay, bx, by, '#3f3a45', lw); strokeSeg(ax, ay, bx, by, '#7d7686', 0.08); }
+  else if (type === 'steel'){ lw = 0.22; strokeSeg(ax, ay, bx, by, '#4c5866', lw); strokeSeg(ax, ay, bx, by, '#a9b9c8', 0.08); }
+  else if (type === 'crystal'){ lw = 0.23; strokeSeg(ax, ay, bx, by, 'rgba(120,205,240,.95)', lw); strokeSeg(ax, ay, bx, by, '#e9fcff', 0.08); ctx.lineCap = 'butt'; strokeSeg(ax, ay, bx, by, '#ffffff', 0.03, [0.05, 0.4]); ctx.lineCap = 'round'; }
+  else if (type === 'ribbon'){ lw = 0.09; strokeSeg(ax, ay, bx, by, '#ff7eb6', lw); ctx.lineCap = 'butt'; strokeSeg(ax, ay, bx, by, '#ffffff', 0.035, [0.14, 0.14]); ctx.lineCap = 'round'; }
   else if (type === 'scable'){ lw = 0.13; strokeSeg(ax, ay, bx, by, '#56616d', lw); ctx.lineCap = 'butt'; strokeSeg(ax, ay, bx, by, '#d3dde6', 0.05, [0.12, 0.12]); ctx.lineCap = 'round'; }
+  else if (type === 'magic'){
+    lw = 0.12; strokeSeg(ax, ay, bx, by, 'rgba(201,167,255,.35)', 0.28);
+    const g = ctx.createLinearGradient(ax, ay, bx, by); ['#ff7eb6', '#ffe95c', '#8fe3a1', '#7cc8ff', '#c9a7ff'].forEach((col, i, a) => g.addColorStop(i / (a.length - 1), col));
+    strokeSeg(ax, ay, bx, by, g, lw);
+  }
   else { lw = 0.1; strokeSeg(ax, ay, bx, by, '#8a6a42', lw); ctx.lineCap = 'butt'; strokeSeg(ax, ay, bx, by, '#dcc092', 0.045, [0.1, 0.1]); ctx.lineCap = 'round'; }
   ctx.setLineDash([]);
   if (stress > 0.2){ const k = Math.min(1, (stress - 0.2) / 0.8); strokeSeg(ax, ay, bx, by, `hsla(${55 * (1 - k)},100%,50%,${0.3 + 0.6 * k})`, Math.max(lw, 0.14)); }
+}
+function drawStructGhost(pl){
+  const col = pl.ok ? '#ff9cc7' : '#ff5a45';
+  ctx.globalAlpha = 0.5; ctx.fillStyle = col;
+  if (pl.t === 'ayak') ctx.fillRect(pl.x - 0.9, pl.y, 1.8, level.water + 3 - pl.y);
+  else if (pl.t === 'kule' && pl.base != null) ctx.fillRect(pl.x - 0.28, pl.y, 0.56, pl.base - pl.y);
+  rr(pl.x - 0.36, pl.y - 0.36, 0.72, 0.72, 0.1); ctx.fill();
+  ctx.globalAlpha = 1; circ(ctx, pl.x, pl.y, 0.18, pl.ok ? '#ff4f9a' : '#ff5a45');
 }
 function drawNode(n, hot){
   ctx.beginPath(); ctx.arc(n.x, n.y, n.fixed ? 0.21 : 0.14, 0, 7);
@@ -1621,7 +1895,7 @@ function drawNode(n, hot){
   if (hot){ ctx.beginPath(); ctx.arc(n.x, n.y, 0.38, 0, 7); ctx.strokeStyle = tool === 'delete' ? '#ff5a45' : '#ffd25e'; ctx.lineWidth = 0.07; ctx.stroke(); }
 }
 function drawAnchorBlocks(){
-  for (const [ax, ay] of level.anchors){ ctx.fillStyle = '#a998c6'; rr(ax - 0.36, ay - 0.36, 0.72, 0.72, 0.1); ctx.fill(); }
+  for (const [ax, ay] of anchorList()){ ctx.fillStyle = '#a998c6'; rr(ax - 0.36, ay - 0.36, 0.72, 0.72, 0.1); ctx.fill(); }
 }
 
 /* araç süslemeleri — yerel eksen: x ileri, y aşağı, dingil hattı y=0 */
@@ -1805,6 +2079,7 @@ function drawCar(){
   drawWheel(ctx, r.x, r.y, V.r, r.angle, V.wheel); drawWheel(ctx, f.x, f.y, V.r, f.angle, V.wheel);
   drawDecorWorld(ctx, sim.kind, t, clamp(r.vx * 0.1, -0.7, 0.7), carPoint);
   if (t - hornT < 0.9){ const [hx, hy] = carPoint(0.4, -2.9); speech.push({x:hx, y:hy, text:HORN_TXT[sim.kind]}); }
+  else if (!sim.started && !sim.result && !sim.rescue){ const [hx, hy] = carPoint(0.4, -2.9); speech.push({x:hx, y:hy, text:'Sür beni! ➡️ ya da ▶ İleri'}); }
 }
 function drawParked(t){   // tasarım modunda bekleyen araba (tıklayınca korna çalar)
   const k = store.vehicle, V = VEHICLES[k], cx = -2.5 - V.wb / 2, cy = -V.r, hop = t - hornT < 0.3 ? Math.sin((t - hornT) / 0.3 * Math.PI) * 0.12 : 0;
@@ -1933,20 +2208,20 @@ function drawGrid(){
 }
 
 function drawBridge(bs, ns, simMode){
-  for (const b of bs) if (b.type !== 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, simMode ? b.stress : 0);
-  bs.forEach((b, i) => { if (b.type === 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, simMode ? b.stress : 0, i); });
+  for (const b of bs) if (!MAT[b.type].deck) drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, simMode ? b.stress : 0);
+  bs.forEach((b, i) => { if (MAT[b.type].deck) drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, simMode ? b.stress : 0, i); });
   for (const n of ns) drawNode(n, false);
 }
 function renderTransition(t){   // iki bölüm yan yana; kamera arabayla birlikte sağa kayar
-  const T = trans, seam = level.right + 7.5;
+  const T = trans, seam = T.seam;
   drawBackground(t, T.bgW); worldT();
   ctx.save(); ctx.beginPath(); ctx.rect(-1e4, -1e4, 1e4 + seam, 2e4); ctx.clip();
   drawTerrain(t); drawAnchorBlocks(); drawBridge(sim.beams, sim.nodes, true); drawWater(t); ctx.restore();
-  const keep = [level, rects]; level = T.B.level; rects = T.B.rects; sceneDX = T.dx; sceneDY = T.dy;
+  const keep = [level, rects, structs]; level = T.B.level; rects = T.B.rects; structs = T.B.structs; sceneDX = T.dx; sceneDY = T.dy;
   ctx.save(); ctx.translate(T.dx, T.dy); ctx.beginPath(); ctx.rect(seam - T.dx, -1e4, 1e4, 2e4); ctx.clip();
   drawTerrain(t); drawAnchorBlocks(); drawBridge(T.B.beams, T.B.nodes, false); drawWater(t); ctx.restore();
-  level = keep[0]; rects = keep[1]; sceneDX = sceneDY = 0;
-  drawPuffs(false); drawCar(); drawPuffs(true); drawSpeech();
+  level = keep[0]; rects = keep[1]; structs = keep[2]; sceneDX = sceneDY = 0;
+  drawRoadStuff(t); drawPuffs(false); drawCar(); drawPuffs(true); drawSpeech();
 }
 function render(t){
   if (!level || !W) return;
@@ -1957,8 +2232,8 @@ function render(t){
   drawAnchorBlocks();
 
   if (mode === 'sim' && sim){
-    for (const b of sim.beams) if (b.type !== 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, b.stress);
-    sim.beams.forEach((b, i) => { if (b.type === 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, b.stress, i); });
+    for (const b of sim.beams) if (!b.mat.deck) drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, b.stress);
+    sim.beams.forEach((b, i) => { if (b.mat.deck) drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, b.stress, i); });
     for (const n of sim.nodes) drawNode(n, false);
     drawPuffs(false);
     drawCar();
@@ -1970,10 +2245,14 @@ function render(t){
     drawWater(t);
     drawGrid();
     drawParked(t);
-    for (const b of beams) if (b.type !== 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, 0);
-    beams.forEach((b, i) => { if (b.type === 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, 0, i); });
+    for (const b of beams) if (!MAT[b.type].deck) drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, 0);
+    beams.forEach((b, i) => { if (MAT[b.type].deck) drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, 0, i); });
     if (hoverBeam && !drag && (tool === 'delete')){ ctx.lineCap = 'round'; strokeSeg(hoverBeam.a.x, hoverBeam.a.y, hoverBeam.b.x, hoverBeam.b.y, 'rgba(255,80,60,.75)', 0.4); }
     let label = null;
+    if (STRUCT[tool] && mouse.inside && !pan && !pinch){
+      const pl = structPlan(tool, mouse); drawStructGhost(pl);
+      label = {x:pl.x, y:pl.y - 0.6, text:pl.ok ? `${STRUCT[tool].ic} ${STRUCT[tool].name} · ${fmt(STRUCT[tool].cost)}` : 'buraya olmaz'};
+    }
     if (drag){
       const f = drag.from, m = MAT[tool] || MAT.road;
       ctx.beginPath(); ctx.arc(f.x, f.y, m.maxLen, 0, 7); ctx.fillStyle = 'rgba(255,210,94,.07)'; ctx.fill();
@@ -2003,6 +2282,7 @@ function frame(now){
   const d = Math.min(0.05, (now - last) / 1000); last = now;
   if (mode === 'sim' && sim){ acc += d; let k = 0; while (sim && acc >= FIXED_DT && k < 3){ simStep(); acc -= FIXED_DT; k++; } if (k === 3) acc = 0; }
   if (mode === 'sim') followCam(d);
+  if (hornNode) hornT = now / 1000;
   render(now / 1000);
   drawConfetti(d); drawFireworks(d);
   requestAnimationFrame(frame);
@@ -2024,6 +2304,7 @@ window.__kopru = {
   },
   clear(){ beams = []; cleanupOrphans(); persist(); },
   testMode(){ TEST_MODE = true; STORE_KEY = 'kopru-ustasi-test'; store = freshStore(); store.seenHelp = true; closeModal(); setLevel(0, true); },
+  struct(t, x, y){ addStruct(structPlan(t, {x, y})); }, get structs(){ return structs; }, jump, selectTool, openPicker,
   menu:showMenu, start:startSim, stop:stopSim, setLevel:i => setLevel(i, true), next:goNext, horn, keys, get trans(){ return trans; }, get view(){ return view; }, step(n = 1){ for (let i = 0; i < n && sim; i++) simStep(); },
   get sim(){ return sim; }, get cost(){ return totalCost(); }, MAT, VEHICLES, LEVELS,
 };

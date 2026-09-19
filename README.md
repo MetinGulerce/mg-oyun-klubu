@@ -10,7 +10,7 @@ Oyunlar tek bir hikâyenin bölümleridir: Prenses Mila, unicorn Pamuk'un doğum
 |---|---|---|
 | 1 | Orman ve Köy *(yakında)* | Fırtınadan önce ormandan ve köyden malzeme toplama. |
 | 2 | [🧁 Pasta Atölyesi](oyunlar/pasta-atolyesi/) | Şatonun mutfağında malzemeleri karıştır, pişir, krema sür, süsle, mumları üfle. Pamuk'un mektubundaki üç dileği yerine getir. |
-| 3 | [🌉 Köprü Ustası](oyunlar/kopru-ustasi/) | 10 durakta köprü kurarak pastayı şatoya yetiştir. Pasta Atölyesi'nde yapılan pasta arabada görünür. |
+| 3 | [🌉 Köprü Ustası](oyunlar/kopru-ustasi/) | 10 durakta köprü kurarak pastayı şatoya yetiştir. Malzemeler dört grupta (Yol, Kirişler, Halatlar, Yapılar); kule, destek noktası ve köprü ayağı eklenebilir. Köprüler arasındaki yolda bonus toplanır, engellerin üstünden zıplanır. Pasta Atölyesi'nde yapılan pasta arabada görünür. |
 
 Oyunlar aynı sitede çalıştığı için bilgileri paylaşır: Pasta Atölyesi'nde bitirilen pastanın resmi `mg-kulup-pasta` anahtarıyla tarayıcıya kaydedilir, Köprü Ustası onu okur.
 
