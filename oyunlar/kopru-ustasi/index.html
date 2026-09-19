@@ -31,6 +31,9 @@ header{display:flex;align-items:center;gap:10px 18px;padding:8px 14px;background
 .story{text-align:center}
 .story .big{font-size:64px;line-height:1.1}
 .story p{font-size:15px;line-height:1.55}
+.myCake{display:flex;align-items:center;gap:12px;margin:10px auto 0;padding:8px 14px;border-radius:16px;background:var(--panel2);max-width:340px;text-align:left;font-size:13px;font-weight:600;color:var(--text);text-decoration:none}
+.myCake img{width:96px;height:80px;object-fit:contain;flex:none;filter:drop-shadow(0 3px 5px rgba(120,40,90,.25))}
+a.myCake:hover{outline:2px solid var(--accent)}
 .chip{width:32px;height:32px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);font-weight:700;position:relative}
 .chip:hover{border-color:var(--muted)}
 .chip.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -916,16 +919,28 @@ function showModal(html, buttons, wide){
 }
 function closeModal(){ $('#modal').hidden = true; }
 
+/* Pasta Atölyesi'nde yapılan pasta (aynı sitedeki ortak kayıttan) */
+let cakeImg = null;
+try { const d = JSON.parse(localStorage.getItem('mg-kulup-pasta')); if (d && d.img){ cakeImg = new Image(); cakeImg.src = d.img; } } catch (e) {}
+const cakeCard = () => cakeImg ? `<div class="myCake"><img src="${cakeImg.src}" alt="Mila'nın pastası"><span>🎂 Mila'nın Pasta Atölyesi'nde yaptığı pasta arabada, yola hazır!</span></div>`
+  : `<a class="myCake" href="../pasta-atolyesi/"><span style="font-size:44px">🧁</span><span>Pastayı sen yapmak ister misin? <u>Pasta Atölyesi</u>'nde Mila'yla birlikte pişir, burada arabada görünsün!</span></a>`;
+// araba üstünde pastanın duracağı yer (arabanın yerel ekseninde, pastanın alt ortası)
+const CAKE_SPOT = {bug:[-0.62, -1.3], princess:[-1.2, -0.93], icecream:[0.72, -1.78], carriage:[0.5, -1.84], unicorn:[0.45, -2.02]};
+function drawCakeOnCar(c, kind){
+  if (!cakeImg || !cakeImg.complete || !cakeImg.naturalWidth) return;
+  const [x, y] = CAKE_SPOT[kind], h = 0.95, w = h * cakeImg.naturalWidth / cakeImg.naturalHeight;
+  c.drawImage(cakeImg, x - w / 2, y - h, w, h);
+}
 function showStory(i, then){
   const L = LEVELS[i]; store.storySeen[i] = true; saveStore();
-  showModal(`<div class="story"><div class="big">${L.emoji}</div><h2>${L.name}</h2><p>${L.story}</p></div>`,
+  showModal(`<div class="story"><div class="big">${L.emoji}</div><h2>${L.name}</h2><p>${L.story}</p>${i === 0 ? cakeCard() : ''}</div>`,
     [{label:'🔈 Dinle', action:() => voice('story' + i)},
      {label:i === 0 ? 'Hadi başlayalım! ▶' : 'Köprüyü kuralım! ▶', primary:true, action:() => { stopVoice(); closeModal(); if (then) then(); }}]);
   voice('story' + i);
 }
 function showEnding(){
   closeModal(); stopCelebrate(); launchFireworks(30, 10); SFX.win();
-  showModal(`<div class="story"><div class="big">🏰🎂🦄</div><h2>Mutlu son!</h2><p>${ENDING}</p><p style="font-size:12px;color:var(--muted)">İstersen yoldaki köprülere geri dönüp daha ağır arabalarla daha çok para kazanabilirsin.</p></div>`,
+  showModal(`<div class="story"><div class="big">🏰🎂🦄</div><h2>Mutlu son!</h2><p>${ENDING}</p>${cakeImg ? `<img src="${cakeImg.src}" alt="Mila'nın pastası" style="max-width:220px;max-height:180px;filter:drop-shadow(0 6px 10px rgba(120,40,90,.3))">` : ''}<p style="font-size:12px;color:var(--muted)">İstersen yoldaki köprülere geri dönüp daha ağır arabalarla daha çok para kazanabilirsin.</p></div>`,
     [{label:'🔈 Dinle', action:() => voice('ending')}, {label:'Yaşasın! 🎉', primary:true, action:() => { stopVoice(); stopSim(); launchFireworks(10, 3); }}]);
   setTimeout(() => voice('ending'), 700);
 }
@@ -975,6 +990,7 @@ function showMenu(){
     [{label:'▶ Oyuna dön', primary:true, action:closeModal}], true);
   const items = [
     ['🏠', 'Oyun Kulübü’ne dön', () => { location.href = '../../'; }],
+    ['🧁', 'Pasta Atölyesi', () => { location.href = '../pasta-atolyesi/'; }],
     ['📖', 'Hikâyeyi tekrar oku', () => showStory(levelIndex)],
     ['❓', 'Nasıl oynanır?', showHelp],
     [store.muted ? '🔇' : '🔊', store.muted ? 'Sesi aç' : 'Sesi kapat', () => { store.muted = !store.muted; saveStore(); updateUI(); if (!store.muted) SFX.pick(); showMenu(); }],
@@ -1785,14 +1801,14 @@ function drawCar(){
   const V = sim.V, [r, f] = sim.car.wheels, t = performance.now() / 1000;
   hidePrincess = !!sim.rescue;
   ctx.save(); ctx.translate((r.x + f.x) / 2, (r.y + f.y) / 2); ctx.rotate(Math.atan2(f.y - r.y, f.x - r.x));
-  BODY[sim.kind](ctx, V.wb); drawDecorLocal(ctx, sim.kind, t); ctx.restore(); hidePrincess = false;
+  BODY[sim.kind](ctx, V.wb); drawDecorLocal(ctx, sim.kind, t); if (!sim.rescue) drawCakeOnCar(ctx, sim.kind); ctx.restore(); hidePrincess = false;
   drawWheel(ctx, r.x, r.y, V.r, r.angle, V.wheel); drawWheel(ctx, f.x, f.y, V.r, f.angle, V.wheel);
   drawDecorWorld(ctx, sim.kind, t, clamp(r.vx * 0.1, -0.7, 0.7), carPoint);
   if (t - hornT < 0.9){ const [hx, hy] = carPoint(0.4, -2.9); speech.push({x:hx, y:hy, text:HORN_TXT[sim.kind]}); }
 }
 function drawParked(t){   // tasarım modunda bekleyen araba (tıklayınca korna çalar)
   const k = store.vehicle, V = VEHICLES[k], cx = -2.5 - V.wb / 2, cy = -V.r, hop = t - hornT < 0.3 ? Math.sin((t - hornT) / 0.3 * Math.PI) * 0.12 : 0;
-  ctx.save(); ctx.translate(cx, cy - hop); drawVehicle(ctx, k, 0, 0); drawDecorLocal(ctx, k, t); ctx.restore();
+  ctx.save(); ctx.translate(cx, cy - hop); drawVehicle(ctx, k, 0, 0); drawDecorLocal(ctx, k, t); drawCakeOnCar(ctx, k); ctx.restore();
   drawDecorWorld(ctx, k, t, 0, (x, y) => [cx + x, cy - hop + y]);
   if (t - hornT < 0.9) speech.push({x:cx + 0.4, y:cy - 2.9, text:HORN_TXT[k]});
 }

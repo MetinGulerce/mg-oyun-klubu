@@ -39,6 +39,9 @@ a.game:active{transform:translateY(3px);box-shadow:0 4px 0 var(--line)}
 .body p{margin:0;color:var(--muted)}
 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .tags span{font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;background:#ffe8f3}
+.chap{font-size:13px;font-weight:700;color:var(--lilac);letter-spacing:.02em}
+.saga{max-width:640px;margin:-14px auto 26px;text-align:center;color:var(--muted);font-size:16px}
+.saga b{color:var(--ink)}
 .play{margin-top:auto;align-self:flex-start;padding:10px 22px;border-radius:16px;background:linear-gradient(180deg,#ff86ba,var(--pink));color:#fff;font-weight:700;font-size:18px;box-shadow:0 4px 0 #d63a80}
 .soon{opacity:.75;border-style:dashed;box-shadow:none}
 .soon .play{background:#eee;color:#998;box-shadow:none}
@@ -54,17 +57,21 @@ footer{margin-top:40px;text-align:center;color:var(--muted);font-size:14px}
     <h1><span class="a">MG</span> <span class="b">Oyun</span> <span class="c">Klü</span><span class="d">bü</span><span class="e">!</span></h1>
     <p>Minik oyuncular için tarayıcıda oynanan oyunlar</p>
   </header>
+  <p class="saga">📖 <b>Mila'nın Masalı:</b> Prenses Mila, en yakın arkadaşı unicorn Pamuk'un doğum günü için malzeme toplar, pastayı pişirir ve fırtınanın yıktığı köprüleri kurarak Gökkuşağı Şatosu'na yetişir. Oyunları sırayla oyna!</p>
   <section class="grid" id="games"></section>
   <footer>Oyunlar ilerlemeni bu tarayıcıya kaydeder. 💖</footer>
 </main>
 <script>
 // Yeni oyun eklemek için bu listeye bir satır ekle (oyun klasörü: oyunlar/<klasor>/index.html)
 const OYUNLAR = [
-  {ad:'Köprü Ustası', klasor:'kopru-ustasi', sahne:['🌸', '🚗', '🌉'], gok:'linear-gradient(#a9dcff,#ffe3f1 70%,#bdf0c8 70%)',
-   aciklama:'Prenses Mila pastayı Gökkuşağı Şatosu’na yetiştirebilsin diye köprüler kur!',
+  {ad:'Orman ve Köy', bolum:1, yakinda:true, sahne:['🌲', '🧺', '🏡'], gok:'linear-gradient(#c9f0d4,#fff3c4)',
+   aciklama:'Fırtınadan önce Mila ormandan ve köyden pastanın malzemelerini topluyor.', etiket:['Yakında']},
+  {ad:'Pasta Atölyesi', bolum:2, klasor:'pasta-atolyesi', sahne:['🥚', '🎂', '🍓'], gok:'linear-gradient(#ffe0f0,#fff3c4 70%,#ffd0e4 70%)',
+   aciklama:'Fırtınalı akşam, şatonun mutfağında Pamuk’un doğum günü pastasını pişir ve süsle!',
+   etiket:['4+ yaş', '🔊 Sesli hikâye', '📻 Radyo']},
+  {ad:'Köprü Ustası', bolum:3, klasor:'kopru-ustasi', sahne:['🌸', '🚗', '🌉'], gok:'linear-gradient(#a9dcff,#ffe3f1 70%,#bdf0c8 70%)',
+   aciklama:'Fırtına köprüleri yıktı! Köprüler kur, pastayı Gökkuşağı Şatosu’na yetiştir.',
    etiket:['5+ yaş', '🔊 Sesli hikâye', '📻 Radyo']},
-  {ad:'Yeni oyun', yakinda:true, sahne:['🎨', '✨', '🧸'], gok:'linear-gradient(#fff3c4,#ffe1ef)',
-   aciklama:'Sıradaki oyun çok yakında burada!', etiket:['Yakında']},
 ];
 const el = document.getElementById('games');
 for (const o of OYUNLAR){
@@ -72,7 +79,7 @@ for (const o of OYUNLAR){
   a.className = 'game' + (o.yakinda ? ' soon' : '');
   if (!o.yakinda) a.href = `oyunlar/${o.klasor}/`;
   a.innerHTML = `<div class="art"><div class="sky" style="background:${o.gok}"></div><div class="scene">${o.sahne.map(e => `<span>${e}</span>`).join('')}</div></div>
-    <div class="body"><h2>${o.ad}</h2><p>${o.aciklama}</p><div class="tags">${o.etiket.map(t => `<span>${t}</span>`).join('')}</div>
+    <div class="body"><span class="chap">${o.bolum}. BÖLÜM</span><h2>${o.ad}</h2><p>${o.aciklama}</p><div class="tags">${o.etiket.map(t => `<span>${t}</span>`).join('')}</div>
     <span class="play">${o.yakinda ? 'Yakında' : '▶ Oyna'}</span></div>`;
   el.appendChild(a);
 }

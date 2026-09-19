@@ -2,18 +2,25 @@
 
 Minik oyuncular için tarayıcıda oynanan oyunlar. Kurulum yok; `index.html` dosyasını açmak ya da siteyi ziyaret etmek yeterli.
 
-## Oyunlar
+## Oyunlar — Mila'nın Masalı
 
-| Oyun | Açıklama |
-|---|---|
-| [🌉 Köprü Ustası](oyunlar/kopru-ustasi/) | Prenses Mila, doğum günü pastasını Gökkuşağı Şatosu'na yetiştirebilsin diye 10 durakta köprü kurar. Sesli hikâye, radyo, araba garajı ve süs dükkânı var. |
+Oyunlar tek bir hikâyenin bölümleridir: Prenses Mila, unicorn Pamuk'un doğum günü için malzeme toplar, pastayı pişirir, fırtınanın yıktığı köprüleri kurup Gökkuşağı Şatosu'na yetişir.
+
+| Bölüm | Oyun | Açıklama |
+|---|---|---|
+| 1 | Orman ve Köy *(yakında)* | Fırtınadan önce ormandan ve köyden malzeme toplama. |
+| 2 | [🧁 Pasta Atölyesi](oyunlar/pasta-atolyesi/) | Şatonun mutfağında malzemeleri karıştır, pişir, krema sür, süsle, mumları üfle. Pamuk'un mektubundaki üç dileği yerine getir. |
+| 3 | [🌉 Köprü Ustası](oyunlar/kopru-ustasi/) | 10 durakta köprü kurarak pastayı şatoya yetiştir. Pasta Atölyesi'nde yapılan pasta arabada görünür. |
+
+Oyunlar aynı sitede çalıştığı için bilgileri paylaşır: Pasta Atölyesi'nde bitirilen pastanın resmi `mg-kulup-pasta` anahtarıyla tarayıcıya kaydedilir, Köprü Ustası onu okur.
 
 ## Klasör yapısı
 
 ```
 index.html                  kulübün giriş sayfası (oyun listesi)
 oyunlar/<oyun>/index.html   her oyun kendi klasöründe, tek dosya
-oyunlar/kopru-ustasi/ses/   hikâye ve karakter seslendirmeleri (MP3)
+oyunlar/<oyun>/ses/         hikâye ve karakter seslendirmeleri (MP3)
+ortak/mila-fm.js            oyunların ortak radyosu (Mila FM)
 araclar/seslendir.py        seslendirmeleri Gemini TTS ile üreten betik
 ```
 
@@ -24,19 +31,21 @@ araclar/seslendir.py        seslendirmeleri Gemini TTS ile üreten betik
 
 ## Seslendirme
 
-Köprü Ustası'ndaki hikâye, ipucu ve karakter repliklerinin sesleri `oyunlar/kopru-ustasi/ses/` klasöründe hazır durur; oyun oynarken internet gerekmez.
+Hikâye, ipucu ve karakter repliklerinin sesleri her oyunun `ses/` klasöründe hazır durur; oyun oynarken seslendirme servisine bağlanılmaz.
 Metinler değişirse yalnızca değişen satırlar yeniden üretilir:
 
 ```powershell
-$env:TTS_API_KEY = "..."   # anahtar depoya yazılmaz
-python araclar/seslendir.py
+$env:TTS_URL = "..."       # servis adresi ve anahtar depoya yazılmaz
+$env:TTS_API_KEY = "..."
+python araclar/seslendir.py                  # bütün oyunlar
+python araclar/seslendir.py pasta-atolyesi   # tek oyun
 ```
 
-Seslendirilen metinler oyundaki `LEVELS` (hikâye ve ipuçları), `ENDING` ve `SAY` listelerinden okunur. Sesler: anlatıcı *Zephyr*, Mila *Leda*, kral *Puck*, kraliçe *Aoede*. Betik için `ffmpeg` gerekir.
+Seslendirilen metinler her oyundaki `SAY` listesinden (Köprü Ustası'nda ayrıca `LEVELS` ve `ENDING`) okunur. Sesler: anlatıcı *Zephyr*, Mila *Leda*, kral *Puck*, kraliçe *Aoede*. Betik için `ffmpeg` gerekir.
 
 ## Radyo
 
-Oyundaki 📻 **Mila FM** iki istasyonludur:
+Oyunlardaki 📻 **Mila FM** (`ortak/mila-fm.js`) iki istasyonludur:
 
 - **K-Pop:** KPop Demon Hunters şarkılarının Sony Pictures Animation kanalındaki resmi YouTube videolarını çalar. YouTube dosyadan (`file://`) açılan sayfalarda çalışmadığı için bu istasyon yalnızca site üzerinden açılınca çalar.
 - **Pamuk Pop:** Oyunun kendi bestesi olan üç şarkı; internetsiz çalar.

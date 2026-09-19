@@ -1,0 +1,200 @@
+{
+ "bebek": {
+  "konusan": "bebek",
+  "ses": "Leda",
+  "metin": "Agu! Pasta! Hi hi hi!",
+  "ozet": "dcdeecd35427"
+ },
+ "bitti": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Pasta hazır! Kraliçe anne pastayı kocaman bir kutuya koydu. Yarın sabah Mila onu arabasına koyup Gökkuşağı Şatosu'na doğru yola çıkacak. Ama o gece fırtına yoldaki bütün köprüleri yıktı... Mila'nın köprü kurması gerekecek!",
+  "ozet": "cc3921719bfd"
+ },
+ "cok_guzel": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Çok güzel oldu!",
+  "ozet": "972ecb058752"
+ },
+ "dilek_renk_beyaz": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Bembeyaz krema.",
+  "ozet": "78a4994e1d58"
+ },
+ "dilek_renk_cikolata": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Çikolata krema.",
+  "ozet": "0e7ce8ae3e51"
+ },
+ "dilek_renk_lila": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Lila krema.",
+  "ozet": "a1d19a082c72"
+ },
+ "dilek_renk_mavi": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Mavi krema.",
+  "ozet": "419bc5c33d04"
+ },
+ "dilek_renk_nane": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Nane yeşili krema.",
+  "ozet": "790ad5754e56"
+ },
+ "dilek_renk_pembe": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Pembe krema.",
+  "ozet": "69aa588ab0e2"
+ },
+ "dilek_sus_cicek": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Üstünde çiçek olsun!",
+  "ozet": "b3b272ce7f39"
+ },
+ "dilek_sus_cilek": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Üstünde çilek olsun!",
+  "ozet": "d4c438be6c2b"
+ },
+ "dilek_sus_kalp": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Üstünde kalp olsun!",
+  "ozet": "0c33c351e656"
+ },
+ "dilek_sus_kelebek": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Üstünde kelebek olsun!",
+  "ozet": "956ebdc33d39"
+ },
+ "dilek_sus_kiraz": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Üstünde kiraz olsun!",
+  "ozet": "9c553b4a560c"
+ },
+ "dilek_sus_unicorn": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Üstünde minik bir unicorn olsun!",
+  "ozet": "f5e0aec54a71"
+ },
+ "dilek_sus_yildiz": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Üstünde yıldız olsun!",
+  "ozet": "72581542551f"
+ },
+ "dilek_tat_cikolata": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Çikolatalı bir pasta.",
+  "ozet": "6de5472f61e0"
+ },
+ "dilek_tat_cilek": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Çilekli bir pasta.",
+  "ozet": "50df047d0166"
+ },
+ "dilek_tat_vanilya": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Vanilyalı bir pasta.",
+  "ozet": "09dc15b0dbab"
+ },
+ "firin": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Fırın ısınıyor. Zil çalınca fırına dokun!",
+  "ozet": "e0bab1968190"
+ },
+ "firin_hazir": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Zil çaldı! Pasta pişti!",
+  "ozet": "d59348eb7a00"
+ },
+ "harika": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Harika! Aferin tatlım!",
+  "ozet": "98d2e63e45a6"
+ },
+ "hikaye": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Fırtınadan önceki akşam... Prenses Mila, ormandan ve köyden topladığı malzemelerle şatonun mutfağına koştu. Yarın en yakın arkadaşı unicorn Pamuk'un doğum günü! Dışarıda rüzgâr uğulduyor ama mutfak sıcacık. Kraliçe annesi önlüğünü bağladı, bebek kardeşi de kucağında: Hadi Mila, en güzel pastayı birlikte yapalım!",
+  "ozet": "80ad2bf8ad92"
+ },
+ "kalip": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Pastan hangi şekilde olsun? Bir kalıp seç!",
+  "ozet": "bfb3acf8b8dd"
+ },
+ "karistir": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Şimdi parmağınla kasede daireler çiz ve güzelce karıştır!",
+  "ozet": "acf1afb22199"
+ },
+ "kat": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Pastan kaç katlı olsun?",
+  "ozet": "842e87644be8"
+ },
+ "krema": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Krema zamanı! Bir renk seç ve parmağınla pastayı boya.",
+  "ozet": "ac630c0ca771"
+ },
+ "malzeme": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Önce malzemeleri kaseye koyalım: un, yumurta, şeker, süt ve tereyağı. Bir de pastanın tadını seç!",
+  "ozet": "96a4b355547c"
+ },
+ "mektup": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Pamuk bana bir mektup göndermiş! Dilekleri şunlar:",
+  "ozet": "9edaf5045d85"
+ },
+ "mis": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Mmm, mis gibi kokuyor!",
+  "ozet": "81bed0060e44"
+ },
+ "mum": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Kaç mum koyalım? Sonra mumları yakıp bir prova yapalım!",
+  "ozet": "a3b2e2e73f9c"
+ },
+ "sus": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Süsleme zamanı! Bir süs seç, sonra pastanın üstüne dokun.",
+  "ozet": "606cbe7357f7"
+ },
+ "ufle": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Şimdi mumları üfle! Alevlere dokun.",
+  "ozet": "a9dd01c5b889"
+ }
+}
