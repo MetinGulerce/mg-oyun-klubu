@@ -42,11 +42,15 @@ header{display:flex;align-items:center;gap:8px 10px;padding:8px 12px;background:
 #wish .w{position:relative;width:44px;height:44px;border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(160,60,120,.18);display:grid;place-items:center;font-size:24px}
 #wish .w i{display:block;width:26px;height:26px;border-radius:50%;border:2px solid rgba(0,0,0,.08)}
 #wish .w.ok::after{content:"✓";position:absolute;right:-5px;top:-5px;width:18px;height:18px;border-radius:50%;background:var(--ok);color:#fff;font-size:11px;font-weight:800;line-height:18px;text-align:center}
-#toast{position:absolute;left:50%;bottom:14px;transform:translate(-50%,20px);padding:9px 16px;border-radius:12px;background:#fff;border:1.5px solid var(--accent);opacity:0;transition:.2s;pointer-events:none;white-space:nowrap;z-index:7}
+#toast{position:absolute;left:50%;bottom:14px;transform:translate(-50%,20px);padding:9px 16px;border-radius:12px;background:#fff;border:1.5px solid var(--accent);opacity:0;transition:.2s;pointer-events:none;width:max-content;max-width:calc(100% - 24px);text-align:center;z-index:7}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
 footer{padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)}
-#tools{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin}
+*{scrollbar-width:thin;scrollbar-color:#f3b9d4 transparent}
+*::-webkit-scrollbar{width:8px;height:8px}
+*::-webkit-scrollbar-thumb{background:#f3b9d4;border-radius:8px}
+*::-webkit-scrollbar-track{background:transparent}
+#tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:2px 2px 4px}
 .grp{display:flex;gap:6px;flex:none}
 .sep{width:2px;height:48px;border-radius:2px;background:var(--line);flex:none}
 .tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:70px;height:66px;border-radius:18px;background:var(--panel2);border:3px solid transparent;flex:none;transition:transform .12s}
@@ -114,8 +118,13 @@ footer{padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)
   #steps{flex:1;justify-content:space-between;order:5;width:100%}
   .sd{width:30px;height:30px;font-size:16px}
   .hb{padding:6px 10px;font-size:13px}
-  .tile{width:58px;height:58px;border-radius:15px}
-  .tile .ic{font-size:24px}
+  #tools{gap:6px}
+  .grp{gap:5px;flex-wrap:wrap;flex:1 1 auto;max-width:100%}
+  .sep{display:none}
+  .tile{width:52px;height:54px;border-radius:14px}
+  .tile .ic{font-size:22px}
+  .tile .tl{font-size:10.5px}
+  .tile .sw{width:26px;height:26px}
   .tile .tl{font-size:11px}
   .big{height:58px;padding:0 16px;font-size:17px}
   #say{font-size:14px;max-width:calc(100% - 80px);left:10px;transform:none}

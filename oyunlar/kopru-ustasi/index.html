@@ -91,11 +91,15 @@ a.myCake:hover{outline:2px solid var(--accent)}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
 #hint{position:absolute;left:12px;top:12px;max-width:min(440px,calc(100% - 24px));padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(180,80,130,.15);font-size:13px;pointer-events:none;backdrop-filter:blur(3px)}
 #hint b{color:var(--accent)}
-#toast{position:absolute;left:50%;bottom:16px;transform:translate(-50%,20px);padding:9px 16px;border-radius:10px;background:#fff;border:1.5px solid var(--accent);opacity:0;transition:.2s;pointer-events:none;white-space:nowrap}
+#toast{position:absolute;left:50%;bottom:16px;transform:translate(-50%,20px);padding:9px 16px;border-radius:10px;background:#fff;border:1.5px solid var(--accent);opacity:0;transition:.2s;pointer-events:none;width:max-content;max-width:calc(100% - 24px);text-align:center;z-index:6}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
 footer{display:flex;align-items:center;padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)}
-#buildBar,#driveBar{display:flex;align-items:center;gap:8px;width:100%;overflow-x:auto;scrollbar-width:thin;padding:2px 2px 6px}
+*{scrollbar-width:thin;scrollbar-color:#f3b9d4 transparent}
+*::-webkit-scrollbar{width:8px;height:8px}
+*::-webkit-scrollbar-thumb{background:#f3b9d4;border-radius:8px}
+*::-webkit-scrollbar-track{background:transparent}
+#buildBar,#driveBar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;width:100%;padding:2px 2px 4px}
 body.sim #buildBar,body:not(.sim) #driveBar{display:none}
 #mats,.tiles{display:flex;gap:6px;flex:none}
 .sep{width:2px;height:48px;border-radius:2px;background:var(--line);flex:none}
@@ -122,6 +126,7 @@ body.sim #buildBar,body:not(.sim) #driveBar{display:none}
 #padFwd{background:linear-gradient(180deg,#b6f2cf,#6fd6a0)}
 #padJump{background:#ffd6a8;display:none}
 body.trans #padJump{display:flex}
+@media (hover:none){.keyhelp{display:none}}
 .gt{position:relative}
 .gt .dd{position:absolute;right:5px;top:2px;font-size:10px;color:var(--muted)}
 #picker{position:absolute;left:10px;right:10px;bottom:10px;z-index:4;max-width:780px;margin:0 auto;background:#fff;border:2px solid var(--line);border-radius:20px;box-shadow:0 10px 30px rgba(120,40,90,.25);padding:10px 12px 12px}
@@ -129,8 +134,8 @@ body.trans #padJump{display:flex}
 #picker .ph{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;margin-bottom:8px}
 #picker .ph small{font-weight:500;font-size:12.5px;color:var(--muted)}
 #picker .ph button{margin-left:auto;flex:none;width:32px;height:32px;border-radius:50%;background:var(--panel2)}
-#picker .pl{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
-.pc{flex:none;width:148px;padding:8px 10px;border-radius:16px;background:var(--panel2);border:3px solid transparent;text-align:left}
+#picker .pl{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;max-height:min(46vh,340px);overflow-y:auto;padding:2px}
+.pc{width:auto;padding:8px 10px;border-radius:16px;background:var(--panel2);border:3px solid transparent;text-align:left}
 .pc:hover{border-color:var(--line)}
 .pc.on{border-color:var(--accent);background:#ffd0e4}
 .pc canvas{width:100%;height:30px;display:block;border-radius:8px;background:linear-gradient(#e3f4ff,#fdeaf4)}
@@ -229,18 +234,20 @@ body.trans #padJump{display:flex}
   #muteBtn,#helpBtn{display:none}
   #budgetText{font-size:11px}
   #buildBar{flex-wrap:wrap;row-gap:6px}
-  #mats{width:100%;overflow-x:auto;padding-bottom:2px}
+  #mats{width:100%;justify-content:space-between}
   #buildBar .sep{display:none}
   .tiles .tile{width:54px}
-  #driveBar{justify-content:space-between}
+  #driveBar{justify-content:space-between;gap:5px}
+  #stopBtn{width:100%;height:46px;margin-left:0;justify-content:center;font-size:16px}
+  #stopBtn .ic{font-size:20px}
   #vehBtn,#bank,#menuBtn,#radioBtn{padding:5px 9px;font-size:13px}
   .tile{width:58px;height:58px;border-radius:15px}
   .tile .ic{font-size:24px}
   .tile .tl{font-size:11px}
   .big{height:58px;padding:0 16px;font-size:18px}
   .big .ic{font-size:24px}
-  .pad{width:70px;height:62px}
-  .pad .ic{font-size:27px}
+  .pad{width:calc((100% - 25px) / 6);min-width:46px;height:58px;font-size:11px;border-radius:16px}
+  .pad .ic{font-size:24px}
   #hint{font-size:12px;max-width:calc(100% - 84px)}
   #zoomUI button{width:42px;height:42px;font-size:19px}
 }
@@ -338,6 +345,7 @@ const STRUCT = {
 };
 const TOOL_INFO = k => MAT[k] || STRUCT[k];
 const toolGroup = k => (TOOL_INFO(k) || {}).grp;
+const TOUCH = window.matchMedia && matchMedia('(hover: none)').matches;   // dokunmatik cihaz: yazılarda tuş yerine düğme adı
 const EMOF = '"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
 
 const VEHICLES = {
@@ -365,7 +373,7 @@ const LEVELS = [
   {name:'Papatya Deresi', emoji:'🌼', right:8, rightTop:0, water:5, budget:4200,
    anchors:[[0,0],[8,0],[0,2],[8,2]], scenery:[['tree',-6.4],['bush',-4.6],['sign',-0.9],['blossom',10.1],['house',14.3]],
    story:"Bir varmış bir yokmuş… Prenses Mila'nın en yakın arkadaşı unicorn Pamuk'un bugün doğum günü! 🎂 Parti Gökkuşağı Şatosu'nda. Ama dün geceki fırtına yoldaki bütün köprüleri yıkmış! Mila pastayı arabasına koydu ve yola çıktı. Genç kral babası ile kraliçe annesi de minik bebek kardeşiyle birlikte sandala binip nehirden onu takip ediyor. İlk durak: Papatya Deresi.",
-   hint:'<b>Yol</b> parçalarıyla iki kıyıyı birleştir, sonra <b>ahşap</b> üçgenlerle destekle. Düz bir yol tek başına taşımaz!'},
+   hint:'<b>Yol</b> parçalarıyla iki kıyıyı birleştir, sonra <b>tahta</b> üçgenlerle destekle. Düz bir yol tek başına taşımaz!'},
   {name:'Kelebek Vadisi', emoji:'🦋', right:12, rightTop:0, water:7, budget:6500,
    anchors:[[0,0],[12,0],[0,3],[12,3]], scenery:[['blossom',-6.3],['mushroom',-4.4],['tree',13.9],['bush',15.6],['mushroom',18.4]],
    story:"Rengârenk kelebekler Mila'ya yol gösteriyor. Ama vadi çok derin! Kelebekler fısıldıyor: “Üçgenler yap prenses, üçgenler hiç eğilmez!”",
@@ -959,7 +967,7 @@ function simStep(){
 
   if (S.trans && trans){   // köprüler arasındaki yol: kamera arabayı izler, sonunda yeni bölüme oturur
     const T = trans, p = clamp((f.x - T.x0) / (T.x1 - T.x0), 0, 1), e = p * p * (3 - 2 * p), Lr = (a, b) => a + (b - a) * e, sm = k => k * k * (3 - 2 * k);
-    const sc = Lr(T.from.s, T.to.s), follow = f.x + W * 0.2 / sc;
+    const sc = Lr(T.from.s, T.to.s) * (1 + (H > W * 1.05 ? 0.7 : 0.25) * Math.sin(Math.PI * p)), follow = f.x + W * 0.2 / sc;
     let cx = T.from.cx + (follow - T.from.cx) * sm(clamp(p / 0.15, 0, 1)); cx += (T.to.cx - cx) * sm(clamp((p - 0.8) / 0.2, 0, 1));
     view.s = sc; view.ox = W / 2 - cx * sc; view.oy = H / 2 - Lr(T.from.cy, T.to.cy) * sc; T.bgW = Lr(T.from.w, T.to.w);
     roadStep(FIXED_DT);
@@ -1104,7 +1112,7 @@ function roadStep(dt){
     for (const w of [f, r]) if (w.x < o.x && o.x - w.x < o.w / 2 + w.r * 0.7 && w.y + w.r > T.gy - o.h + 0.08){   // yalnızca soldan gelen tekerlek çarpar
       o.hitT = S.t; SFX.bump();
       for (const q of [r, f]){ q.vx = -3.2; q.x -= 0.25; }
-      T.floats.push({x:o.x, y:T.gy - o.h - 1, text:'Hop! ⬆ Zıpla!', life:1.4}); break;
+      T.floats.push({x:o.x, y:T.gy - o.h - 1, text:TOUCH ? 'Hop! ⤴️ Zıpla!' : 'Hop! ↑ Zıpla!', life:1.4}); break;
     }
   }
 }
@@ -1142,7 +1150,7 @@ function goNext(){
     from:{s:view.s, cx:(W / 2 - view.ox) / view.s, cy:(H / 2 - view.oy) / view.s, w:level.water},
     to:{s:vb.s, cx:(W / 2 - vb.ox) / vb.s + dx, cy:(H / 2 - vb.oy) / vb.s + dy, w:BL.water + dy}};
   sim.drive = true; sim.trans = true; sim.started = false; document.body.classList.add('trans'); updateUI();
-  toast('🪙 Düşen bonusları topla, ⬆ ile engellerin üstünden zıpla!');
+  toast(TOUCH ? '🪙 Düşen bonusları topla, ⤴️ Zıpla ile engellerin üstünden atla!' : '🪙 Düşen bonusları topla, ↑ ya da Boşluk ile engellerin üstünden zıpla!');
 }
 function horn(){   // kısa korna (dokunma / K tuşu)
   if (sim && sim.rescue) return;
@@ -1334,7 +1342,12 @@ function renderJourney(){   // numarasız yolculuk haritası: kalpler = geçilen
 /* malzeme grupları: gruba dokun → o grupta en son seçilen tür; bir daha dokun → çeşitler */
 let pickerG = null;
 function selectTool(k){ tool = k; const g = toolGroup(k); if (g){ store.lastTool[g] = k; saveStore(); } drag = null; updateUI(); }
-function groupTap(g){ if (toolGroup(tool) === g) togglePicker(g); else { selectTool(store.lastTool[g]); SFX.pick(); } }
+function groupTap(g){
+  if (pickerG === g){ closePicker(); return; }                    // açık menünün grubuna dokun: kapat
+  if (toolGroup(tool) === g && !pickerG){ openPicker(g); return; } // seçili gruba ikinci dokunuş: çeşitler
+  selectTool(store.lastTool[g]); SFX.pick();
+  if (pickerG) openPicker(g);                                      // menü açıksa tek dokunuşta yeni grubun çeşitlerine geç
+}
 function togglePicker(g){ if (pickerG === g) closePicker(); else openPicker(g); }
 function closePicker(){ pickerG = null; const el = $('#picker'); if (el) el.hidden = true; }
 const meter = (icon, n, tip) => `<div class="pm" title="${tip}">${icon} ${[1, 2, 3, 4, 5].map(i => `<i class="${i <= n ? 'f' : ''}"></i>`).join('')}</div>`;
@@ -1545,7 +1558,7 @@ cv.addEventListener('pointerdown', e => {
   const p = toWorld(e); mouse.x = p.x; mouse.y = p.y; mouse.inside = true;
   if (e.button === 2){ if (drag) drag = null; else deleteAt(p); return; }
   if (e.button !== 0) return;
-  if (pickerG) closePicker();
+  if (pickerG){ closePicker(); return; }
   if (tool === 'delete'){ deleteAt(p); return; }
   if (STRUCT[tool]){ addStruct(structPlan(tool, p)); return; }
   if (drag && drag.sticky){
@@ -1619,7 +1632,7 @@ window.addEventListener('keydown', e => {
   if ((e.key === '+' || e.key === '=') && $('#modal').hidden){ zoomAt(W / 2, H / 2, 1.25); return; }
   if ((e.key === '-' || e.key === '_') && $('#modal').hidden){ zoomAt(W / 2, H / 2, 0.8); return; }
   if (e.key === '0' && $('#modal').hidden){ resetCam(); computeView(); return; }
-  if (e.key === 'Escape'){ if (!$('#modal').hidden && mode === 'build') closeModal(); drag = null; return; }
+  if (e.key === 'Escape'){ if (pickerG) closePicker(); else if (!$('#modal').hidden && mode === 'build') closeModal(); drag = null; return; }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){ e.preventDefault(); undo(); return; }
   if (e.code === 'Space'){ e.preventDefault(); if (e.repeat) return; if (trans) jump(); else if (mode === 'sim') stopSim(); else if ($('#modal').hidden) startSim(); return; }   // yolda Boşluk da zıplatır
   if (mode !== 'build') return;
@@ -2079,7 +2092,7 @@ function drawCar(){
   drawWheel(ctx, r.x, r.y, V.r, r.angle, V.wheel); drawWheel(ctx, f.x, f.y, V.r, f.angle, V.wheel);
   drawDecorWorld(ctx, sim.kind, t, clamp(r.vx * 0.1, -0.7, 0.7), carPoint);
   if (t - hornT < 0.9){ const [hx, hy] = carPoint(0.4, -2.9); speech.push({x:hx, y:hy, text:HORN_TXT[sim.kind]}); }
-  else if (!sim.started && !sim.result && !sim.rescue){ const [hx, hy] = carPoint(0.4, -2.9); speech.push({x:hx, y:hy, text:'Sür beni! ➡️ ya da ▶ İleri'}); }
+  else if (!sim.started && !sim.result && !sim.rescue){ const [hx, hy] = carPoint(0.4, -2.9); speech.push({x:hx, y:hy, text:TOUCH ? 'Sür beni! ▶ İleri' : 'Sür beni! → tuşu'}); }
 }
 function drawParked(t){   // tasarım modunda bekleyen araba (tıklayınca korna çalar)
   const k = store.vehicle, V = VEHICLES[k], cx = -2.5 - V.wb / 2, cy = -V.r, hop = t - hornT < 0.3 ? Math.sin((t - hornT) / 0.3 * Math.PI) * 0.12 : 0;
