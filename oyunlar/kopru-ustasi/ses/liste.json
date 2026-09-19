@@ -1,0 +1,182 @@
+{
+ "baby": {
+  "konusan": "bebek",
+  "ses": "Leda",
+  "metin": "Agu agu!",
+  "ozet": "e1635172f30a"
+ },
+ "ending": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mila şatoya ulaştı! Pamuk mumları üfledi, herkes pastadan kocaman bir dilim yedi. Kelebekler dans etti, ördekler şarkı söyledi, kral baba, kraliçe anne ve minik bebek de sandalla partiye yetişti! Gökten göğe havai fişekler atıldı… Onlar ermiş muradına.",
+  "ozet": "469368ca7c97"
+ },
+ "help": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Pembe noktalardan birine dokun ve parmağını sürükle. Böylece köprü parçası koyarsın. Aşağıdan yol, tahta, demir ya da halat seçebilirsin. Köprü hazır olunca kocaman Sür düğmesine bas!",
+  "ozet": "e215cc4baed0"
+ },
+ "hint0": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yol parçalarıyla iki kıyıyı birleştir, sonra ahşap üçgenlerle destekle. Düz bir yol tek başına taşımaz!",
+  "ozet": "2b2d894a192f"
+ },
+ "hint1": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Açıklık büyüdü. Yolun altına ya da üstüne üçgenlerden oluşan bir kafes kur; alttaki ankrajlardan kemer çıkabilirsin.",
+  "ozet": "8ee721bef93a"
+ },
+ "hint2": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ortadaki kaya ayağın üstünde bir ankraj var. Yükü oraya indirmek köprüyü iki kısa açıklığa böler.",
+  "ozet": "58f423d35549"
+ },
+ "hint3": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kulelerin tepesindeki ankrajlardan halat sarkıt. Halat ucuz ve uzundur ama yalnızca çekmeye çalışır.",
+  "ozet": "e0c466d5838a"
+ },
+ "hint4": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Karşı kıyı daha yüksek. Yolu eğimli kur; çok dik rampalarda araç zorlanır.",
+  "ozet": "ab81d58bcace"
+ },
+ "hint5": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Çok uzun bir açıklık! Ağır araçlar için ahşabın yetmediği yerde demir ya da çelik kullan; orta kuleden halat da çekebilirsin.",
+  "ozet": "d055edeb6441"
+ },
+ "hint6": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "İki kaya ayak köprüyü üçe böler. Her ayaktan yukarı payandalar çıkarak yolu destekle.",
+  "ozet": "2cc5efa73bfd"
+ },
+ "hint7": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Karşı kıyı daha alçak: yolu aşağı doğru eğimli kur. İnişte aşağı ok tuşuyla fren yapabilirsin.",
+  "ozet": "9c97b3ac84ea"
+ },
+ "hint8": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ortada destek yok. Yüksek kulelerden çelik halat (14 metre) çekerek yolu as; uçlarda alttaki ankrajlardan payanda kullan.",
+  "ozet": "6f75cb151059"
+ },
+ "hint9": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Son köprü! İki ayak, iki kule: bildiğin her şeyi kullan — kafes, payanda, halat ve çelik.",
+  "ozet": "d40b447237cd"
+ },
+ "king_coming": {
+  "konusan": "kral",
+  "ses": "Puck",
+  "metin": "Geliyoruz Mila!",
+  "ozet": "4cbcc21ee5bd"
+ },
+ "king_stronger": {
+  "konusan": "kral",
+  "ses": "Puck",
+  "metin": "Köprüyü daha sağlam yapalım!",
+  "ozet": "364b6f9919e5"
+ },
+ "mila_chute": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Paraşütüm açıldı!",
+  "ozet": "f1b657e7c4f4"
+ },
+ "mila_help": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Anne! Baba! İmdaaat!",
+  "ozet": "4fb2208ad8d1"
+ },
+ "mila_thanks": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Anneciğim! Babacığım!",
+  "ozet": "a6e6f9cf4d4b"
+ },
+ "queen_saved": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Kurtardık seni tatlım!",
+  "ozet": "851fb51421d1"
+ },
+ "story0": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bir varmış bir yokmuş… Prenses Mila'nın en yakın arkadaşı unicorn Pamuk'un bugün doğum günü! Parti Gökkuşağı Şatosu'nda. Ama dün geceki fırtına yoldaki bütün köprüleri yıkmış! Mila pastayı arabasına koydu ve yola çıktı. Genç kral babası ile kraliçe annesi de minik bebek kardeşiyle birlikte sandala binip nehirden onu takip ediyor. İlk durak: Papatya Deresi.",
+  "ozet": "80d355007126"
+ },
+ "story1": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Rengârenk kelebekler Mila'ya yol gösteriyor. Ama vadi çok derin! Kelebekler fısıldıyor: “Üçgenler yap prenses, üçgenler hiç eğilmez!”",
+  "ozet": "b534f68d3596"
+ },
+ "story2": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Nehrin ortasında kocaman bir kaya var. Eskiden uykucu bir dev buraya oturup ayaklarını suya sokarmış! Dev çoktan gitmiş ama taşı hâlâ köprülere destek oluyor.",
+  "ozet": "81c0cd7732a5"
+ },
+ "story3": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "İki eski kule hâlâ dimdik ayakta. Aşağıdaki sandaldan kral babası sesleniyor: “Halatları kulelere bağla tatlım, asma köprü yap!”",
+  "ozet": "8202f17f8b72"
+ },
+ "story4": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yol tepeye doğru tırmanıyor. Bulutlara yaklaştıkça uzakta Gökkuşağı Şatosu'nun kuleleri görünmeye başladı!",
+  "ozet": "c182a65ed827"
+ },
+ "story5": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Büyük Nehir o kadar geniş ki karşı kıyı zor görünüyor! Neyse ki ortadaki taş ayak ve tepesindeki kule Mila'ya yardım edecek.",
+  "ozet": "d4cfdee0157c"
+ },
+ "story6": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "İki minik ada, üç kısa köprü demek! Ördek ailesi suda süzülürken Mila'yı merakla izliyor. Vak vak!",
+  "ozet": "c7569354b50b"
+ },
+ "story7": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Rüzgâr kanyonda fısıldıyor: “Yavaaaş…” Yol artık aşağı iniyor. Dikkat et, yokuş aşağı araba hızlanır!",
+  "ozet": "18346b79fa9a"
+ },
+ "story8": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Burası çok geniş ve ortada tek bir ayak bile yok! Ama kuleler çok yüksek. Kraliçe annesi sandaldan el sallıyor: “Çelik halat 14 metreye kadar uzanır canım!”",
+  "ozet": "7ad3b2558974"
+ },
+ "story9": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "İşte Gökkuşağı Şatosu! Pamuk pencereden el sallıyor. Bu son ve en uzun köprü… Hadi Mila, pasta partiye yetişsin!",
+  "ozet": "54d8f17431a1"
+ },
+ "win": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yaşasın Mila! Kazandın!",
+  "ozet": "a7d17dffc0e6"
+ }
+}

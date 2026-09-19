@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MG Oyun Klübü</title>
+<meta name="description" content="Minik oyuncular için tarayıcıda oynanan oyunlar.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎈</text></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Titan+One&display=swap">
+<style>
+:root{
+  --bg:#fff4fa; --ink:#4a2545; --muted:#9a6b8b; --pink:#ff5fa2; --lilac:#b26bff; --card:#fff; --line:#f6c9df;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100vh;background:
+  radial-gradient(circle at 12% 8%,#ffd9ec 0 18%,transparent 19%),
+  radial-gradient(circle at 92% 22%,#e3d4ff 0 14%,transparent 15%),
+  radial-gradient(circle at 80% 96%,#d4f3ff 0 16%,transparent 17%),var(--bg);
+  color:var(--ink);font:16px/1.5 "Fredoka","Segoe UI",system-ui,sans-serif;padding-inline:20px}
+main{max-width:1040px;margin:0 auto;padding-block:36px 48px}
+header{text-align:center;margin-bottom:34px}
+.logo{font-size:56px;line-height:1;display:inline-block;animation:bob 2.4s ease-in-out infinite}
+h1{margin:10px 0 6px;font:400 clamp(38px,8vw,68px)/1.05 "Titan One","Fredoka",sans-serif;letter-spacing:.01em}
+h1 span{display:inline-block}
+h1 .a{color:var(--pink)} h1 .b{color:#ffb300} h1 .c{color:#2fbf86} h1 .d{color:#4da6ff} h1 .e{color:var(--lilac)}
+header p{margin:0;color:var(--muted);font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+.game{position:relative;display:flex;flex-direction:column;background:var(--card);border-radius:28px;border:3px solid var(--line);
+  overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 8px 0 var(--line);transition:transform .15s,box-shadow .15s}
+a.game:hover{transform:translateY(-4px) rotate(-.5deg);box-shadow:0 12px 0 var(--line)}
+a.game:active{transform:translateY(3px);box-shadow:0 4px 0 var(--line)}
+.art{position:relative;isolation:isolate;height:170px;display:grid;place-items:center;font-size:64px;overflow:hidden}
+.art .scene{display:flex;gap:6px;align-items:flex-end;filter:drop-shadow(0 4px 4px rgba(90,30,70,.18))}
+.art .scene span:nth-child(2){font-size:78px;animation:bob 2s ease-in-out infinite}
+.art .sky{position:absolute;inset:0;z-index:-1}
+.body{padding:16px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.body h2{margin:0;font-size:24px}
+.body p{margin:0;color:var(--muted)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.tags span{font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;background:#ffe8f3}
+.play{margin-top:auto;align-self:flex-start;padding:10px 22px;border-radius:16px;background:linear-gradient(180deg,#ff86ba,var(--pink));color:#fff;font-weight:700;font-size:18px;box-shadow:0 4px 0 #d63a80}
+.soon{opacity:.75;border-style:dashed;box-shadow:none}
+.soon .play{background:#eee;color:#998;box-shadow:none}
+footer{margin-top:40px;text-align:center;color:var(--muted);font-size:14px}
+@keyframes bob{50%{transform:translateY(-8px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="logo">🎈</div>
+    <h1><span class="a">MG</span> <span class="b">Oyun</span> <span class="c">Klü</span><span class="d">bü</span><span class="e">!</span></h1>
+    <p>Minik oyuncular için tarayıcıda oynanan oyunlar</p>
+  </header>
+  <section class="grid" id="games"></section>
+  <footer>Oyunlar ilerlemeni bu tarayıcıya kaydeder. 💖</footer>
+</main>
+<script>
+// Yeni oyun eklemek için bu listeye bir satır ekle (oyun klasörü: oyunlar/<klasor>/index.html)
+const OYUNLAR = [
+  {ad:'Köprü Ustası', klasor:'kopru-ustasi', sahne:['🌸', '🚗', '🌉'], gok:'linear-gradient(#a9dcff,#ffe3f1 70%,#bdf0c8 70%)',
+   aciklama:'Prenses Mila pastayı Gökkuşağı Şatosu’na yetiştirebilsin diye köprüler kur!',
+   etiket:['5+ yaş', '🔊 Sesli hikâye', '📻 Radyo']},
+  {ad:'Yeni oyun', yakinda:true, sahne:['🎨', '✨', '🧸'], gok:'linear-gradient(#fff3c4,#ffe1ef)',
+   aciklama:'Sıradaki oyun çok yakında burada!', etiket:['Yakında']},
+];
+const el = document.getElementById('games');
+for (const o of OYUNLAR){
+  const a = document.createElement(o.yakinda ? 'div' : 'a');
+  a.className = 'game' + (o.yakinda ? ' soon' : '');
+  if (!o.yakinda) a.href = `oyunlar/${o.klasor}/`;
+  a.innerHTML = `<div class="art"><div class="sky" style="background:${o.gok}"></div><div class="scene">${o.sahne.map(e => `<span>${e}</span>`).join('')}</div></div>
+    <div class="body"><h2>${o.ad}</h2><p>${o.aciklama}</p><div class="tags">${o.etiket.map(t => `<span>${t}</span>`).join('')}</div>
+    <span class="play">${o.yakinda ? 'Yakında' : '▶ Oyna'}</span></div>`;
+  el.appendChild(a);
+}
+</script>
+</body>
+</html>
