@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Köprü Ustası</title>
+<style>
+:root{
+  --bg:#13202b; --panel:#1b2a37; --panel2:#243747; --line:#34495b;
+  --text:#eaf1f6; --muted:#93a8b8; --accent:#f2b134; --accent-ink:#2b1e00;
+  --danger:#e5533f; --ok:#4fbf7a;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font:14px/1.4 system-ui,"Segoe UI",Roboto,sans-serif;overflow:hidden;user-select:none;-webkit-user-select:none}
+#app{display:flex;flex-direction:column;height:100%}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+
+header{display:flex;align-items:center;gap:10px 18px;padding:8px 14px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font-weight:800;font-size:17px;letter-spacing:.2px;white-space:nowrap}
+.brand span{color:var(--accent)}
+#levels{display:flex;gap:6px}
+.chip{width:32px;height:32px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);font-weight:700;position:relative}
+.chip:hover{border-color:var(--muted)}
+.chip.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip.done::after{content:"✓";position:absolute;right:-4px;top:-6px;font-size:10px;width:15px;height:15px;line-height:15px;border-radius:50%;background:var(--ok);color:#06240f}
+#levelInfo{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+#levelName{font-weight:700}
+#levelSub{color:var(--muted);font-size:12px}
+#budget{margin-left:auto;min-width:230px}
+#budgetText{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted)}
+#budgetText b{color:var(--text);font-size:14px;font-variant-numeric:tabular-nums}
+#budget.over #budgetText b{color:var(--danger)}
+#bar{height:7px;border-radius:4px;background:var(--panel2);margin-top:4px;overflow:hidden}
+#barFill{height:100%;width:0;background:var(--ok);border-radius:4px;transition:width .15s}
+#budget.over #barFill{background:var(--danger)}
+#helpBtn{width:32px;height:32px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);font-weight:700}
+
+#stage{position:relative;flex:1;min-height:0}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+#hint{position:absolute;left:12px;top:12px;max-width:min(440px,calc(100% - 24px));padding:8px 12px;border-radius:10px;background:rgba(19,32,43,.82);font-size:13px;pointer-events:none;backdrop-filter:blur(3px)}
+#hint b{color:var(--accent)}
+#toast{position:absolute;left:50%;bottom:16px;transform:translate(-50%,20px);padding:9px 16px;border-radius:10px;background:#0c151d;border:1px solid var(--line);opacity:0;transition:.2s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+footer{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--panel);border-top:1px solid var(--line);flex-wrap:wrap}
+.tool{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 8px;border-radius:10px;background:var(--panel2);border:1.5px solid transparent;text-align:left}
+.tool:hover{border-color:var(--line)}
+.tool.active{border-color:var(--accent);background:#2c4052}
+.tool .sw{width:26px;height:26px;border-radius:7px;background:#0f1921;display:grid;place-items:center;flex:none}
+.tool .sw i{display:block;width:20px;border-radius:3px;transform:rotate(-30deg)}
+.tool .nm{font-weight:650;line-height:1.1}
+.tool .sub{font-size:11px;color:var(--muted);line-height:1.1}
+.tool kbd{font:600 10px system-ui;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-left:2px}
+.sep{width:1px;height:30px;background:var(--line);margin:0 4px}
+.btn{padding:8px 12px;border-radius:10px;background:var(--panel2);border:1.5px solid transparent}
+.btn:hover{border-color:var(--line)}
+.btn.active{border-color:var(--danger);background:#3a2a2c}
+#testBtn{margin-left:auto;padding:10px 22px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:15px}
+#testBtn:hover{filter:brightness(1.07)}
+#testBtn.stop{background:var(--danger);color:#fff}
+body.sim .buildOnly{opacity:.35;pointer-events:none}
+
+#modal{position:absolute;inset:0;display:grid;place-items:center;background:rgba(8,14,20,.55);z-index:5;padding:16px}
+#modal[hidden]{display:none}
+.card{width:min(460px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.card h2{margin:0 0 8px;font-size:21px}
+.card p{margin:6px 0;color:#cfdbe4}
+.card ul{margin:8px 0;padding-left:18px;color:#cfdbe4}
+.card li{margin:5px 0}
+.card .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 4px}
+.card .stat{background:var(--panel2);border-radius:10px;padding:8px 12px}
+.card .stat small{display:block;color:var(--muted);font-size:11px}
+.card .stat b{font-size:16px;font-variant-numeric:tabular-nums}
+.card .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.card .row button{padding:9px 16px;border-radius:10px;background:var(--panel2);font-weight:650}
+.card .row button.primary{background:var(--accent);color:var(--accent-ink)}
+#celebrate{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:4;overflow:hidden;animation:milaOut .6s ease-in 3s forwards}
+#celebrate[hidden]{display:none}
+#celebrate::before{content:"";position:absolute;left:50%;top:50%;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;
+  background:repeating-conic-gradient(rgba(255,226,120,.55) 0 9deg,rgba(255,226,120,0) 9deg 18deg);
+  -webkit-mask:radial-gradient(circle,#000 0,transparent 42%);mask:radial-gradient(circle,#000 0,transparent 42%);
+  animation:milaSpin 9s linear infinite,milaFade .5s ease-out both}
+#celebrate .word{position:relative;display:flex;font:900 clamp(90px,24vw,280px)/1 "Segoe UI",system-ui,sans-serif}
+#celebrate .word span{display:inline-block;padding:0 .02em;
+  background:linear-gradient(120deg,#ff5e7e,#ffb13d,#ffe95c,#5be38f,#4db8ff,#b57bff,#ff5e7e);background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.025em #fff;
+  filter:drop-shadow(0 .04em 0 rgba(0,0,0,.3)) drop-shadow(0 0 .14em rgba(255,215,110,.95));
+  animation:milaIn .9s cubic-bezier(.2,1.6,.4,1) both,milaHue 2.2s linear infinite,milaWob 1.1s ease-in-out infinite;
+  animation-delay:calc(var(--i)*.13s),0s,calc(.9s + var(--i)*.13s)}
+@keyframes milaIn{from{transform:translateY(-130%) scale(.2) rotate(-30deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes milaWob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9%) rotate(4deg) scale(1.06)}}
+@keyframes milaHue{to{background-position:300% 0}}
+@keyframes milaSpin{to{transform:rotate(360deg)}}
+@keyframes milaFade{from{opacity:0}}
+@keyframes milaOut{to{opacity:0;transform:scale(1.35)}}
+@media (max-width:720px){
+  #budget{min-width:100%;margin-left:0;order:9}
+  .tool .sub,.tool kbd{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">🌉 Köprü <span>Ustası</span></div>
+    <div id="levels"></div>
+    <div id="levelInfo"><span id="levelName"></span><span id="levelSub"></span></div>
+    <div id="budget">
+      <div id="budgetText"><span>Maliyet <b id="costVal">0 ₺</b></span><span>Bütçe <b id="budgetVal">0 ₺</b></span></div>
+      <div id="bar"><div id="barFill"></div></div>
+    </div>
+    <button id="helpBtn" title="Nasıl oynanır?">?</button>
+  </header>
+
+  <main id="stage">
+    <canvas id="cv"></canvas>
+    <div id="hint"></div>
+    <div id="toast"></div>
+    <div id="celebrate" hidden></div>
+    <div id="modal" hidden><div class="card" id="card"></div></div>
+  </main>
+
+  <footer>
+    <div id="mats" class="buildOnly" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    <div class="sep buildOnly"></div>
+    <button class="btn buildOnly" id="delBtn" title="Sil aracı (X) — sağ tık da siler">🗑 Sil</button>
+    <button class="btn buildOnly" id="undoBtn" title="Geri al (Ctrl+Z)">↶ Geri al</button>
+    <button class="btn buildOnly" id="clearBtn" title="Tüm köprüyü sil">✕ Temizle</button>
+    <button id="testBtn">▶ Test Et</button>
+  </footer>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ------------------------------------------------------------------ veri */
+const G = 9.8, SUB = 16, FIXED_DT = 1 / 60;
+
+const MAT = {
+  road:  {name:'Yol',   cost:120, maxLen:4,  density:8,   EA:8e5, strength:4000, key:'1', sw:'#3a404c', h:7},
+  wood:  {name:'Ahşap', cost:80,  maxLen:4,  density:3.5, EA:3e5, strength:3800, key:'2', sw:'#b07a40', h:5},
+  steel: {name:'Çelik', cost:200, maxLen:4,  density:8,   EA:7e5, strength:9000, key:'3', sw:'#9fb0c0', h:5},
+  cable: {name:'Halat', cost:100, maxLen:10, density:1,   EA:2.5e5, strength:2200, key:'4', sw:'#d8d8d8', h:2, tensionOnly:true},
+};
+
+const VEHICLES = {
+  car:    {name:'Otomobil', mass:60,  wb:2.0, r:0.38, speed:4.0, color:'#d94f3d'},
+  pickup: {name:'Kamyonet', mass:100, wb:2.5, r:0.44, speed:3.6, color:'#2f7fc1'},
+  truck:  {name:'Kamyon',   mass:170, wb:3.3, r:0.50, speed:3.0, color:'#e39a26'},
+};
+
+// Koordinatlar metre; y aşağı doğru artar. Sol kıyının üstü y=0.
+const LEVELS = [
+  {name:'İlk Adım', right:8, rightTop:0, water:5, vehicle:'car', budget:4200,
+   anchors:[[0,0],[8,0],[0,2],[8,2]],
+   hint:'<b>Yol</b> parçalarıyla iki kıyıyı birleştir, sonra <b>ahşap</b> üçgenlerle destekle. Düz bir yol tek başına taşımaz!'},
+  {name:'Derin Vadi', right:12, rightTop:0, water:7, vehicle:'car', budget:6500,
+   anchors:[[0,0],[12,0],[0,3],[12,3]],
+   hint:'Açıklık büyüdü. Yolun altına ya da üstüne üçgenlerden oluşan bir <b>kafes</b> kur; alttaki ankrajlardan kemer çıkabilirsin.'},
+  {name:'Orta Ayak', right:18, rightTop:0, water:7, vehicle:'pickup', budget:9500,
+   anchors:[[0,0],[18,0],[9,4]], pillars:[{x1:8,x2:10,top:4}],
+   hint:'Ortadaki kaya ayağın üstünde bir ankraj var. Yükü oraya indirmek köprüyü iki kısa açıklığa böler.'},
+  {name:'Asma Köprü', right:16, rightTop:0, water:7, vehicle:'pickup', budget:8000,
+   anchors:[[0,0],[16,0],[0,-5],[16,-5]],
+   hint:'Kulelerin tepesindeki ankrajlardan <b>halat</b> sarkıt. Halat ucuz ve uzundur ama yalnızca <b>çekmeye</b> çalışır.'},
+  {name:'Yokuş Yukarı', right:14, rightTop:-3, water:6, vehicle:'pickup', budget:8000,
+   anchors:[[0,0],[14,-3],[0,3],[14,1]],
+   hint:'Karşı kıyı daha yüksek. Yolu eğimli kur; çok dik rampalarda araç zorlanır.'},
+  {name:'Büyük Geçit', right:24, rightTop:0, water:8, vehicle:'truck', budget:18000,
+   anchors:[[0,0],[24,0],[0,4],[24,4],[12,5],[12,-6]], pillars:[{x1:11,x2:13,top:5}],
+   hint:'Ağır kamyon, uzun açıklık. Ahşabın yetmediği yerde <b>çelik</b> kullan; orta kuleden halat da çekebilirsin.'},
+];
+
+/* --------------------------------------------------------------- durum */
+const $ = s => document.querySelector(s);
+const cv = $('#cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+const view = {s:30, ox:0, oy:0};
+
+let levelIndex = 0, level = null, rects = [];
+let nodes = [], beams = [];
+let tool = 'road';
+let mode = 'build';
+let drag = null, hoverNode = null, hoverBeam = null;
+const mouse = {x:0, y:0, inside:false};
+let undoStack = [];
+let sim = null;
+
+const STORE_KEY = 'kopru-ustasi-v1';
+let store = {designs:{}, done:{}, seenHelp:false, level:0};
+try { const s = JSON.parse(localStorage.getItem(STORE_KEY)); if (s && typeof s === 'object') store = Object.assign(store, s); } catch (e) {}
+function saveStore(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) {} }
+
+const fmt = n => Math.round(n).toLocaleString('tr-TR') + ' ₺';
+const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+
+/* ------------------------------------------------------------ tasarım */
+function serialize(){
+  const idx = new Map(nodes.map((n, i) => [n, i]));
+  return {n: nodes.filter(n => !n.fixed).map(n => [n.x, n.y]),
+          b: beams.map(b => [idx.get(b.a), idx.get(b.b), b.type])};
+}
+function applyDesign(d){
+  nodes = level.anchors.map(([x, y]) => ({x, y, fixed:true}));
+  for (const [x, y] of (d.n || [])) nodes.push({x, y, fixed:false});
+  beams = [];
+  for (const [i, j, t] of (d.b || [])) if (nodes[i] && nodes[j] && i !== j && MAT[t]) beams.push({a:nodes[i], b:nodes[j], type:t});
+}
+function persist(){ store.designs[levelIndex] = serialize(); saveStore(); updateUI(); }
+function pushUndo(){ undoStack.push(JSON.stringify(serialize())); if (undoStack.length > 200) undoStack.shift(); }
+function undo(){ if (mode !== 'build' || !undoStack.length) return; applyDesign(JSON.parse(undoStack.pop())); drag = null; persist(); }
+
+function beamCost(b){ return Math.round(dist(b.a, b.b) * MAT[b.type].cost); }
+function totalCost(){ let c = 0; for (const b of beams) c += beamCost(b); return c; }
+
+function setLevel(i){
+  stopSim();
+  levelIndex = clamp(i, 0, LEVELS.length - 1); level = LEVELS[levelIndex];
+  rects = [{x1:-1e3, x2:0, top:0, kind:'bank'}, {x1:level.right, x2:1e3, top:level.rightTop, kind:'bank'}];
+  for (const p of (level.pillars || [])) rects.push({x1:p.x1, x2:p.x2, top:p.top, kind:'pillar'});
+  applyDesign(store.designs[levelIndex] || {});
+  undoStack = []; drag = null;
+  store.level = levelIndex; saveStore();
+  computeView(); updateUI();
+}
+
+function insideTerrain(x, y){ return rects.some(r => x > r.x1 && x < r.x2 && y > r.top); }
+function groundTopAt(x){ let t = Infinity; for (const r of rects) if (x >= r.x1 && x <= r.x2) t = Math.min(t, r.top); return t; }
+
+function nodeAt(p, rad = 0.5){
+  let best = null, bd = rad;
+  for (const n of nodes){ const d = dist(n, p); if (d < bd){ bd = d; best = n; } }
+  return best;
+}
+function segDist(p, a, b){
+  const dx = b.x - a.x, dy = b.y - a.y, l2 = dx * dx + dy * dy || 1e-9;
+  const t = clamp(((p.x - a.x) * dx + (p.y - a.y) * dy) / l2, 0, 1);
+  return Math.hypot(p.x - a.x - dx * t, p.y - a.y - dy * t);
+}
+function beamAt(p, rad = 0.35){
+  let best = null, bd = rad;
+  for (const b of beams){ const d = segDist(p, b.a, b.b); if (d < bd){ bd = d; best = b; } }
+  return best;
+}
+
+function dragTarget(from, p, matKey){
+  const maxLen = MAT[matKey].maxLen;
+  const n = nodeAt(p, 0.55);
+  if (n && n !== from && dist(n, from) <= maxLen + 1e-6) return {x:n.x, y:n.y, node:n, ok:true};
+  let dx = p.x - from.x, dy = p.y - from.y;
+  const d = Math.hypot(dx, dy);
+  let tx = Math.round(p.x), ty = Math.round(p.y);
+  if (d > maxLen || Math.hypot(tx - from.x, ty - from.y) > maxLen + 1e-6){
+    const k = Math.min(1, maxLen / d);
+    tx = from.x + Math.trunc(dx * k + 1e-9 * Math.sign(dx));
+    ty = from.y + Math.trunc(dy * k + 1e-9 * Math.sign(dy));
+  }
+  const ex = nodes.find(m => m.x === tx && m.y === ty);
+  if (ex === from) return {x:tx, y:ty, node:null, ok:false};
+  if (ex) return {x:tx, y:ty, node:ex, ok:true};
+  return {x:tx, y:ty, node:null, ok:!insideTerrain(tx, ty)};
+}
+
+function commitBeam(from, target, type){
+  if (!target || !target.ok) return null;
+  let to = target.node;
+  if (to === from) return null;
+  pushUndo();
+  if (!to){ to = {x:target.x, y:target.y, fixed:false}; nodes.push(to); }
+  const ex = beams.find(b => (b.a === from && b.b === to) || (b.a === to && b.b === from));
+  if (ex) ex.type = type; else beams.push({a:from, b:to, type});
+  persist();
+  return to;
+}
+function cleanupOrphans(){
+  const used = new Set(); for (const b of beams){ used.add(b.a); used.add(b.b); }
+  nodes = nodes.filter(n => n.fixed || used.has(n));
+}
+function deleteAt(p){
+  const n = nodeAt(p, 0.4);
+  if (n){
+    const att = beams.filter(b => b.a === n || b.b === n);
+    if (!att.length) return;
+    pushUndo(); beams = beams.filter(b => !att.includes(b));
+  } else {
+    const b = beamAt(p); if (!b) return;
+    pushUndo(); beams = beams.filter(x => x !== b);
+  }
+  cleanupOrphans(); hoverBeam = null; hoverNode = null; persist();
+}
+
+/* --------------------------------------------------------------- fizik */
+function startSim(){
+  if (totalCost() > level.budget){ toast('Bütçe aşıldı — önce maliyeti düşür.'); return; }
+  closeModal();
+  const V = VEHICLES[level.vehicle];
+  const map = new Map();
+  const sn = nodes.map(n => { const m = {x:n.x, y:n.y, px:n.x, py:n.y, vx:0, vy:0, fixed:n.fixed, mass:1, w:0}; map.set(n, m); return m; });
+  const sb = beams.map(b => {
+    const mat = MAT[b.type], a = map.get(b.a), c = map.get(b.b), rest = dist(a, c);
+    a.mass += mat.density * rest / 2; c.mass += mat.density * rest / 2;
+    return {a, b:c, rest, type:b.type, mat, alpha:rest / mat.EA, stress:0, slack:false};
+  });
+  for (const n of sn) n.w = n.fixed ? 0 : 1 / n.mass;
+  const mk = x => ({x, y:-V.r, px:x, py:-V.r, vx:0, vy:0, r:V.r, w:2 / V.mass, contact:false, nx:0, ny:-1, angle:0});
+  sim = {nodes:sn, beams:sb, t:0, V, car:{wheels:[mk(-2.5 - V.wb), mk(-2.5)]}, drive:true,
+         maxStress:0, broken:0, result:null, shown:false, particles:[], cost:totalCost(), lastX:-99, lastMoveT:0};
+  mode = 'sim'; drag = null; document.body.classList.add('sim'); updateUI();
+}
+function stopSim(){
+  sim = null; mode = 'build'; document.body.classList.remove('sim'); closeModal(); stopCelebrate(); updateUI();
+}
+
+function collideWheel(wh, ax, ay, bx, by, na, nb){
+  const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy || 1e-9;
+  const t = clamp(((wh.x - ax) * dx + (wh.y - ay) * dy) / l2, 0, 1);
+  let nx = wh.x - (ax + dx * t), ny = wh.y - (ay + dy * t);
+  const d = Math.hypot(nx, ny);
+  if (d >= wh.r || d < 1e-9) return;
+  nx /= d; ny /= d;
+  const wa = na ? na.w * (1 - t) : 0, wb = nb ? nb.w * t : 0;
+  const s = (wh.r - d) / (wh.w + wa * (1 - t) + wb * t);
+  wh.x += nx * s * wh.w; wh.y += ny * s * wh.w;
+  if (na){ na.x -= nx * s * wa; na.y -= ny * s * wa; }
+  if (nb){ nb.x -= nx * s * wb; nb.y -= ny * s * wb; }
+  wh.contact = true; wh.nx = nx; wh.ny = ny;
+}
+
+function substep(dt){
+  const S = sim, ns = S.nodes, ws = S.car.wheels, water = level.water;
+  const gr = Math.min(1, S.t / 0.8) * G, idt2 = 1 / (dt * dt);
+
+  for (const n of ns){
+    if (n.fixed) continue;
+    n.vy += gr * dt;
+    if (n.y > water){ n.vx *= 0.985; n.vy = n.vy * 0.985 - gr * dt * 0.6; }
+    n.px = n.x; n.py = n.y; n.x += n.vx * dt; n.y += n.vy * dt; n.ground = false;
+  }
+  for (const w of ws){
+    w.vy += G * dt;
+    if (w.y > water){ w.vx *= 0.985; w.vy = w.vy * 0.985 - G * dt * 0.5; }
+    w.px = w.x; w.py = w.y; w.x += w.vx * dt; w.y += w.vy * dt; w.contact = false;
+  }
+
+  // kirişler (XPBD mesafe kısıtı; kuvvet = lambda / dt²)
+  for (const b of S.beams){
+    const a = b.a, c = b.b;
+    let dx = a.x - c.x, dy = a.y - c.y;
+    const len = Math.hypot(dx, dy) || 1e-9, C = len - b.rest;
+    if (b.mat.tensionOnly && C < 0){ b.slack = true; b.stress *= 0.97; continue; }
+    b.slack = false;
+    const wsum = a.w + c.w; if (!wsum) continue;
+    const dl = -C / (wsum + b.alpha * idt2);
+    dx /= len; dy /= len;
+    a.x += a.w * dl * dx; a.y += a.w * dl * dy;
+    c.x -= c.w * dl * dx; c.y -= c.w * dl * dy;
+    b.stress += (Math.abs(dl) * idt2 / b.mat.strength - b.stress) * 0.04;
+  }
+
+  // dingil
+  { const [r, f] = ws; const dx = f.x - r.x, dy = f.y - r.y, len = Math.hypot(dx, dy) || 1e-9, k = (len - S.V.wb) / len / 2;
+    r.x += dx * k; r.y += dy * k; f.x -= dx * k; f.y -= dy * k; }
+
+  // tekerlek çarpışmaları
+  for (const w of ws){
+    for (const r of rects){
+      collideWheel(w, Math.max(r.x1, w.x - 50), r.top, Math.min(r.x2, w.x + 50), r.top);
+      if (r.x1 > -500) collideWheel(w, r.x1, r.top, r.x1, r.top + 100);
+      if (r.x2 < 500) collideWheel(w, r.x2, r.top, r.x2, r.top + 100);
+    }
+    for (const b of S.beams) if (b.type === 'road') collideWheel(w, b.a.x, b.a.y, b.b.x, b.b.y, b.a, b.b);
+  }
+
+  // düğüm – zemin
+  for (const n of ns){
+    if (n.fixed) continue;
+    for (const r of rects){
+      if (n.x > r.x1 && n.x < r.x2 && n.y > r.top){
+        const dT = n.y - r.top, dL = r.x1 > -500 ? n.x - r.x1 : 1e9, dR = r.x2 < 500 ? r.x2 - n.x : 1e9;
+        if (dT <= dL && dT <= dR) n.y = r.top; else if (dL < dR) n.x = r.x1; else n.x = r.x2;
+        n.ground = true;
+      }
+    }
+  }
+
+  // hızlar
+  const gd = 1 - 0.15 * dt;
+  for (const n of ns){ if (n.fixed) continue; n.vx = (n.x - n.px) / dt * gd; n.vy = (n.y - n.py) / dt * gd; if (n.ground){ n.vx *= 0.9; n.vy *= 0.9; } }
+  for (const w of ws){ w.vx = (w.x - w.px) / dt; w.vy = (w.y - w.py) / dt; }
+
+  // kiriş ekseni boyunca sönüm
+  for (const b of S.beams){
+    if (b.slack) continue;
+    const a = b.a, c = b.b, wsum = a.w + c.w; if (!wsum) continue;
+    let dx = a.x - c.x, dy = a.y - c.y; const len = Math.hypot(dx, dy) || 1e-9; dx /= len; dy /= len;
+    const vrel = (a.vx - c.vx) * dx + (a.vy - c.vy) * dy;
+    const f = Math.min(0.5, Math.sqrt(wsum / b.alpha) * dt);   // ζ≈0.5
+    const j = -vrel * f / wsum;
+    a.vx += dx * j * a.w; a.vy += dy * j * a.w; c.vx -= dx * j * c.w; c.vy -= dy * j * c.w;
+  }
+
+  // sürüş
+  const target = S.drive ? S.V.speed : 0;
+  for (const w of ws){
+    if (w.contact){
+      const tx = -w.ny, ty = w.nx, vt = w.vx * tx + w.vy * ty;
+      const dv = clamp(target - vt, -7 * dt, 7 * dt);
+      w.vx += tx * dv; w.vy += ty * dv;
+    }
+    w.angle += w.vx / w.r * dt;
+  }
+
+  // kırılma
+  let broke = null;
+  for (const b of S.beams){ if (b.stress > S.maxStress) S.maxStress = b.stress; if (b.stress > 1) (broke || (broke = [])).push(b); }
+  if (broke) for (const b of broke) breakBeam(b);
+}
+
+function breakBeam(b){
+  const S = sim; S.beams.splice(S.beams.indexOf(b), 1); S.broken++;
+  const a = b.a, c = b.b, mx = (a.x + c.x) / 2, my = (a.y + c.y) / 2;
+  const col = b.type === 'wood' ? '#b98247' : b.type === 'road' ? '#4a505c' : b.type === 'steel' ? '#a9b8c6' : '#ddd';
+  for (let i = 0; i < 9; i++) S.particles.push({x:mx, y:my, vx:(Math.random() - .5) * 5, vy:-Math.random() * 4 - 1, life:1, col});
+  if (b.rest < 1) return;
+  const half = b.rest / 2 * 0.97, mass = b.mat.density * b.rest / 4 + 0.5;
+  for (const end of [a, c]){
+    const n = {x:mx, y:my, px:mx, py:my, vx:(a.vx + c.vx) / 2, vy:(a.vy + c.vy) / 2, fixed:false, mass, w:1 / mass};
+    S.nodes.push(n);
+    S.beams.push({a:end, b:n, rest:half, type:b.type, mat:b.mat, alpha:half / b.mat.EA, stress:0, slack:false});
+  }
+}
+
+function simStep(){
+  const S = sim, dt = FIXED_DT / SUB;
+  for (let i = 0; i < SUB; i++) substep(dt);
+  S.t += FIXED_DT;
+  for (const p of S.particles){ p.vy += G * FIXED_DT; p.x += p.vx * FIXED_DT; p.y += p.vy * FIXED_DT; p.life -= FIXED_DT * 1.2; }
+  S.particles = S.particles.filter(p => p.life > 0);
+
+  const [r, f] = S.car.wheels;
+  if (!S.result){
+    if (Math.abs(f.x - S.lastX) > 0.4){ S.lastX = f.x; S.lastMoveT = S.t; }
+    if (r.y > level.water + 0.3 || f.y > level.water + 0.3) finish(false, 'Araç suya düştü!');
+    else if (r.x > level.right + 4) finish(true);
+    else if (S.t - S.lastMoveT > 7) finish(false, 'Araç takıldı, karşıya ulaşamadı.');
+    else if (S.t > 70) finish(false, 'Süre doldu.');
+  } else if (!S.shown && S.t - S.result.at > (S.result.win ? 3.4 : 0.9)){ S.shown = true; showResult(); }
+  updateHint();
+}
+
+/* kazanma kutlaması: dev "Mila" yazısı + konfeti */
+const WIN_WORD = 'Mila';
+let confetti = [];
+function celebrate(){
+  const el = $('#celebrate');
+  el.innerHTML = '<div class="word">' + [...WIN_WORD].map((ch, i) => `<span style="--i:${i}">${ch}</span>`).join('') + '</div>';
+  el.hidden = false; clearTimeout(celebrate.h); celebrate.h = setTimeout(() => { el.hidden = true; }, 3700);
+  const cols = ['#ff5e7e', '#ffb13d', '#ffe95c', '#5be38f', '#4db8ff', '#b57bff', '#ffffff'];
+  const mk = (x, y, vx, vy) => confetti.push({x, y, vx, vy, rot:Math.random() * 7, vr:(Math.random() - .5) * 14, w:6 + Math.random() * 7, h:4 + Math.random() * 5, col:cols[Math.random() * cols.length | 0], life:4 + Math.random() * 2.5});
+  for (let i = 0; i < 90; i++){
+    const a = Math.random() * 0.9 + 0.35, v = 500 + Math.random() * 650;
+    mk(0, H, Math.cos(a) * v, -Math.sin(a) * v); mk(W, H, -Math.cos(a) * v, -Math.sin(a) * v);
+  }
+  for (let i = 0; i < 80; i++) mk(Math.random() * W, -20 - Math.random() * H * 0.8, (Math.random() - .5) * 80, 60 + Math.random() * 120);
+}
+function stopCelebrate(){ clearTimeout(celebrate.h); $('#celebrate').hidden = true; confetti = []; }
+function drawConfetti(d){
+  if (!confetti.length) return;
+  screenT();
+  for (const p of confetti){
+    p.vy += 620 * d; p.vx *= 1 - 1.2 * d; p.vy *= 1 - 1.2 * d; p.x += p.vx * d; p.y += p.vy * d; p.rot += p.vr * d; p.life -= d;
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.scale(1, Math.cos(p.rot * 1.7));
+    ctx.globalAlpha = Math.min(1, p.life); ctx.fillStyle = p.col; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+  confetti = confetti.filter(p => p.life > 0 && p.y < H + 40);
+}
+
+function finish(win, msg){
+  const S = sim; S.result = {win, msg, at:S.t}; S.drive = false;
+  if (win) celebrate();
+  if (win){ const prev = store.done[levelIndex]; if (prev == null || S.cost < prev) store.done[levelIndex] = S.cost; saveStore(); updateUI(); }
+}
+
+/* ------------------------------------------------------------- arayüz */
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2200); }
+
+function showModal(html, buttons){
+  const card = $('#card'); card.innerHTML = html + '<div class="row"></div>';
+  const row = card.querySelector('.row');
+  for (const b of buttons){ const el = document.createElement('button'); el.textContent = b.label; if (b.primary) el.className = 'primary'; el.onclick = b.action; row.appendChild(el); }
+  $('#modal').hidden = false;
+}
+function closeModal(){ $('#modal').hidden = true; }
+
+function showHelp(){
+  showModal(`<h2>Nasıl oynanır?</h2>
+  <ul>
+    <li><b>Amaç:</b> aracı karşı kıyıdaki bayrağa ulaştıracak bir köprü kur — bütçeyi aşmadan.</li>
+    <li>Bir <b>bağlantı noktasından sürükleyerek</b> kiriş çiz. Ya da noktaya bir kez tıkla, sonra hedeflere tıklayarak zincirleme çiz (Esc ile bırak).</li>
+    <li>Araç yalnızca <b>Yol</b> parçalarının üstünde gider. Ahşap, çelik ve halat destek içindir.</li>
+    <li><b>Kırmızı</b> noktalar sabit ankrajlardır; köprü onlara tutunur.</li>
+    <li><b>Sağ tık</b> siler · <b>Ctrl+Z</b> geri alır · <b>1–4</b> malzeme seçer · <b>Boşluk</b> testi başlatır/durdurur.</li>
+    <li>Testte kirişler zorlandıkça sarıdan kırmızıya döner. İpucu: <b>üçgenler</b> sağlamdır!</li>
+  </ul>`, [{label:'Başla', primary:true, action:() => { store.seenHelp = true; saveStore(); closeModal(); }}]);
+}
+
+function showResult(){
+  const S = sim, R = S.result, last = levelIndex === LEVELS.length - 1;
+  const stats = `<div class="stats">
+    <div class="stat"><small>Maliyet</small><b>${fmt(S.cost)}</b></div>
+    <div class="stat"><small>Kalan bütçe</small><b>${fmt(level.budget - S.cost)}</b></div>
+    <div class="stat"><small>En yüksek yük</small><b>%${Math.min(100, Math.round(S.maxStress * 100))}</b></div>
+    <div class="stat"><small>Kırılan parça</small><b>${S.broken}</b></div></div>`;
+  if (R.win){
+    const btns = [{label:'Tasarıma dön', action:stopSim}];
+    if (!last) btns.push({label:'Sonraki seviye →', primary:true, action:() => setLevel(levelIndex + 1)});
+    showModal(`<h2>🎉 Tebrikler!</h2><p>${S.V.name} karşıya sağ salim geçti${S.broken ? ' — köprü biraz hasar alsa da' : ''}.${last ? ' Tüm seviyeleri bitirdin!' : ''}</p>${stats}
+      <p style="font-size:12px;color:var(--muted)">Daha ucuza yapabilir misin? En iyi sonucun kaydedilir.</p>`, btns);
+  } else {
+    showModal(`<h2>💥 Olmadı!</h2><p>${R.msg}</p>${stats}`, [
+      {label:'Tekrar izle', action:() => { startSim(); }},
+      {label:'Tasarıma dön', primary:true, action:stopSim}]);
+  }
+}
+
+function updateHint(){
+  const h = $('#hint');
+  if (mode === 'sim' && sim){
+    h.innerHTML = `En yüksek yük: <b>%${Math.min(100, Math.round(sim.maxStress * 100))}</b> · Kırılan: <b>${sim.broken}</b>`;
+  } else h.innerHTML = '💡 ' + level.hint;
+}
+
+function updateUI(){
+  if (!level) return;
+  const c = mode === 'sim' && sim ? sim.cost : totalCost();
+  $('#costVal').textContent = fmt(c); $('#budgetVal').textContent = fmt(level.budget);
+  $('#budget').classList.toggle('over', c > level.budget);
+  $('#barFill').style.width = Math.min(100, c / level.budget * 100) + '%';
+  $('#levelName').textContent = `${levelIndex + 1}. ${level.name}`;
+  const best = store.done[levelIndex];
+  $('#levelSub').textContent = `${VEHICLES[level.vehicle].name} · ${level.right} m açıklık` + (best != null ? ` · en iyi: ${fmt(best)}` : '');
+  document.querySelectorAll('.chip').forEach((el, i) => { el.classList.toggle('active', i === levelIndex); el.classList.toggle('done', store.done[i] != null); });
+  document.querySelectorAll('.tool').forEach(el => el.classList.toggle('active', el.dataset.k === tool));
+  $('#delBtn').classList.toggle('active', tool === 'delete');
+  const tb = $('#testBtn'); tb.textContent = mode === 'sim' ? '■ Durdur' : '▶ Test Et'; tb.classList.toggle('stop', mode === 'sim');
+  cv.style.cursor = mode === 'sim' ? 'default' : 'crosshair';
+  updateHint();
+}
+
+function buildUI(){
+  const lv = $('#levels');
+  LEVELS.forEach((L, i) => { const b = document.createElement('button'); b.className = 'chip'; b.textContent = i + 1; b.title = L.name; b.onclick = () => setLevel(i); lv.appendChild(b); });
+  const ms = $('#mats');
+  for (const [k, m] of Object.entries(MAT)){
+    const b = document.createElement('button'); b.className = 'tool'; b.dataset.k = k;
+    b.innerHTML = `<span class="sw"><i style="height:${m.h}px;background:${m.sw}"></i></span><span><div class="nm">${m.name}<kbd>${m.key}</kbd></div><div class="sub">${m.cost} ₺/m · en çok ${m.maxLen} m</div></span>`;
+    b.onclick = () => { tool = k; updateUI(); };
+    ms.appendChild(b);
+  }
+  $('#delBtn').onclick = () => { tool = tool === 'delete' ? 'road' : 'delete'; drag = null; updateUI(); };
+  $('#undoBtn').onclick = undo;
+  $('#clearBtn').onclick = () => { if (!beams.length) return; pushUndo(); beams = []; cleanupOrphans(); persist(); toast('Temizlendi — Ctrl+Z ile geri alabilirsin.'); };
+  $('#testBtn').onclick = () => mode === 'sim' ? stopSim() : startSim();
+  $('#helpBtn').onclick = showHelp;
+}
+
+/* -------------------------------------------------------------- girdi */
+function toWorld(e){ const r = cv.getBoundingClientRect(); return {x:(e.clientX - r.left - view.ox) / view.s, y:(e.clientY - r.top - view.oy) / view.s}; }
+
+cv.addEventListener('contextmenu', e => e.preventDefault());
+cv.addEventListener('pointerdown', e => {
+  if (mode !== 'build') return;
+  const p = toWorld(e); mouse.x = p.x; mouse.y = p.y; mouse.inside = true;
+  if (e.button === 2){ if (drag) drag = null; else deleteAt(p); return; }
+  if (e.button !== 0) return;
+  if (tool === 'delete'){ deleteAt(p); return; }
+  if (drag && drag.sticky){
+    const t = dragTarget(drag.from, p, tool), to = commitBeam(drag.from, t, tool);
+    drag = to ? {from:to, sticky:true, target:null} : null;
+    return;
+  }
+  const n = nodeAt(p);
+  if (n){ drag = {from:n, sticky:false, moved:false, sx:e.clientX, sy:e.clientY, target:null}; try { cv.setPointerCapture(e.pointerId); } catch (_) {} }
+});
+cv.addEventListener('pointermove', e => {
+  const p = toWorld(e); mouse.x = p.x; mouse.y = p.y; mouse.inside = true;
+  if (mode !== 'build') return;
+  if (drag){
+    if (!drag.sticky && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 6) drag.moved = true;
+    drag.target = dragTarget(drag.from, p, tool);
+  }
+  hoverNode = nodeAt(p); hoverBeam = hoverNode ? null : beamAt(p);
+});
+cv.addEventListener('pointerup', e => {
+  if (mode !== 'build' || !drag || drag.sticky || e.button !== 0) return;
+  const t = dragTarget(drag.from, toWorld(e), tool);
+  if (drag.moved && t.ok){ commitBeam(drag.from, t, tool); drag = null; }
+  else if (!drag.moved){ drag.sticky = true; drag.target = null; }
+  else drag = null;
+});
+cv.addEventListener('pointerleave', () => { mouse.inside = false; hoverNode = hoverBeam = null; });
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){ if (!$('#modal').hidden && mode === 'build') closeModal(); drag = null; return; }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){ e.preventDefault(); undo(); return; }
+  if (e.code === 'Space'){ e.preventDefault(); if (mode === 'sim') stopSim(); else if ($('#modal').hidden) startSim(); return; }
+  if (mode !== 'build') return;
+  for (const [k, m] of Object.entries(MAT)) if (e.key === m.key){ tool = k; updateUI(); }
+  if (e.key.toLowerCase() === 'x' || e.key === 'Delete'){ tool = tool === 'delete' ? 'road' : 'delete'; drag = null; updateUI(); }
+});
+
+/* -------------------------------------------------------------- çizim */
+function computeView(){
+  if (!level || !W) return;
+  const xmin = -8.5, xmax = level.right + 8;
+  let ymin = Math.min(-6, level.rightTop - 5); for (const a of level.anchors) ymin = Math.min(ymin, a[1] - 2.5);
+  const ymax = level.water + 2.2;
+  view.s = Math.min(W / (xmax - xmin), H / (ymax - ymin));
+  view.ox = W / 2 - (xmin + xmax) / 2 * view.s;
+  view.oy = H / 2 - (ymin + ymax) / 2 * view.s;
+}
+function resize(){
+  const r = $('#stage').getBoundingClientRect(); DPR = Math.min(2, window.devicePixelRatio || 1);
+  W = Math.max(50, r.width); H = Math.max(50, r.height);
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  computeView();
+}
+const worldT = () => ctx.setTransform(DPR * view.s, 0, 0, DPR * view.s, DPR * view.ox, DPR * view.oy);
+const screenT = () => ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+function rr(x, y, w, h, r){ ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
+
+const CLOUDS = [[0.1, 0.12, 1.0, 7], [0.45, 0.07, 0.7, 4], [0.7, 0.2, 1.2, 9], [0.95, 0.1, 0.8, 5]];
+function drawBackground(t){
+  screenT();
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#86c9ec'); g.addColorStop(0.55, '#d3ecf6'); g.addColorStop(1, '#f8ecd4');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const sx = W * 0.83, sy = H * 0.17, sg = ctx.createRadialGradient(sx, sy, 8, sx, sy, 110);
+  sg.addColorStop(0, 'rgba(255,246,200,1)'); sg.addColorStop(0.25, 'rgba(255,240,180,.55)'); sg.addColorStop(1, 'rgba(255,240,180,0)');
+  ctx.fillStyle = sg; ctx.fillRect(sx - 120, sy - 120, 240, 240);
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  for (const [fx, fy, sc, sp] of CLOUDS){
+    const x = ((fx * (W + 400) + t * sp) % (W + 400)) - 200, y = fy * H, s = sc * 26;
+    ctx.beginPath(); ctx.ellipse(x, y, s * 2.2, s * 0.8, 0, 0, 7); ctx.ellipse(x - s, y - s * 0.5, s, s * 0.8, 0, 0, 7); ctx.ellipse(x + s * 0.7, y - s * 0.6, s * 1.2, s, 0, 0, 7); ctx.fill();
+  }
+  const hy = level.water * view.s + view.oy, s = view.s;
+  const ridge = (col, base, a1, f1, a2, f2, ph) => {
+    ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(0, hy + 5);
+    for (let x = 0; x <= W; x += 8){ const wx = (x - view.ox) / s; ctx.lineTo(x, hy - s * (base + a1 * Math.sin(wx * f1 + ph) + a2 * Math.sin(wx * f2 + ph * 2))); }
+    ctx.lineTo(W, hy + 5); ctx.fill();
+  };
+  ridge('#a9cadb', 7.5, 2.2, 0.13, 1.0, 0.41, 1.3);
+  ridge('#8dbb9c', 4.6, 1.3, 0.21, 0.6, 0.57, 0.4);
+}
+
+function drawTerrain(){
+  const yB = (H - view.oy) / view.s + 1, xL = -view.ox / view.s - 1, xR = (W - view.ox) / view.s + 1;
+  // kuleler (zeminin üstündeki ankrajlar)
+  for (const [ax, ay] of level.anchors){
+    const gt = groundTopAt(ax);
+    if (ay < gt - 0.01 && gt < 1e8){
+      ctx.fillStyle = '#b9b4aa'; ctx.fillRect(ax - 0.28, ay - 0.1, 0.56, gt - ay + 0.1);
+      ctx.fillStyle = '#9d988e'; ctx.fillRect(ax + 0.08, ay - 0.1, 0.2, gt - ay + 0.1);
+      ctx.fillStyle = '#8d887f'; ctx.fillRect(ax - 0.45, ay - 0.3, 0.9, 0.3); ctx.fillRect(ax - 0.5, gt - 0.35, 1.0, 0.35);
+    }
+  }
+  for (const r of rects){
+    const x1 = Math.max(r.x1, xL), x2 = Math.min(r.x2, xR); if (x2 <= x1) continue;
+    if (r.kind === 'pillar'){
+      ctx.fillStyle = '#8f8f98'; ctx.fillRect(x1, r.top, x2 - x1, yB - r.top);
+      ctx.fillStyle = '#7b7b85'; ctx.fillRect(x1 + (x2 - x1) * 0.62, r.top, (x2 - x1) * 0.38, yB - r.top);
+      ctx.fillStyle = '#a5a5ae'; ctx.fillRect(x1 - 0.15, r.top, x2 - x1 + 0.3, 0.35);
+      ctx.strokeStyle = 'rgba(0,0,0,.12)'; ctx.lineWidth = 0.04;
+      for (let y = r.top + 1; y < yB; y += 0.9){ ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke(); }
+    } else {
+      const g = ctx.createLinearGradient(0, r.top, 0, r.top + 10);
+      g.addColorStop(0, '#9a7650'); g.addColorStop(1, '#6d5238');
+      ctx.fillStyle = g; ctx.fillRect(x1, r.top, x2 - x1, yB - r.top);
+      ctx.fillStyle = 'rgba(60,40,20,.18)';
+      for (let i = 0; i < 6; i++){ const y = r.top + 1.2 + i * 1.7; ctx.fillRect(x1, y, x2 - x1, 0.22 + (i % 2) * 0.2); }
+      ctx.fillStyle = '#5d9b47'; ctx.fillRect(x1, r.top, x2 - x1, 0.34);
+      ctx.fillStyle = '#79b85c'; ctx.fillRect(x1, r.top, x2 - x1, 0.13);
+      // sokak: asfalt yaklaşım
+      ctx.fillStyle = '#3a404c'; ctx.fillRect(x1, r.top - 0.02, x2 - x1, 0.16);
+    }
+  }
+  // bitiş bayrağı
+  const fx = level.right + 4, fy = level.rightTop;
+  ctx.strokeStyle = '#444'; ctx.lineWidth = 0.09; ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(fx, fy - 2.3); ctx.stroke();
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++){ ctx.fillStyle = (i + j) % 2 ? '#fff' : '#222'; ctx.fillRect(fx + 0.04 + i * 0.27, fy - 2.3 + j * 0.24, 0.27, 0.24); }
+}
+
+function drawWater(t){
+  const yB = (H - view.oy) / view.s + 1, xL = -view.ox / view.s - 1, xR = (W - view.ox) / view.s + 1, wy = level.water;
+  const g = ctx.createLinearGradient(0, wy, 0, wy + 5); g.addColorStop(0, 'rgba(58,150,190,.72)'); g.addColorStop(1, 'rgba(24,84,130,.9)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(xL, yB);
+  for (let x = xL; x <= xR + 0.4; x += 0.4) ctx.lineTo(x, wy + 0.07 * Math.sin(x * 1.3 + t * 1.6) + 0.04 * Math.sin(x * 2.9 - t * 1.1));
+  ctx.lineTo(xR, yB); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 0.05; ctx.lineCap = 'round';
+  for (let i = 0; i < 9; i++){ const x = xL + ((i * 5.3 + t * 0.5) % (xR - xL)), y = wy + 0.5 + (i % 3) * 0.55; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 0.9, y); ctx.stroke(); }
+}
+
+function strokeSeg(ax, ay, bx, by, col, lw, dash){
+  ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+}
+function drawBeam(ax, ay, bx, by, type, stress){
+  ctx.lineCap = 'round';
+  let lw;
+  if (type === 'road'){ lw = 0.34; strokeSeg(ax, ay, bx, by, '#2e333d', lw); ctx.lineCap = 'butt'; strokeSeg(ax, ay, bx, by, '#f0c64a', 0.05, [0.35, 0.35]); ctx.lineCap = 'round'; }
+  else if (type === 'wood'){ lw = 0.24; strokeSeg(ax, ay, bx, by, '#7d5026', lw); strokeSeg(ax, ay, bx, by, '#bb8549', 0.11); }
+  else if (type === 'steel'){ lw = 0.22; strokeSeg(ax, ay, bx, by, '#4c5866', lw); strokeSeg(ax, ay, bx, by, '#a9b9c8', 0.08); }
+  else { lw = 0.09; strokeSeg(ax, ay, bx, by, '#2a2a2e', lw); }
+  ctx.setLineDash([]);
+  if (stress > 0.2){ const k = Math.min(1, (stress - 0.2) / 0.8); strokeSeg(ax, ay, bx, by, `hsla(${55 * (1 - k)},100%,50%,${0.3 + 0.6 * k})`, Math.max(lw, 0.14)); }
+}
+function drawNode(n, hot){
+  ctx.beginPath(); ctx.arc(n.x, n.y, n.fixed ? 0.21 : 0.14, 0, 7);
+  ctx.fillStyle = n.fixed ? '#d9483b' : '#f3eee4'; ctx.fill();
+  ctx.lineWidth = 0.055; ctx.strokeStyle = n.fixed ? '#fff' : '#33373f'; ctx.stroke();
+  if (hot){ ctx.beginPath(); ctx.arc(n.x, n.y, 0.38, 0, 7); ctx.strokeStyle = tool === 'delete' ? '#ff5a45' : '#ffd25e'; ctx.lineWidth = 0.07; ctx.stroke(); }
+}
+function drawAnchorBlocks(){
+  for (const [ax, ay] of level.anchors){ ctx.fillStyle = '#77736b'; rr(ax - 0.36, ay - 0.36, 0.72, 0.72, 0.1); ctx.fill(); }
+}
+
+function drawCar(){
+  const V = sim.V, [r, f] = sim.car.wheels, wb = V.wb, R = V.r;
+  ctx.save(); ctx.translate((r.x + f.x) / 2, (r.y + f.y) / 2); ctx.rotate(Math.atan2(f.y - r.y, f.x - r.x));
+  const kind = level.vehicle; ctx.fillStyle = V.color;
+  if (kind === 'car'){
+    rr(-wb / 2 - 0.6, -0.78, wb + 1.2, 0.62, 0.2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-wb / 2 - 0.05, -0.75); ctx.lineTo(-wb / 2 + 0.4, -1.32); ctx.lineTo(wb / 2 - 0.4, -1.32); ctx.lineTo(wb / 2 + 0.2, -0.75); ctx.fill();
+    ctx.fillStyle = '#d4ecf8'; ctx.beginPath(); ctx.moveTo(-wb / 2 + 0.2, -0.78); ctx.lineTo(-wb / 2 + 0.5, -1.2); ctx.lineTo(-0.05, -1.2); ctx.lineTo(-0.05, -0.78); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(0.08, -0.78); ctx.lineTo(0.08, -1.2); ctx.lineTo(wb / 2 - 0.47, -1.2); ctx.lineTo(wb / 2 - 0.02, -0.78); ctx.fill();
+    ctx.fillStyle = '#ffe9a3'; ctx.fillRect(wb / 2 + 0.47, -0.62, 0.13, 0.16);
+  } else if (kind === 'pickup'){
+    rr(-wb / 2 - 0.75, -0.9, wb + 1.5, 0.7, 0.14); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(0, -0.88); ctx.lineTo(0, -1.55); ctx.lineTo(wb / 2 - 0.15, -1.55); ctx.lineTo(wb / 2 + 0.3, -0.88); ctx.fill();
+    ctx.fillStyle = '#d4ecf8'; ctx.beginPath(); ctx.moveTo(0.15, -0.92); ctx.lineTo(0.15, -1.42); ctx.lineTo(wb / 2 - 0.22, -1.42); ctx.lineTo(wb / 2 + 0.1, -0.92); ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(-wb / 2 - 0.7, -0.9, wb / 2 + 0.65, 0.1);
+    ctx.fillStyle = '#ffe9a3'; ctx.fillRect(wb / 2 + 0.62, -0.72, 0.13, 0.18);
+  } else {
+    ctx.fillStyle = '#2f333b'; ctx.fillRect(-wb / 2 - 0.85, -0.42, wb + 1.7, 0.22);
+    ctx.fillStyle = '#e8e6df'; rr(-wb / 2 - 0.85, -2.15, wb * 0.72 + 0.85, 1.75, 0.08); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,.12)'; ctx.lineWidth = 0.04;
+    for (let x = -wb / 2 - 0.4; x < wb * 0.22 - 0.1; x += 0.5){ ctx.beginPath(); ctx.moveTo(x, -2.1); ctx.lineTo(x, -0.45); ctx.stroke(); }
+    ctx.fillStyle = V.color; rr(wb * 0.22 + 0.1, -1.7, wb / 2 - wb * 0.22 + 0.75, 1.3, 0.14); ctx.fill();
+    ctx.fillStyle = '#d4ecf8'; rr(wb * 0.22 + 0.45, -1.55, wb / 2 - wb * 0.22 + 0.3, 0.55, 0.06); ctx.fill();
+    ctx.fillStyle = '#ffe9a3'; ctx.fillRect(wb / 2 + 0.72, -0.72, 0.13, 0.18);
+  }
+  ctx.restore();
+  for (const w of [r, f]){
+    ctx.save(); ctx.translate(w.x, w.y); ctx.rotate(w.angle);
+    ctx.beginPath(); ctx.arc(0, 0, R, 0, 7); ctx.fillStyle = '#1d1e22'; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.52, 0, 7); ctx.fillStyle = '#c7cbd1'; ctx.fill();
+    ctx.strokeStyle = '#6a6f78'; ctx.lineWidth = 0.05; ctx.beginPath(); ctx.moveTo(-R * 0.5, 0); ctx.lineTo(R * 0.5, 0); ctx.moveTo(0, -R * 0.5); ctx.lineTo(0, R * 0.5); ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawGrid(){
+  const xL = Math.ceil(-view.ox / view.s), xR = Math.floor((W - view.ox) / view.s), yT = Math.ceil(-view.oy / view.s), yB = Math.floor((H - view.oy) / view.s);
+  ctx.fillStyle = 'rgba(20,40,60,.28)';
+  const d = Math.max(0.07, 1.6 / view.s);
+  for (let x = xL; x <= xR; x++) for (let y = yT; y <= yB; y++) if (!insideTerrain(x, y)) ctx.fillRect(x - d / 2, y - d / 2, d, d);
+}
+
+function render(t){
+  if (!level || !W) return;
+  drawBackground(t);
+  worldT();
+  drawTerrain();
+  drawAnchorBlocks();
+
+  if (mode === 'sim' && sim){
+    for (const b of sim.beams) if (b.type !== 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, b.stress);
+    for (const b of sim.beams) if (b.type === 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, b.stress);
+    for (const n of sim.nodes) drawNode(n, false);
+    drawCar();
+    for (const p of sim.particles){ ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.col; ctx.fillRect(p.x - 0.07, p.y - 0.07, 0.14, 0.14); }
+    ctx.globalAlpha = 1;
+    drawWater(t);
+  } else {
+    drawWater(t);
+    drawGrid();
+    for (const b of beams) if (b.type !== 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, 0);
+    for (const b of beams) if (b.type === 'road') drawBeam(b.a.x, b.a.y, b.b.x, b.b.y, b.type, 0);
+    if (hoverBeam && !drag && (tool === 'delete')){ ctx.lineCap = 'round'; strokeSeg(hoverBeam.a.x, hoverBeam.a.y, hoverBeam.b.x, hoverBeam.b.y, 'rgba(255,80,60,.75)', 0.4); }
+    let label = null;
+    if (drag){
+      const f = drag.from, m = MAT[tool] || MAT.road;
+      ctx.beginPath(); ctx.arc(f.x, f.y, m.maxLen, 0, 7); ctx.fillStyle = 'rgba(255,210,94,.07)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,210,94,.55)'; ctx.lineWidth = 0.04; ctx.setLineDash([0.25, 0.25]); ctx.stroke(); ctx.setLineDash([]);
+      const tg = drag.target;
+      if (tg && !(tg.x === f.x && tg.y === f.y)){
+        ctx.globalAlpha = tg.ok ? 0.75 : 0.35; drawBeam(f.x, f.y, tg.x, tg.y, tool, tg.ok ? 0 : 1); ctx.globalAlpha = 1;
+        if (!tg.node){ ctx.beginPath(); ctx.arc(tg.x, tg.y, 0.14, 0, 7); ctx.fillStyle = tg.ok ? '#fff' : '#ff5a45'; ctx.fill(); }
+        const len = Math.hypot(tg.x - f.x, tg.y - f.y);
+        label = {x:(f.x + tg.x) / 2, y:(f.y + tg.y) / 2, text:tg.ok ? `${len.toFixed(1)} m · ${fmt(len * m.cost)}` : 'buraya olmaz'};
+      }
+    }
+    for (const n of nodes) drawNode(n, n === hoverNode || (drag && (n === drag.from || (drag.target && drag.target.node === n))));
+    if (label){
+      screenT(); ctx.font = '600 12px system-ui,sans-serif';
+      const x = label.x * view.s + view.ox, y = label.y * view.s + view.oy - 16, w = ctx.measureText(label.text).width + 14;
+      ctx.fillStyle = 'rgba(12,21,29,.88)'; rr(x - w / 2, y - 11, w, 22, 7); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label.text, x, y + 1);
+    }
+  }
+}
+
+/* -------------------------------------------------------------- döngü */
+let last = performance.now(), acc = 0;
+function frame(now){
+  const d = Math.min(0.05, (now - last) / 1000); last = now;
+  if (mode === 'sim' && sim){ acc += d; let k = 0; while (acc >= FIXED_DT && k < 3){ simStep(); acc -= FIXED_DT; k++; } if (k === 3) acc = 0; }
+  render(now / 1000);
+  drawConfetti(d);
+  requestAnimationFrame(frame);
+}
+
+buildUI();
+new ResizeObserver(resize).observe($('#stage'));
+resize();
+setLevel(store.level || 0);
+if (!store.seenHelp) showHelp();
+requestAnimationFrame(frame);
+
+// Konsoldan deneme / hata ayıklama için küçük bir API
+window.__kopru = {
+  add(x1, y1, x2, y2, type = 'wood'){
+    const get = (x, y) => nodes.find(n => n.x === x && n.y === y) || (nodes.push({x, y, fixed:false}), nodes[nodes.length - 1]);
+    const a = get(x1, y1), b = get(x2, y2); if (!beams.some(q => (q.a === a && q.b === b) || (q.a === b && q.b === a))) beams.push({a, b, type}); persist();
+  },
+  clear(){ beams = []; cleanupOrphans(); persist(); },
+  start:startSim, stop:stopSim, setLevel, step(n = 1){ for (let i = 0; i < n && sim; i++) simStep(); },
+  get sim(){ return sim; }, get cost(){ return totalCost(); }, MAT, VEHICLES, LEVELS,
+};
+})();
+</script>
+</body>
+</html>
