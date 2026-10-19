@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Orman ve Köy</title>
+<meta name="theme-color" content="#fff6fb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MG Oyun">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../ikonlar/ikon-180.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧺</text></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Titan+One&display=swap">
+<style>
+:root{
+  --bg:#fbe4f0; --panel:#fff6fb; --panel2:#ffe1ef; --line:#f6bcd9;
+  --text:#4a2545; --muted:#a3748f; --accent:#ff5fa2; --ok:#3fbf86; --gold:#f6c445;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+body{background:var(--bg);color:var(--text);font:15px/1.4 "Fredoka","Segoe UI",system-ui,sans-serif;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+#app{position:fixed;inset:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+
+header{display:flex;align-items:center;gap:8px 10px;padding:calc(7px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 7px calc(12px + env(safe-area-inset-left));background:var(--panel);border-bottom:1px solid var(--line)}
+.brand{font-weight:800;font-size:18px;white-space:nowrap}
+.brand span{color:var(--accent)}
+#list{display:flex;gap:3px;align-items:center;padding:3px 8px;border-radius:999px;background:var(--panel2);border:1.5px solid var(--line);cursor:pointer;min-width:0}
+#list .it{position:relative;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:19px;filter:grayscale(.85);opacity:.42;transition:transform .25s,opacity .25s,filter .25s}
+#list .it.got{filter:none;opacity:1;background:#fff;box-shadow:0 1px 4px rgba(160,60,120,.18)}
+#list .it.got::after{content:"✓";position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;background:var(--ok);color:#fff;font-size:9px;font-weight:800;line-height:14px;text-align:center}
+#list .it.pop{animation:itPop .6s cubic-bezier(.2,1.8,.4,1)}
+@keyframes itPop{0%{transform:scale(.4)}60%{transform:scale(1.45)}100%{transform:scale(1)}}
+#stars{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:12px;background:#fff3c4;border:1.5px solid #f3d36b;font-weight:800;color:#7a5600;white-space:nowrap;font-variant-numeric:tabular-nums}
+#stars.pop{animation:itPop .5s cubic-bezier(.2,1.8,.4,1)}
+.spacer{flex:1}
+.hb{padding:7px 13px;border-radius:12px;background:var(--panel2);border:1.5px solid var(--line);font-weight:700;white-space:nowrap}
+#radioBtn{background:#d9c4ff;border-color:#c9a7ff}
+#radioBtn.on{background:linear-gradient(90deg,#ff7eb6,#b26bff);color:#fff}
+#menuBtn{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+#stage{position:relative;min-height:0;min-width:0;overflow:hidden}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#say{position:absolute;left:50%;top:10px;transform:translateX(-50%);max-width:min(560px,calc(100% - 150px));padding:9px 16px;border-radius:16px;background:rgba(255,255,255,.94);box-shadow:0 3px 12px rgba(160,60,120,.18);font-size:16px;font-weight:600;text-align:center;cursor:pointer;z-index:3}
+#say:empty{display:none}
+#say .spk{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--panel2);margin-right:6px;vertical-align:middle;font-size:14px}
+#say .who{display:block;font-size:11.5px;font-weight:700;color:var(--accent);margin-bottom:1px;letter-spacing:.02em}
+#backBtn{position:absolute;left:10px;top:10px;z-index:4;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:14px;background:rgba(255,255,255,.94);border:2px solid var(--line);font-weight:800;box-shadow:0 3px 10px rgba(160,60,120,.18)}
+#backBtn[hidden]{display:none}
+#hud{position:absolute;right:10px;top:10px;z-index:3;display:flex;gap:6px;align-items:center}
+#hud:empty{display:none}
+#hud .h{padding:7px 13px;border-radius:14px;background:rgba(255,255,255,.95);box-shadow:0 3px 10px rgba(160,60,120,.18);font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
+#hud .h.pop{animation:itPop .45s cubic-bezier(.2,1.8,.4,1)}
+#toast{position:absolute;left:50%;bottom:14px;transform:translate(-50%,20px);padding:9px 16px;border-radius:12px;background:#fff;border:1.5px solid var(--accent);opacity:0;transition:.2s;pointer-events:none;width:max-content;max-width:calc(100% - 24px);text-align:center;z-index:7;font-weight:600}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+#modal{position:absolute;inset:0;display:grid;place-items:center;background:rgba(74,37,69,.38);z-index:8;padding:16px}
+#modal[hidden]{display:none}
+.card{max-height:100%;overflow:auto;width:min(480px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 24px;--cpb:22px;box-shadow:0 20px 60px rgba(120,40,90,.35)}
+.card.wide{width:min(760px,100%)}
+.card h2{margin:0 0 8px;font-size:22px}
+.card h3{margin:16px 0 6px;font-size:16px}
+.card p{margin:6px 0;color:#6b4263}
+.card .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap;position:sticky;bottom:calc(-1 * var(--cpb));margin-bottom:calc(-1 * var(--cpb));padding:10px 0 var(--cpb);background:linear-gradient(rgba(255,246,251,0),var(--panel) 38%)}   /* düğmeler kısa ekranda da hep görünür */
+.card .row button{padding:10px 16px;border-radius:12px;background:var(--panel2);font-weight:700}
+.card .row button.primary{background:var(--accent);color:#fff}
+.card details{margin-top:8px;font-size:13px;color:var(--muted)}
+.card summary{cursor:pointer;font-weight:700}
+.card ul{margin:8px 0;padding-left:18px;color:#6b4263}
+.card li{margin:5px 0}
+.story{text-align:center}
+.story .bigE{font-size:62px;line-height:1.1}
+.story p{font-size:15.5px;line-height:1.55}
+.qlist{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 4px;background:#fffdf5;border:2px dashed #f3d36b;border-radius:16px;padding:12px}
+.qlist div{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12.5px;font-weight:700;padding:6px 2px;border-radius:12px;background:#fff;box-shadow:0 1px 5px rgba(0,0,0,.08);position:relative}
+.qlist div b{font-size:28px;line-height:1.1}
+.qlist div.got{background:#e7fbef}
+.qlist div.got::after{content:"✓";position:absolute;right:4px;top:3px;width:16px;height:16px;border-radius:50%;background:var(--ok);color:#fff;font-size:10px;line-height:16px;text-align:center}
+.qlist .sign{grid-column:1/-1;text-align:right;font-weight:700;color:var(--accent);background:none;box-shadow:none;align-items:flex-end;padding:0}
+.kid{display:grid;gap:10px;margin:12px 0}
+.kid div{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:14px;background:var(--panel2);font-size:15px;font-weight:600}
+.kid b{font-size:30px;line-height:1;flex:none;width:40px;text-align:center}
+.mi{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;margin-top:8px;border-radius:12px;background:var(--panel2);border:2px solid transparent;font-weight:600;text-align:left}
+.mi:hover{border-color:var(--accent)}
+.mi.danger{background:#ffe1dc;color:#a3271a}
+.mi .e{font-size:20px}
+.ml{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0 8px}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:10px}
+.album div{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 8px;border-radius:16px;background:var(--panel2);font-size:12px;font-weight:700;text-align:center;border:2px dashed transparent}
+.album div b{font-size:38px;line-height:1.1}
+.album div.got{background:#fff;border:2px solid var(--line);box-shadow:0 2px 0 var(--line)}
+.album div:not(.got) b{filter:brightness(0) opacity(.18)}
+.album div:not(.got) span{color:var(--muted)}
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:8px}
+.shop button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 6px 9px;border-radius:16px;background:var(--panel2);border:3px solid transparent;font-weight:700;font-size:13px}
+.shop button canvas{width:100%;height:84px;border-radius:12px;background:linear-gradient(#e3f4ff,#fdeaf4)}
+.shop button .pr{font-size:12px;color:var(--muted)}
+.shop button.own .pr{color:var(--ok)}
+.shop button.on{border-color:var(--accent);background:#ffd0e4}
+.basket{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:30px;margin:8px 0}
+
+#celebrate{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:6;overflow:hidden;animation:milaOut .6s ease-in 3s forwards}
+#celebrate[hidden]{display:none}
+#celebrate::before{content:"";position:absolute;left:50%;top:50%;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;
+  background:repeating-conic-gradient(rgba(255,226,120,.55) 0 9deg,rgba(255,226,120,0) 9deg 18deg);
+  -webkit-mask:radial-gradient(circle,#000 0,transparent 42%);mask:radial-gradient(circle,#000 0,transparent 42%);animation:milaSpin 9s linear infinite}
+#celebrate .stack{position:relative;display:flex;flex-direction:column;align-items:center}
+#celebrate .crownTop{font-size:clamp(46px,9vw,110px);line-height:1;margin-bottom:-.1em;animation:milaIn .8s cubic-bezier(.2,1.6,.4,1) .55s both}
+#celebrate .word{display:flex;font:400 clamp(80px,19vw,240px)/1.05 "Titan One","Fredoka","Arial Black",sans-serif;letter-spacing:.03em}
+#celebrate .word span{display:inline-block;color:var(--c);-webkit-text-stroke:.06em #fff;paint-order:stroke fill;
+  text-shadow:0 .03em 0 var(--d),0 .06em 0 var(--d),0 .09em 0 var(--d),0 .12em 0 var(--d),0 .17em .08em rgba(80,20,60,.45);
+  animation:milaIn .9s cubic-bezier(.2,1.6,.4,1) both,milaWob 1.1s ease-in-out infinite;animation-delay:calc(var(--i)*.13s),calc(.9s + var(--i)*.13s)}
+#celebrate .sub{font:700 clamp(18px,3.4vw,38px)/1 "Fredoka",sans-serif;color:#fff;background:linear-gradient(90deg,#ff5fa2,#b26bff);padding:.35em 1.1em;border-radius:999px;margin-top:.45em;box-shadow:0 .2em 0 rgba(120,30,90,.35);animation:milaIn .7s cubic-bezier(.2,1.6,.4,1) .8s both}
+@keyframes milaIn{from{transform:translateY(-130%) scale(.2) rotate(-30deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes milaWob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9%) rotate(4deg) scale(1.06)}}
+@keyframes milaSpin{to{transform:rotate(360deg)}}
+@keyframes milaOut{to{opacity:0;transform:scale(1.35)}}
+*{scrollbar-width:thin;scrollbar-color:#f3b9d4 transparent}
+*::-webkit-scrollbar{width:8px;height:8px}
+*::-webkit-scrollbar-thumb{background:#f3b9d4;border-radius:8px}
+*::-webkit-scrollbar-track{background:transparent}
+
+@media (max-width:820px){
+  .brand{display:none}
+}
+/* dik telefon */
+@media (max-width:600px){
+  header{gap:5px;padding:calc(6px + env(safe-area-inset-top)) calc(7px + env(safe-area-inset-right)) 6px calc(7px + env(safe-area-inset-left))}
+  .lbl,.spacer{display:none}
+  #list{flex:1;justify-content:space-between;padding:3px 5px;gap:1px}
+  #list .it{width:28px;height:28px;font-size:16px;flex:0 1 28px;min-width:0}
+  #stars{padding:5px 8px;font-size:14px}
+  .hb{padding:6px 10px;font-size:15px}
+  #say{font-size:14px;max-width:calc(100% - 20px);top:auto;bottom:10px}
+  body.ingame #say{top:58px;bottom:auto}
+  #hud .h{font-size:15px;padding:6px 10px}
+  #backBtn{padding:7px 11px;font-size:14px}
+  .qlist{grid-template-columns:repeat(4,1fr);padding:8px;gap:6px}
+  .qlist div b{font-size:24px}
+}
+/* yatay telefon */
+@media (orientation:landscape) and (max-height:520px){
+  header{padding:calc(4px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) 4px calc(10px + env(safe-area-inset-left));gap:6px}
+  .brand,.lbl{display:none}
+  #list .it{width:28px;height:28px;font-size:16px}
+  .hb{padding:0 12px;height:32px;font-size:15px}
+  #stars{padding:3px 10px}
+  #say{font-size:13.5px;top:8px;padding:6px 12px;max-width:calc(100% - 260px)}
+  #modal{padding:8px}
+  .card{padding:14px 18px;--cpb:14px}
+  .card h2{font-size:18px}
+  .card .row{margin-top:10px}
+  .story .bigE{font-size:38px}
+  .story p{font-size:14px;line-height:1.45}
+  .qlist{grid-template-columns:repeat(8,1fr);gap:5px;padding:8px}
+  .qlist div{font-size:10.5px}
+  .qlist div b{font-size:22px}
+  .kid{gap:6px;margin:8px 0}
+  .kid div{padding:5px 10px;font-size:14px}
+  .kid b{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){#celebrate .word span,#list .it.pop{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">🧺 Orman <span>ve Köy</span></div>
+    <div id="list" title="Kraliçe annenin listesi"></div>
+    <div id="stars" title="Yıldızlar: Prenses Butiği'nde harcanır">⭐ 0</div>
+    <div class="spacer"></div>
+    <button class="hb" id="radioBtn" title="Radyo: Mila FM">📻<span class="lbl"> Radyo</span></button>
+    <button class="hb" id="menuBtn" title="Menü">☰<span class="lbl"> Menü</span></button>
+  </header>
+  <main id="stage">
+    <canvas id="cv"></canvas>
+    <div id="say"></div>
+    <button id="backBtn" hidden title="Yola dön">⬅ Yola dön</button>
+    <div id="hud"></div>
+    <div id="toast"></div>
+    <div id="celebrate" hidden></div>
+    <div id="modal" hidden><div class="card" id="card"></div></div>
+  </main>
+</div>
+<script src="../../ortak/mila-fm.js"></script>
+<script src="../../ortak/mobil.js"></script>
+<script>
+(() => {
+'use strict';
+/* ============================================================ temel */
+const $ = s => document.querySelector(s);
+const cv = $('#cv'); let ctx = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, k) => a + (b - a) * k;
+const rnd = a => a[Math.random() * a.length | 0];
+const rr = (a, b) => a + Math.random() * (b - a);
+const ease = k => k * k * (3 - 2 * k);
+const PASTEL = ['#ff7eb6', '#ffb13d', '#ffe95c', '#8fe3a1', '#7cc8ff', '#c9a7ff'];
+const EMO = '"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+let simT = 0;   // yalnızca konsoldaki deneme aracı (__ovk.step) zamanı ileri sarar
+const now = () => performance.now() / 1000 + simT;
+
+/* ============================================================ veri */
+// Kraliçe annenin listesi (Pasta Atölyesi'ndeki malzemelerle aynı sırada)
+const ITEMS = [
+  {k:'un',       e:'🌾', n:'Un',       from:'degirmen'},
+  {k:'yumurta',  e:'🥚', n:'Yumurta',  from:'kumes'},
+  {k:'seker',    e:'🍬', n:'Şeker',    from:'sekerci'},
+  {k:'sut',      e:'🥛', n:'Süt',      from:'ahir'},
+  {k:'tereyagi', e:'🧈', n:'Tereyağı', from:'ahir'},
+  {k:'cilek',    e:'🍓', n:'Çilek',    from:'cilek'},
+  {k:'vanilya',  e:'🍦', n:'Vanilya',  from:'peri'},
+  {k:'cikolata', e:'🍫', n:'Çikolata', from:'peri'},
+];
+const ITEM = Object.fromEntries(ITEMS.map(i => [i.k, i]));
+// Yol üstündeki duraklar (x: dünya metresi)
+const STATIONS = [
+  {id:'cilek',    x:24,  name:'Çilek Tarlası', e:'🍓', who:'mila',   items:['cilek']},
+  {id:'peri',     x:46,  name:'Peri Bahçesi',  e:'🧚', who:'peri',   items:['vanilya', 'cikolata']},
+  {id:'degirmen', x:70,  name:'Değirmen',      e:'🌾', who:'findik', items:['un']},
+  {id:'kumes',    x:92,  name:'Kümes',         e:'🐔', who:'mila',   items:['yumurta']},
+  {id:'ahir',     x:110, name:'Ahır',          e:'🐄', who:'nine',   items:['sut', 'tereyagi']},
+  {id:'sekerci',  x:128, name:'Şekerci',       e:'🍬', who:'lale',   items:['seker']},
+];
+const ST = Object.fromEntries(STATIONS.map(s => [s.id, s]));
+const WORLD_X0 = -9, WORLD_X1 = 152;
+// Çıkartmalar: yolda ve mini oyunlarda saklı sürprizler
+const STICKERS = [
+  ['kelebek', '🦋', 'Kelebek'], ['ugur', '🐞', 'Uğur Böceği'], ['tavsan', '🐰', 'Pıtırcık'], ['kirpi', '🦔', 'Kirpi'],
+  ['sincap', '🐿️', 'Sincap'], ['baykus', '🦉', 'Baykuş'], ['peri', '🧚', 'Peri Işıltı'], ['findik', '🐭', 'Fındık'],
+  ['civciv', '🐥', 'Civciv'], ['altin', '🥚', 'Altın Yumurta'], ['horoz', '🐓', 'Horoz'], ['benekli', '🐄', 'Benekli'],
+  ['ayran', '🥛', 'Ayran Bıyığı'], ['lolipop', '🍭', 'Lolipop'], ['kurbaga', '🐸', 'Kurbağa'], ['gokkusagi', '🌈', 'Gökkuşağı'],
+];
+const STK = Object.fromEntries(STICKERS.map(s => [s[0], s]));
+// Prenses Butiği: Mila'nın elbisesi, tacı ve sepet kurdelesi (bütün oyunlarda görünür)
+const DRESSES = {pembe:['Pembe', '#ff9ccb', 0], lila:['Lila', '#c9a7ff', 6], nane:['Nane', '#8fe3b9', 6], mavi:['Gök Mavisi', '#8fd0ff', 6], sari:['Güneş', '#ffd76a', 8], mercan:['Mercan', '#ff9f8a', 8], gokkusagi:['Gökkuşağı', 'rainbow', 15]};
+const CROWNS = {altin:['Altın Taç', 0], cicek:['Çiçek Taç', 8], yildiz:['Yıldız Taç', 10], kalp:['Kalpli Taç', 10]};
+
+// Seslendirilen satırlar: araclar/seslendir.py bu listeyi okuyup ses/<anahtar>.mp3 dosyalarını üretir.
+// Konuşan: anlatici | mila | kralice | kral | bebek | peri | findik | nine | lale
+const SAY = {
+  hikaye:        ['anlatici', "Bir varmış bir yokmuş... Yarın unicorn Pamuk'un doğum günü! Prenses Mila ona kocaman bir pasta yapmak istiyor. Ama şatonun mutfağında ne un kalmış ne de yumurta! Kraliçe anne Mila'ya resimli bir liste verdi: Ormandan ve köyden bunları topla tatlım. Ama akşama fırtına çıkacakmış, hava kararmadan dön! Mila sepetini kaptı ve yola koyuldu."],
+  liste:         ['kralice', 'Listemiz şöyle: un, yumurta, şeker, süt ve tereyağı. Bir de çilek, vanilya ve çikolata! Dikkatli ol tatlım!'],
+  yardim:        ['anlatici', 'Gitmek istediğin yere dokun, Mila oraya yürüsün. Parlayan yerlere dokunursan Mila orada yardım eder ve malzemeleri sepetine koyar. Yolda kelebekleri, yıldızları ve saklanan hayvanları da bulabilirsin!'],
+  yola:          ['mila', 'Hadi bakalım, malzeme toplamaya!'],
+  cilek_gel:     ['mila', 'Ooo, çilek tarlası! Kıpkırmızı olanları toplayalım.'],
+  cilek_nasil:   ['anlatici', 'Kırmızı çileklere dokun. Yeşil olanlar henüz olmamış, biraz beklemek lazım. Yaprakların altına da bak!'],
+  cilek_olmadi:  ['mila', 'Bu daha yeşil, biraz bekleyelim!'],
+  cilek_bitti:   ['mila', 'Sepetim çilek doldu! Mis gibi kokuyorlar!'],
+  peri_gel:      ['peri', 'Merhaba prenses! Ben Peri Işıltı. Vanilya çiçeklerim şarkı söylemeyi çok sever!'],
+  peri_dinle:    ['peri', 'Önce ben çalayım, sonra sen aynısını çal!'],
+  peri_sira:     ['peri', 'Sıra sende!'],
+  peri_tekrar:   ['peri', 'Hımm, bir daha dinleyelim!'],
+  peri_aferin:   ['peri', 'Harikasın! Çiçekler açıldı!'],
+  peri_yagmur:   ['peri', 'Şimdi sihirli bulutum çikolata yağdıracak. Sepetinle yakala!'],
+  peri_bitti:    ['peri', "Vanilya da çikolata da senin! Pamuk'a benden de sevgiler!"],
+  findik_gel:    ['findik', 'Merhaba prenses! Ben değirmenci Fındık. Un mu lazım? Önce buğdayları biçelim!'],
+  findik_bic:    ['anlatici', 'Parmağını buğdayların üstünden kaydır, hepsini biç!'],
+  findik_ruzgar: ['findik', 'Eyvah, bugün hiç rüzgâr yok! Değirmenin kanatlarını parmağınla çevirir misin?'],
+  findik_bitti:  ['findik', 'Yaşasın! Bembeyaz un oldu! Afiyet olsun prenses!'],
+  kumes_gel:     ['mila', 'Gıdak gıdak! Tavuklar yumurtaları saklamış!'],
+  kumes_nasil:   ['anlatici', 'Tavuklara dokun. Kalkınca altındaki yumurtayı al, kutuya koy.'],
+  kumes_civciv:  ['mila', 'Aaa, minik bir civciv! Ne tatlı!'],
+  kumes_altin:   ['mila', 'Altın yumurta! Vay canına!'],
+  kumes_bitti:   ['mila', 'Altı yumurta tamam! Teşekkürler tavuklar!'],
+  nine_gel:      ['nine', 'Hoş geldin güzel kızım! Benekli acıkmış, ona biraz yonca verir misin?'],
+  nine_sut:      ['nine', 'Benekli çok sevindi! Bak ne güzel süt verdi.'],
+  nine_yayik:    ['nine', 'Şimdi yayığı sallayalım, tereyağı olsun! Parmağınla sağa sola salla!'],
+  nine_ayran:    ['nine', 'Al kızım, yayıktan taze ayran!'],
+  mila_ayran:    ['mila', 'Mmm! Ayran bıyığım oldu!'],
+  nine_bitti:    ['nine', "Süt de tereyağı da hazır. Pamuk'a çok selam söyle!"],
+  lale_gel:      ['lale', 'Mila, hoş geldin! Ah, şekerlerim karıştı! Renklerine göre kavanozlara koyar mısın?'],
+  lale_yanlis:   ['lale', 'O kavanoz değil, rengine bak!'],
+  lale_bitti:    ['lale', 'Ne güzel düzenledin! Al, bu şeker senin. Bu lolipop da benden hediye!'],
+  butik:         ['lale', 'Prenses Butiği’ne hoş geldin! Yıldızlarınla elbise ve taç alabilirsin.'],
+  kelebek:       ['mila', 'Kelebek! Ne kadar güzel!'],
+  cikartma:      ['anlatici', 'Yeni bir çıkartma buldun!'],
+  harika:        ['anlatici', 'Harika!'],
+  aferin:        ['anlatici', 'Aferin sana!'],
+  firtina:       ['mila', 'Rüzgâr çıktı! Fırtına geliyor, eve dönmeliyim!'],
+  kral_gel:      ['kral', 'Mila! Çabuk arabaya atla, seni eve götüreyim!'],
+  mila_baba:     ['mila', 'Babacığım! Sepetim dopdolu!'],
+  kralice_aferin:['kralice', 'Aferin benim akıllı kızıma! Hepsini getirmişsin!'],
+  bebek:         ['bebek', 'Agu! Pasta! Agu agu!'],
+  bitti:         ['anlatici', 'Mila sepetini mutfağa taşıdı. Dışarıda rüzgâr uğulduyor ama şato sıcacık. Şimdi sıra pastada!'],
+};
+const WHO = {anlatici:'', mila:'Mila', kralice:'Kraliçe Anne', kral:'Kral Baba', bebek:'Bebek', peri:'Peri Işıltı', findik:'Değirmenci Fındık', nine:'Nine', lale:'Lale Teyze'};
+const plain = t => t.replace(/[\u{1F000}-\u{1FAFF}☀-➿️‍]/gu, '').replace(/\s+/g, ' ').trim();
+
+/* ============================================================ kayıt */
+const KEY = 'orman-ve-koy-v1';
+const freshStore = () => ({done:{}, items:{}, stars:0, stickers:{}, storySeen:false, helpSeen:false, finished:false, muted:false, owned:{dress:{pembe:1}, crown:{altin:1}}, dress:'pembe', crown:'altin', x:3, butterflies:0, found:{}});
+let store = freshStore();
+try {
+  const s = JSON.parse(localStorage.getItem(KEY));
+  if (s && typeof s === 'object' && !Array.isArray(s)){
+    store = Object.assign(freshStore(), s);
+    for (const k of ['done', 'items', 'stickers', 'found']) if (!store[k] || typeof store[k] !== 'object') store[k] = {};
+    if (!store.owned || typeof store.owned !== 'object') store.owned = {dress:{pembe:1}, crown:{altin:1}};
+    store.owned.dress = Object.assign({pembe:1}, store.owned.dress); store.owned.crown = Object.assign({altin:1}, store.owned.crown);
+    if (!DRESSES[store.dress]) store.dress = 'pembe'; if (!CROWNS[store.crown]) store.crown = 'altin';
+    store.stars = +store.stars || 0; store.x = clamp(+store.x || 3, WORLD_X0 + 2, WORLD_X1 - 2);
+  }
+} catch (e) {}
+function saveStore(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+// Mila'nın kıyafeti bütün kulüp oyunlarında görünsün
+function saveLook(){ try { localStorage.setItem('mg-kulup-mila', JSON.stringify({elbise:DRESSES[store.dress][1], tac:store.crown})); } catch (e) {} }
+const dressCol = () => DRESSES[store.dress][1];
+
+/* ============================================================ ses */
+let actx = null;
+function audioCtx(){
+  if (!actx){ try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } }
+  if (actx.state === 'suspended') actx.resume().catch(() => {});
+  return actx;
+}
+const audio = () => store.muted ? null : audioCtx();
+function tone(f, dur, type = 'sine', vol = 0.12, when = 0, slide = 0, vib = 0){
+  const a = audio(); if (!a) return;
+  const o = a.createOscillator(), g = a.createGain(), t = a.currentTime + when;
+  o.type = type; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, f + slide), t + dur);
+  if (vib){ const l = a.createOscillator(), lg = a.createGain(); l.frequency.value = 6; lg.gain.value = vib; l.connect(lg); lg.connect(o.frequency); l.start(t); l.stop(t + dur + 0.05); }
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.012); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.05);
+}
+function noise(dur, vol, freq, type = 'lowpass', when = 0, q = 1){
+  const a = audio(); if (!a) return;
+  const n = a.sampleRate * dur | 0, buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  const src = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain(), t = a.currentTime + when;
+  src.buffer = buf; fl.type = type; fl.frequency.value = freq; fl.Q.value = q; g.gain.value = vol;
+  src.connect(fl); fl.connect(g); g.connect(a.destination); src.start(t);
+}
+const sfxT = {}; const lim = (k, ms) => { const n = performance.now(); if (n - (sfxT[k] || 0) < ms) return false; sfxT[k] = n; return true; };
+const SFX = {
+  pop(){ tone(520 + Math.random() * 200, .12, 'sine', .12, 0, 300); },
+  plop(){ tone(300, .18, 'sine', .14, 0, -160); noise(.12, .08, 900); },
+  pick(){ tone(880, .08, 'sine', .08); tone(1175, .12, 'sine', .08, .07); },
+  coin(){ tone(988, .08, 'square', .045); tone(1319, .22, 'square', .045, .08); },
+  star(){ [1319, 1568, 2093].forEach((f, i) => tone(f, .18, 'triangle', .07, i * .06)); },
+  nope(){ tone(260, .16, 'triangle', .07, 0, -60); },
+  boing(){ tone(220, .35, 'sine', .13, 0, 260); tone(330, .3, 'sine', .05, .05, -120); },
+  step(){ if (lim('step', 240)) noise(.05, .05, 700, 'bandpass', 0, 2); },
+  rustle(){ if (lim('rustle', 120)) noise(.3, .12, 2400, 'bandpass', 0, 0.7); },
+  swish(){ if (lim('swish', 90)) noise(.18, .1, 3200, 'highpass'); },
+  win(){ [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, .3, 'triangle', .12, i * .11)); },
+  magic(){ [1047, 1319, 1568, 2093, 2637].forEach((f, i) => tone(f, .35, 'sine', .06, i * .07)); },
+  moo(){ const a = audio(); if (!a) return; tone(150, .9, 'sawtooth', .08, 0, -45, 3); tone(152, .9, 'triangle', .1, 0, -40, 3); },
+  cluck(){ if (!lim('cluck', 160)) return; for (let i = 0; i < 3; i++) tone(700 + Math.random() * 250, .07, 'square', .035, i * .09, -200); },
+  rooster(){ tone(520, .25, 'sawtooth', .05, 0, 260); tone(780, .2, 'sawtooth', .05, .27, 100); tone(880, .6, 'sawtooth', .05, .5, -300, 8); },
+  cheep(){ if (lim('cheep', 140)) tone(2600, .09, 'sine', .07, 0, 700); },
+  squeak(){ tone(1900, .1, 'sine', .07, 0, 600); tone(2300, .1, 'sine', .06, .12, 500); },
+  hoot(){ tone(420, .35, 'sine', .1, 0, -40); tone(400, .5, 'sine', .1, .45, -50); },
+  ribbit(){ tone(180, .12, 'square', .06, 0, 60); tone(200, .16, 'square', .06, .16, 50); },
+  boop(){ tone(600, .12, 'sine', .1, 0, 300); },
+  creak(){ if (lim('creak', 600)) { tone(140, .5, 'sawtooth', .025, 0, 30); noise(.4, .04, 500, 'bandpass', 0, 4); } },
+  slosh(){ if (lim('slosh', 220)) noise(.35, .16, 450, 'lowpass'); },
+  plink(){ tone(1568 + Math.random() * 300, .25, 'triangle', .08); tone(2093, .2, 'sine', .04, .04); },
+  chomp(){ if (lim('chomp', 240)) noise(.09, .12, 900, 'bandpass', 0, 2); },
+  wind(){ noise(2.4, .14, 600, 'bandpass', 0, 0.6); },
+  thunder(){ noise(2.2, .3, 150); },
+  grind(){ if (lim('grind', 260)) noise(.26, .06, 260, 'lowpass'); },
+  splash(){ noise(.4, .12, 1600, 'bandpass'); },
+  note(f){ tone(f, .55, 'sine', .14, 0, 0, 5); tone(f * 2, .35, 'triangle', .04); tone(f * 3, .2, 'sine', .015); },
+  chirp(){ const f = 2500 + Math.random() * 900, n = 2 + (Math.random() * 3 | 0); for (let i = 0; i < n; i++) tone(f + i * 120, .07, 'sine', .022, i * .11, 500); },
+};
+
+/* seslendirme: ses/<anahtar>.mp3 (dosya yoksa yazı kalır, sessizce geçer) */
+// tek oynatıcı (ortak/mobil.js): iPhone/iPad'de ilk dokunuştan sonra kendiliğinden başlayan replikler de çalar
+let narr = null, vq = [], speaker = null, narrTok = 0;
+function stopVoice(){ vq = []; narrTok++; if (narr){ try { narr.pause(); } catch (e) {} narr = null; } speaker = null; MilaFM.duck(false); }
+function voice(id, queue){
+  if (store.muted || !SAY[id]) return;
+  if (queue && narr){ vq.push(id); return; }
+  if (!queue) stopVoice();
+  playVoice(id);
+}
+function playVoice(id){   // kuyruk boşaltılmadan sıradaki satır
+  const a = window.MGMobil ? MGMobil.oynatici() : new Audio(), tok = ++narrTok; narr = a; speaker = SAY[id][0]; MilaFM.duck(true);
+  const done = () => { if (tok !== narrTok) return; narr = null; speaker = null; if (vq.length) playVoice(vq.shift()); else MilaFM.duck(false); };
+  a.onended = done; a.onerror = done; a.src = `ses/${id}.mp3`; const p = a.play(); if (p && p.catch) p.catch(done);
+}
+let sayId = null, sayTimer = 0;
+function setSay(text, id, who, keep){
+  sayId = id; clearTimeout(sayTimer);
+  const w = who != null ? who : id && SAY[id] ? WHO[SAY[id][0]] : '';
+  $('#say').innerHTML = text ? `${w ? `<span class="who">${w}</span>` : ''}${id ? '<span class="spk">🔈</span>' : ''}${text}` : '';
+  if (text && !keep) sayTimer = setTimeout(() => { if (sayId === id) setSay(''); }, Math.max(4500, text.length * 85));
+}
+function sayLine(id, queue, keep){ setSay(plain(SAY[id][1]), id, null, keep); voice(id, queue); }
+
+/* ============================================================ çizim yardımcıları */
+function circ(c, x, y, r, col){ c.beginPath(); c.arc(x, y, Math.max(0, r), 0, 7); c.fillStyle = col; c.fill(); }
+function ell(c, x, y, rx, ry, col, rot = 0){ c.beginPath(); c.ellipse(x, y, Math.max(0, rx), Math.max(0, ry), rot, 0, 7); c.fillStyle = col; c.fill(); }
+function rrc(c, x, y, w, h, r, col){ c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h); c.fillStyle = col; c.fill(); }
+function heart(c, x, y, s, col){ c.save(); c.translate(x, y); c.scale(s, s); c.beginPath(); c.moveTo(0, 0.38); c.bezierCurveTo(-0.7, -0.1, -0.38, -0.62, 0, -0.26); c.bezierCurveTo(0.38, -0.62, 0.7, -0.1, 0, 0.38); c.fillStyle = col; c.fill(); c.restore(); }
+function star(c, x, y, s, col, rot = 0){ c.beginPath(); for (let i = 0; i < 10; i++){ const a = -Math.PI / 2 + rot + i * Math.PI / 5, r = i % 2 ? s * 0.45 : s; c.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } c.closePath(); c.fillStyle = col; c.fill(); }
+function sparkle(c, x, y, s, col){ c.beginPath(); for (let i = 0; i < 8; i++){ const a = -Math.PI / 2 + i * Math.PI / 4, r = i % 2 ? s * 0.25 : s; c.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } c.closePath(); c.fillStyle = col; c.fill(); }
+function line(c, x0, y0, x1, y1, col, w){ c.strokeStyle = col; c.lineWidth = w; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); }
+function shade(hex, amt){
+  if (hex[0] !== '#') return hex;
+  const n = parseInt(hex.slice(1), 16), f = v => amt < 0 ? v * (1 + amt) : v + (255 - v) * amt;
+  return `rgb(${f(n >> 16) | 0},${f(n >> 8 & 255) | 0},${f(n & 255) | 0})`;
+}
+function emoji(c, e, x, y, size, rot){ c.save(); c.translate(x, y); if (rot) c.rotate(rot); c.font = `${size}px ${EMO}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(e, 0, size * 0.04); c.restore(); }
+function crown(c, x, y, s, kind){
+  kind = kind || 'altin';
+  if (kind === 'cicek'){   // çiçekten taç
+    for (let i = 0; i < 7; i++){ const a = Math.PI * (1.05 + i * 0.15), px = x + Math.cos(a) * s * 0.55, py = y + 0.1 * s + Math.sin(a) * s * 0.22, col = ['#ff7eb6', '#ffd36e', '#c9a7ff', '#ffffff'][i % 4];
+      for (let k = 0; k < 5; k++) circ(c, px + Math.cos(k * 1.257) * s * 0.07, py + Math.sin(k * 1.257) * s * 0.07, s * 0.07, col); circ(c, px, py, s * 0.05, '#ffb13d'); }
+    return;
+  }
+  c.beginPath(); c.moveTo(x - 0.5 * s, y); c.lineTo(x - 0.58 * s, y - 0.55 * s); c.lineTo(x - 0.25 * s, y - 0.3 * s); c.lineTo(x, y - 0.72 * s);
+  c.lineTo(x + 0.25 * s, y - 0.3 * s); c.lineTo(x + 0.58 * s, y - 0.55 * s); c.lineTo(x + 0.5 * s, y); c.closePath(); c.fillStyle = kind === 'altin' ? '#f6c445' : '#ffe9a8'; c.fill();
+  if (kind === 'yildiz'){ star(c, x, y - 0.62 * s, 0.32 * s, '#ffd23f'); sparkle(c, x + 0.45 * s, y - 0.75 * s, 0.14 * s, '#fff'); return; }
+  if (kind === 'kalp'){ heart(c, x, y - 0.55 * s, 0.62 * s, '#ff4f9a'); circ(c, x - 0.58 * s, y - 0.55 * s, 0.07 * s, '#c9a7ff'); circ(c, x + 0.58 * s, y - 0.55 * s, 0.07 * s, '#c9a7ff'); return; }
+  circ(c, x, y - 0.72 * s, 0.09 * s, '#ff5fa2'); circ(c, x - 0.58 * s, y - 0.55 * s, 0.07 * s, '#7cc8ff'); circ(c, x + 0.58 * s, y - 0.55 * s, 0.07 * s, '#7cc8ff');
+}
+function face(c, x, y, R, open, blink){
+  if (blink){ c.strokeStyle = '#4a2545'; c.lineWidth = R * 0.08; c.lineCap = 'round'; for (const ex of [0.05, 0.58]){ c.beginPath(); c.arc(x + R * ex, y + R * 0.1, R * 0.09, 0.1 * Math.PI, 0.9 * Math.PI); c.stroke(); } }
+  else { circ(c, x + R * 0.05, y + R * 0.12, R * 0.1, '#4a2545'); circ(c, x + R * 0.58, y + R * 0.12, R * 0.1, '#4a2545'); circ(c, x + R * 0.08, y + R * 0.08, R * 0.035, '#fff'); circ(c, x + R * 0.61, y + R * 0.08, R * 0.035, '#fff'); }
+  circ(c, x - R * 0.2, y + R * 0.48, R * 0.16, 'rgba(255,110,160,.5)'); circ(c, x + R * 0.78, y + R * 0.46, R * 0.13, 'rgba(255,110,160,.5)');
+  if (open){ c.beginPath(); c.ellipse(x + R * 0.32, y + R * 0.5, R * 0.13, R * 0.1 + open * R * 0.08, 0, 0, 7); c.fillStyle = '#c2436f'; c.fill(); return; }
+  c.strokeStyle = '#c2436f'; c.lineWidth = R * 0.12; c.lineCap = 'round'; c.beginPath(); c.arc(x + R * 0.32, y + R * 0.38, R * 0.28, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
+}
+const blinkAt = (t, seed) => ((t + seed * 1.7) % 4.2) < 0.12;
+function rainbowFill(c, x0, y0, x1, y1){ const g = c.createLinearGradient(x0, y0, x1, y1); PASTEL.concat('#ff7eb6').forEach((col, i, a) => g.addColorStop(i / (a.length - 1), col)); return g; }
+
+/* ============================================================ Mila (ayakta, yürüyen) — yerel birim: boy ≈ 1, ayaklar y=0 */
+// o: {dir, walk(faz), moving, talk, basket(0..1 dolu), items(emoji listesi), mustache, wave, hop, sit}
+function drawMila(c, x, y, s, t, o){
+  o = o || {};
+  const dir = o.dir || 1, ph = o.walk || 0, mv = o.moving ? 1 : 0, bob = mv ? Math.abs(Math.sin(ph)) * 0.022 : Math.sin(t * 2.2) * 0.006;
+  const dc = dressCol(), rainbow = dc === 'rainbow', main = rainbow ? '#ffb3d9' : dc, dark = rainbow ? '#c9a7ff' : shade(dc, -0.22);
+  c.save(); c.translate(x, y - (o.hop || 0) * s); c.scale(s * dir, s);
+  const legA = mv ? Math.sin(ph) * 0.45 : 0;
+  // bacaklar ve ayakkabılar
+  for (const [k, a] of [[-1, -legA], [1, legA]]){
+    c.save(); c.translate(k * 0.045, -0.2); c.rotate(a);
+    line(c, 0, 0, 0, 0.16, '#ffdcc2', 0.06);
+    ell(c, 0.025, 0.185, 0.05, 0.03, k > 0 ? '#ff5fa2' : shade('#ff5fa2', -0.12));
+    c.restore();
+  }
+  c.translate(0, -bob);
+  // saç (arkası)
+  c.fillStyle = '#f7c948'; c.beginPath(); c.moveTo(-0.16, -0.78); c.quadraticCurveTo(-0.27, -0.6 + Math.sin(ph) * 0.02 * mv, -0.21, -0.43); c.lineTo(-0.06, -0.5); c.lineTo(-0.05, -0.78); c.fill();
+  // arka kol
+  const armA = mv ? -Math.sin(ph) * 0.5 : 0.15;
+  c.save(); c.translate(-0.05, -0.53); c.rotate(armA); line(c, 0, 0, 0, 0.2, '#ffdcc2', 0.05); c.restore();
+  // elbise
+  const hem = -0.17, sway = mv ? Math.sin(ph * 2) * 0.012 : 0;
+  c.beginPath(); c.moveTo(-0.09, -0.56); c.quadraticCurveTo(-0.13, -0.38, -0.24 + sway, hem); c.quadraticCurveTo(0, hem + 0.05, 0.24 + sway, hem); c.quadraticCurveTo(0.13, -0.38, 0.09, -0.56); c.closePath();
+  c.fillStyle = rainbow ? rainbowFill(c, 0, -0.56, 0, hem) : main; c.fill();
+  // etek ucu fırfırı ve kalpler
+  c.fillStyle = 'rgba(255,255,255,.75)'; for (let i = -3; i <= 3; i++) circ(c, i * 0.07 + sway, hem + 0.01 + Math.abs(i) * -0.003, 0.028, 'rgba(255,255,255,.8)');
+  heart(c, 0.05, -0.32, 0.11, 'rgba(255,255,255,.85)');
+  rrc(c, -0.1, -0.47, 0.2, 0.035, 0.015, dark);   // kemer
+  // gövde (korsaj) + kabarık kollar
+  c.beginPath(); c.moveTo(-0.09, -0.6); c.lineTo(0.09, -0.6); c.lineTo(0.1, -0.46); c.lineTo(-0.1, -0.46); c.closePath(); c.fillStyle = rainbow ? '#ffb3d9' : main; c.fill();
+  ell(c, -0.085, -0.575, 0.05, 0.04, rainbow ? '#c9a7ff' : shade(main, 0.15)); ell(c, 0.085, -0.575, 0.05, 0.04, rainbow ? '#8fe3a1' : shade(main, 0.15));
+  // ön kol + sepet
+  const holding = o.basket != null;
+  c.save(); c.translate(0.07, -0.55); c.rotate(holding ? -0.35 : (mv ? Math.sin(ph) * 0.5 : -0.1) - (o.wave ? 2.4 + Math.sin(t * 12) * 0.35 : 0));
+  line(c, 0, 0, 0, 0.19, '#ffdcc2', 0.05); circ(c, 0, 0.2, 0.03, '#ffdcc2'); c.restore();
+  if (holding) drawBasket(c, 0.2, -0.33, 0.2, o.basket, o.items, t);
+  // baş
+  const hx = 0.01, hy = -0.76, R = 0.16;
+  circ(c, hx, hy, R, '#ffdcc2');
+  c.fillStyle = '#f7c948'; c.beginPath(); c.arc(hx, hy, R * 1.04, Math.PI * 1.02, Math.PI * 1.97); c.quadraticCurveTo(hx + R * 0.25, hy - R * 0.35, hx - R * 1.03, hy - R * 0.05); c.fill();
+  face(c, hx, hy, R, o.talk ? Math.abs(Math.sin(t * 14)) : 0, blinkAt(t, 1));
+  if (o.mustache){   // ayran bıyığı: kocaman, bembeyaz
+    c.fillStyle = '#ffffff'; c.strokeStyle = 'rgba(160,190,220,.8)'; c.lineWidth = R * 0.04;
+    c.beginPath(); c.ellipse(hx + R * 0.12, hy + R * 0.4, R * 0.34, R * 0.15, -0.25, 0, 7); c.ellipse(hx + R * 0.56, hy + R * 0.4, R * 0.32, R * 0.14, 0.3, 0, 7); c.fill(); c.stroke();
+    circ(c, hx - R * 0.16, hy + R * 0.5, R * 0.07, '#ffffff'); circ(c, hx + R * 0.86, hy + R * 0.5, R * 0.06, '#ffffff');
+  }
+  crown(c, hx, hy - R * 0.85, R * 1.25, store.crown);
+  c.restore();
+}
+// hasır sepet; dolu oranına göre içinden malzemeler görünür
+function drawBasket(c, x, y, s, full, items, t){
+  c.save(); c.translate(x, y);
+  c.strokeStyle = '#a0672f'; c.lineWidth = s * 0.09; c.lineCap = 'round'; c.beginPath(); c.arc(0, 0, s * 0.42, Math.PI * 1.08, Math.PI * 1.92); c.stroke();   // sap
+  const its = items || [];
+  for (let i = 0; i < its.length; i++){ const a = (i / Math.max(1, its.length - 1) - 0.5) * 1.2; emoji(c, its[i], Math.sin(a) * s * 0.32, -s * 0.06 - Math.cos(a) * s * 0.06, s * 0.36, a * 0.4); }
+  c.beginPath(); c.moveTo(-s * 0.5, 0); c.lineTo(s * 0.5, 0); c.lineTo(s * 0.38, s * 0.5); c.lineTo(-s * 0.38, s * 0.5); c.closePath(); c.fillStyle = '#d99a52'; c.fill();
+  c.strokeStyle = '#b97a3a'; c.lineWidth = s * 0.035; for (let i = 1; i < 4; i++){ c.beginPath(); c.moveTo(-s * 0.5 + i * 0.01 * s, s * 0.12 * i); c.lineTo(s * 0.5 - i * 0.03 * s, s * 0.12 * i); c.stroke(); }
+  for (let i = -2; i <= 2; i++){ c.beginPath(); c.moveTo(i * s * 0.18, 0); c.lineTo(i * s * 0.14, s * 0.5); c.stroke(); }
+  rrc(c, -s * 0.54, -s * 0.05, s * 1.08, s * 0.1, s * 0.05, '#c98843');
+  heart(c, -s * 0.3, s * 0.02, s * 0.28, '#ff7eb6');
+  c.restore();
+}
+
+/* ============================================================ yetişkinler ve yardımcılar */
+// Kraliçe anne ve kucağında bebek (Pasta Atölyesi'ndekiyle aynı); yerel: baş merkezi (0,0), etek ucu y=1.3
+function drawQueen(c, x, yFeet, s, t, talk, babyTalk){
+  const bb = Math.sin(t * 4) * 0.012;
+  c.save(); c.translate(x, yFeet - 1.3 * s); c.scale(-s, s);
+  const QR = 0.2;
+  c.fillStyle = '#8a4b2a'; c.beginPath(); c.ellipse(-0.05, 0.02, QR * 1.25, QR * 1.3, 0, 0, 7); c.fill();
+  c.beginPath(); c.moveTo(-QR * 1.2, 0); c.quadraticCurveTo(-QR * 2.3, QR * 2, -QR * 1.5, QR * 3.6); c.lineTo(-QR * 0.2, QR * 2.6); c.lineTo(-QR * 0.2, 0); c.fill();
+  c.fillStyle = '#b58cff'; c.beginPath(); c.moveTo(-0.46, 1.3); c.quadraticCurveTo(-0.34, 0.25, 0, 0.21); c.quadraticCurveTo(0.34, 0.25, 0.46, 1.3); c.closePath(); c.fill();
+  c.fillStyle = '#f6c445'; c.beginPath(); c.arc(0, 0.23, 0.13, 0, Math.PI); c.fill();
+  circ(c, 0, 0, QR, '#ffdcc2');
+  c.fillStyle = '#8a4b2a'; c.beginPath(); c.arc(0, 0, QR * 1.03, Math.PI * 1.02, Math.PI * 1.95); c.quadraticCurveTo(QR * 0.2, -QR * 0.3, -QR * 1.02, -QR * 0.05); c.fill();
+  face(c, 0, 0, QR, talk ? Math.abs(Math.sin(t * 13)) : 0, blinkAt(t, 3)); crown(c, 0, -QR * 0.84, QR * 1.2);
+  c.save(); c.translate(0.27, 0.51 + bb); c.rotate(-0.35);
+  c.fillStyle = '#fff4fa'; c.beginPath(); c.ellipse(0, 0, 0.24, 0.14, 0, 0, 7); c.fill(); c.fillStyle = '#ffb3d4'; c.fillRect(-0.12, -0.14, 0.07, 0.28); c.fillRect(0.02, -0.14, 0.05, 0.28); c.restore();
+  const hx = 0.45, hy = 0.37 + bb + (babyTalk ? Math.sin(t * 20) * 0.01 : 0); circ(c, hx, hy, 0.105, '#ffdcc2');
+  c.strokeStyle = '#8a4b2a'; c.lineWidth = 0.025; c.lineCap = 'round'; c.beginPath(); c.arc(hx, hy - 0.11, 0.035, 0.3, 4.6); c.stroke();
+  c.strokeStyle = '#4a2545'; c.lineWidth = 0.018; c.beginPath(); c.arc(hx, hy, 0.022, Math.PI, 0); c.stroke(); c.beginPath(); c.arc(hx + 0.06, hy, 0.022, Math.PI, 0); c.stroke();
+  circ(c, hx + 0.04, hy + 0.055, babyTalk ? 0.035 : 0.028, '#ff7eb6'); circ(c, hx - 0.04, hy + 0.04, 0.025, 'rgba(255,110,160,.5)');
+  c.strokeStyle = '#ffdcc2'; c.lineWidth = 0.085; c.beginPath(); c.moveTo(0.02, 0.35); c.quadraticCurveTo(0.12, 0.67, 0.42, 0.61 + bb); c.stroke();
+  c.restore();
+}
+// genç kral baba (oturan, büst) — yerel: baş merkezi (0,0)
+function drawKing(c, x, y, s, t, talk, dir = 1){
+  c.save(); c.translate(x, y); c.scale(s * dir, s);
+  c.fillStyle = '#d6455d'; c.beginPath(); c.moveTo(-0.24, 0.22); c.quadraticCurveTo(-0.5, 0.6, -0.36, 0.95); c.lineTo(0.05, 0.9); c.closePath(); c.fill();   // pelerin
+  rrc(c, -0.27, 0.2, 0.54, 0.72, 0.16, '#4a6fd8'); c.fillStyle = '#f6c445'; c.fillRect(-0.27, 0.6, 0.54, 0.07); c.fillRect(-0.035, 0.2, 0.07, 0.4);
+  const R = 0.21; circ(c, 0, 0, R, '#f2c9a0');
+  c.fillStyle = '#6b4226'; c.beginPath(); c.arc(0, 0, R * 1.04, Math.PI * 0.92, Math.PI * 1.98); c.quadraticCurveTo(R * 0.3, -R * 0.45, -R * 1.02, R * 0.15); c.fill();
+  face(c, 0, 0, R, talk ? Math.abs(Math.sin(t * 12)) : 0, blinkAt(t, 5)); crown(c, 0, -R * 0.85, R * 1.35);
+  c.restore();
+}
+// Peri Işıltı — yerel: gövde merkezi (0,0), boy ≈ 1 (kanatlar dahil değil)
+function drawFairy(c, x, y, s, t, talk){
+  c.save(); c.translate(x, y + Math.sin(t * 2.6) * s * 0.06); c.scale(s, s);
+  const g = c.createRadialGradient(0, -0.1, 0.02, 0, -0.1, 0.9); g.addColorStop(0, 'rgba(255,240,255,.75)'); g.addColorStop(1, 'rgba(255,240,255,0)'); c.fillStyle = g; c.fillRect(-0.9, -1, 1.8, 1.8);
+  const fl = 0.55 + 0.45 * Math.abs(Math.sin(t * 16));
+  for (const k of [-1, 1]){
+    ell(c, k * 0.26 * fl, -0.2, 0.28 * fl, 0.18, 'rgba(205,235,255,.75)', k * -0.5); ell(c, k * 0.2 * fl, 0.02, 0.2 * fl, 0.12, 'rgba(255,205,235,.75)', k * 0.5);
+    c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 0.015; c.beginPath(); c.ellipse(k * 0.26 * fl, -0.2, 0.28 * fl, 0.18, k * -0.5, 0, 7); c.stroke();
+  }
+  c.fillStyle = '#c9a7ff'; c.beginPath(); c.moveTo(-0.07, -0.18); c.lineTo(0.07, -0.18); c.lineTo(0.2, 0.22); c.quadraticCurveTo(0, 0.28, -0.2, 0.22); c.closePath(); c.fill();
+  for (let i = -2; i <= 2; i++) star(c, i * 0.08, 0.2, 0.03, '#fff');
+  line(c, -0.05, 0.25, -0.07, 0.4, '#ffdcc2', 0.04); line(c, 0.05, 0.25, 0.08, 0.38, '#ffdcc2', 0.04);
+  const wa = Math.sin(t * 3) * 0.3; c.save(); c.translate(0.08, -0.12); c.rotate(-0.9 + wa); line(c, 0, 0, 0, 0.42, '#f6c445', 0.025); star(c, 0, 0.47, 0.09, '#ffe95c'); c.restore();
+  line(c, -0.08, -0.12, -0.18, 0.05, '#ffdcc2', 0.04);
+  const R = 0.14; circ(c, 0, -0.33, R, '#ffdcc2');
+  ell(c, 0, -0.5, 0.1, 0.08, '#ff9ccb'); circ(c, 0, -0.56, 0.07, '#ff9ccb');
+  c.fillStyle = '#ff9ccb'; c.beginPath(); c.arc(0, -0.33, R * 1.05, Math.PI * 1.0, Math.PI * 2.0); c.quadraticCurveTo(R * 0.3, -0.33 - R * 0.4, -R * 1.05, -0.33); c.fill();
+  face(c, -0.04, -0.33, R, talk ? Math.abs(Math.sin(t * 14)) : 0, blinkAt(t, 7));
+  star(c, 0.1, -0.47, 0.05, '#ffe95c');
+  c.restore();
+}
+// Değirmenci Fındık (fare) — yerel: ayaklar y=0, boy ≈ 1
+function drawMouse(c, x, y, s, t, talk, dir = 1){
+  c.save(); c.translate(x, y); c.scale(s * dir, s);
+  c.strokeStyle = '#d9a3a3'; c.lineWidth = 0.04; c.lineCap = 'round'; c.beginPath(); c.moveTo(-0.2, -0.12); c.bezierCurveTo(-0.55, -0.05, -0.5, -0.45, -0.32, -0.42); c.stroke();   // kuyruk
+  ell(c, -0.07, -0.03, 0.08, 0.04, '#d9a3a3'); ell(c, 0.09, -0.03, 0.08, 0.04, '#d9a3a3');
+  ell(c, 0, -0.3, 0.22, 0.28, '#b9a28f'); ell(c, 0.03, -0.27, 0.14, 0.2, '#e9ddd0');
+  c.fillStyle = '#ffffff'; c.beginPath(); c.moveTo(-0.15, -0.42); c.lineTo(0.17, -0.42); c.lineTo(0.2, -0.06); c.quadraticCurveTo(0, 0, -0.18, -0.06); c.closePath(); c.fill();   // önlük
+  ell(c, 0.05, -0.2, 0.06, 0.04, 'rgba(235,225,210,.9)'); circ(c, -0.06, -0.15, 0.025, 'rgba(235,225,210,.9)');
+  const wv = talk ? Math.sin(t * 10) * 0.2 : Math.sin(t * 2) * 0.08;
+  c.save(); c.translate(0.14, -0.4); c.rotate(-0.6 + wv); line(c, 0, 0, 0, 0.16, '#b9a28f', 0.06); c.restore();
+  const hy = -0.66, R = 0.17;
+  for (const k of [-1, 1]){ circ(c, k * 0.15, hy - 0.13, 0.11, '#b9a28f'); circ(c, k * 0.15, hy - 0.13, 0.07, '#ffc2d1'); }
+  ell(c, 0.02, hy, R * 1.05, R, '#b9a28f'); ell(c, 0.13, hy + 0.04, 0.09, 0.07, '#cdb9a6');
+  circ(c, 0.21, hy + 0.03, 0.035, '#ff8fa8');
+  c.strokeStyle = 'rgba(90,70,60,.7)'; c.lineWidth = 0.01; for (const k of [-1, 0, 1]){ c.beginPath(); c.moveTo(0.18, hy + 0.06); c.lineTo(0.34, hy + 0.04 + k * 0.04); c.stroke(); }
+  circ(c, 0.03, hy - 0.02, 0.03, '#3b2a33'); circ(c, 0.12, hy - 0.02, 0.03, '#3b2a33'); circ(c, 0.04, hy - 0.03, 0.01, '#fff'); circ(c, 0.13, hy - 0.03, 0.01, '#fff');
+  circ(c, 0.0, hy + 0.06, 0.03, 'rgba(255,110,160,.4)');
+  if (talk){ ell(c, 0.13, hy + 0.1, 0.03, 0.02 + Math.abs(Math.sin(t * 14)) * 0.02, '#c2436f'); }
+  // fırıncı beresi
+  ell(c, 0.0, hy - 0.17, 0.16, 0.06, '#ffffff'); circ(c, -0.05, hy - 0.25, 0.08, '#ffffff'); circ(c, 0.06, hy - 0.26, 0.09, '#ffffff');
+  c.restore();
+}
+// Nine (köylü büyükanne) — yerel: ayaklar y=0, boy ≈ 1.3
+function drawNine(c, x, y, s, t, talk, dir = 1){
+  c.save(); c.translate(x, y); c.scale(s * dir, s);
+  ell(c, -0.07, -0.02, 0.09, 0.04, '#6b4a3a'); ell(c, 0.1, -0.02, 0.09, 0.04, '#6b4a3a');
+  c.beginPath(); c.moveTo(-0.24, -0.62); c.quadraticCurveTo(-0.32, -0.3, -0.3, -0.04); c.lineTo(0.32, -0.04); c.quadraticCurveTo(0.33, -0.3, 0.24, -0.62); c.closePath(); c.fillStyle = '#ff9fb5'; c.fill();   // çiçekli etek
+  for (let i = 0; i < 9; i++){ const fx = -0.22 + (i % 3) * 0.2 + (i > 2 ? 0.06 : 0), fy = -0.5 + Math.floor(i / 3) * 0.16; for (let k = 0; k < 4; k++) circ(c, fx + Math.cos(k * 1.571) * 0.02, fy + Math.sin(k * 1.571) * 0.02, 0.018, '#fff'); circ(c, fx, fy, 0.012, '#ffd36e'); }
+  rrc(c, -0.22, -0.95, 0.44, 0.4, 0.12, '#9d7fd6');   // hırka
+  line(c, 0, -0.93, 0, -0.6, '#7d5fbe', 0.02); for (let i = 0; i < 3; i++) circ(c, 0.03, -0.88 + i * 0.1, 0.018, '#f6c445');
+  const wv = talk ? Math.sin(t * 8) * 0.25 : 0;
+  c.save(); c.translate(0.18, -0.88); c.rotate(-0.4 + wv); line(c, 0, 0, 0, 0.3, '#9d7fd6', 0.08); circ(c, 0, 0.32, 0.045, '#f2c9a0'); c.restore();
+  const hy = -1.1, R = 0.17;
+  circ(c, 0, hy, R, '#f2c9a0');
+  c.fillStyle = '#d9d4dc'; c.beginPath(); c.arc(0, hy, R * 1.0, Math.PI * 1.05, Math.PI * 1.95); c.fill();   // kır saçlar
+  // yazma (başörtüsü)
+  c.fillStyle = '#ff7eb6'; c.beginPath(); c.arc(0, hy - 0.02, R * 1.18, Math.PI * 0.95, Math.PI * 2.05); c.quadraticCurveTo(R * 1.2, hy + R * 0.2, R * 0.6, hy + R * 0.9); c.lineTo(R * 0.4, hy + R * 0.7); c.quadraticCurveTo(R * 0.9, hy + 0.0, 0, hy - R * 0.55); c.quadraticCurveTo(-R * 0.9, hy, -R * 0.9, hy + R * 0.8); c.lineTo(-R * 1.15, hy + R * 0.6); c.closePath(); c.fill();
+  for (let i = 0; i < 7; i++){ const a = Math.PI * (1.05 + i * 0.13); circ(c, Math.cos(a) * R * 1.05, hy - 0.02 + Math.sin(a) * R * 1.05, 0.016, '#fff'); }
+  face(c, -0.02, hy, R, talk ? Math.abs(Math.sin(t * 12)) : 0, blinkAt(t, 9));
+  c.strokeStyle = '#7a5a3a'; c.lineWidth = 0.012; c.beginPath(); c.arc(-0.01, hy + R * 0.12, 0.035, 0, 7); c.stroke(); c.beginPath(); c.arc(0.09, hy + R * 0.12, 0.035, 0, 7); c.stroke(); line(c, 0.025, hy + R * 0.12, 0.055, hy + R * 0.12, '#7a5a3a', 0.01);
+  c.restore();
+}
+// Lale Teyze (şekerci) — yerel: ayaklar y=0, boy ≈ 1.35
+function drawLale(c, x, y, s, t, talk, dir = 1){
+  c.save(); c.translate(x, y); c.scale(s * dir, s);
+  ell(c, -0.06, -0.02, 0.08, 0.035, '#c2436f'); ell(c, 0.09, -0.02, 0.08, 0.035, '#c2436f');
+  line(c, -0.06, -0.3, -0.06, -0.03, '#ffdcc2', 0.06); line(c, 0.08, -0.3, 0.09, -0.03, '#ffdcc2', 0.06);
+  c.beginPath(); c.moveTo(-0.15, -1.0); c.lineTo(0.15, -1.0); c.lineTo(0.28, -0.28); c.quadraticCurveTo(0, -0.22, -0.28, -0.28); c.closePath(); c.fillStyle = '#8fe3b9'; c.fill();
+  c.save(); c.beginPath(); c.moveTo(-0.13, -0.85); c.lineTo(0.13, -0.85); c.lineTo(0.22, -0.32); c.lineTo(-0.22, -0.32); c.closePath(); c.clip();   // çizgili önlük
+  for (let i = -6; i < 6; i++){ c.fillStyle = i % 2 ? '#ffffff' : '#ff7eb6'; c.fillRect(i * 0.06, -0.9, 0.06, 0.65); } c.restore();
+  heart(c, 0, -0.6, 0.14, '#fff');
+  const wv = talk ? Math.sin(t * 9) * 0.3 : Math.sin(t * 1.6) * 0.05;
+  c.save(); c.translate(0.14, -0.95); c.rotate(-0.3 + wv); line(c, 0, 0, 0, 0.32, '#8fe3b9', 0.07); circ(c, 0, 0.34, 0.04, '#ffdcc2'); c.restore();
+  const hy = -1.18, R = 0.16;
+  ell(c, -0.02, hy - 0.2, 0.11, 0.09, '#c0603a');   // topuz
+  circ(c, 0, hy, R, '#ffdcc2');
+  c.fillStyle = '#c0603a'; c.beginPath(); c.arc(0, hy, R * 1.05, Math.PI * 1.02, Math.PI * 1.98); c.quadraticCurveTo(R * 0.3, hy - R * 0.35, -R * 1.05, hy - R * 0.05); c.fill();
+  face(c, -0.02, hy, R, talk ? Math.abs(Math.sin(t * 13)) : 0, blinkAt(t, 11));
+  // topuzda lale
+  c.save(); c.translate(0.08, hy - 0.27); c.rotate(0.3); line(c, 0, 0, 0, 0.1, '#4caf50', 0.02);
+  c.fillStyle = '#ff4f7a'; c.beginPath(); c.moveTo(-0.05, 0); c.lineTo(-0.05, -0.07); c.lineTo(-0.025, -0.04); c.lineTo(0, -0.08); c.lineTo(0.025, -0.04); c.lineTo(0.05, -0.07); c.lineTo(0.05, 0); c.quadraticCurveTo(0, 0.05, -0.05, 0); c.fill(); c.restore();
+  c.restore();
+}
+
+/* ============================================================ hayvanlar */
+// tavuk: yerel birim, gövde merkezi (0,0) ~ 1 genişlik. kind: 0 beyaz, 1 kahve, 2 benekli. o: {sit, flap, peck}
+const HEN_COL = [['#fffaf2', '#efe2cf'], ['#c98a55', '#a86b3c'], ['#e9d7c1', '#b88f6a']];
+function drawHen(c, x, y, s, t, kind, o, dir = 1){
+  o = o || {};
+  const [b, w] = HEN_COL[kind % 3], fl = o.flap ? Math.sin(t * 30) * 0.6 : 0, pk = o.peck ? Math.max(0, Math.sin(t * 6)) * 0.12 : 0;
+  c.save(); c.translate(x, y); c.scale(s * dir, s);
+  if (!o.sit){ line(c, -0.08, 0.22, -0.1, 0.42, '#ff9f43', 0.04); line(c, 0.08, 0.22, 0.1, 0.42, '#ff9f43', 0.04); }
+  for (let i = 0; i < 3; i++){ c.fillStyle = i === 1 ? w : b; c.beginPath(); c.moveTo(-0.32, -0.02); c.quadraticCurveTo(-0.58, -0.3 - i * 0.08, -0.48 + i * 0.05, -0.42 - i * 0.04); c.quadraticCurveTo(-0.36, -0.22, -0.22, -0.12); c.fill(); }
+  ell(c, 0, 0, 0.4, 0.3, b);
+  if (kind % 3 === 2) for (let i = 0; i < 7; i++) circ(c, -0.25 + (i * 0.37 % 0.5), -0.1 + (i * 0.23 % 0.25), 0.03, '#8a5a3a');
+  c.save(); c.translate(-0.04, -0.02); c.rotate(-0.2 - fl); ell(c, 0, 0, 0.24, 0.14, w); c.restore();
+  const hx = 0.3, hy = -0.32 + pk;
+  circ(c, hx, hy, 0.15, b);
+  c.fillStyle = '#ff4f6a'; for (let i = 0; i < 3; i++){ c.beginPath(); c.arc(hx - 0.06 + i * 0.06, hy - 0.15, 0.05, 0, 7); c.fill(); }
+  ell(c, hx + 0.13, hy + 0.1, 0.035, 0.06, '#ff4f6a');
+  c.fillStyle = '#ffb13d'; c.beginPath(); c.moveTo(hx + 0.13, hy - 0.02); c.lineTo(hx + 0.25, hy + 0.02); c.lineTo(hx + 0.13, hy + 0.06); c.fill();
+  circ(c, hx + 0.05, hy - 0.03, 0.032, '#3b2a33'); circ(c, hx + 0.06, hy - 0.04, 0.01, '#fff');
+  circ(c, hx - 0.02, hy + 0.05, 0.03, 'rgba(255,110,160,.45)');
+  c.restore();
+}
+function drawChick(c, x, y, s, t, dir = 1, hop = 0){
+  c.save(); c.translate(x, y - hop * s); c.scale(s * dir, s);
+  line(c, -0.06, 0.2, -0.07, 0.3, '#ff9f43', 0.035); line(c, 0.06, 0.2, 0.07, 0.3, '#ff9f43', 0.035);
+  circ(c, 0, 0.05, 0.2, '#ffe14d'); circ(c, 0.12, -0.14, 0.14, '#ffe14d');
+  ell(c, -0.05, 0.07, 0.1, 0.07, '#ffd21f', -0.3 + Math.sin(t * 20) * 0.3);
+  c.fillStyle = '#ff9f43'; c.beginPath(); c.moveTo(0.24, -0.16); c.lineTo(0.33, -0.12); c.lineTo(0.24, -0.08); c.fill();
+  circ(c, 0.16, -0.17, 0.025, '#3b2a33'); circ(c, 0.12, -0.08, 0.025, 'rgba(255,110,160,.5)');
+  c.restore();
+}
+function drawRooster(c, x, y, s, t, crow, dir = 1){
+  c.save(); c.translate(x, y); c.scale(s * dir, s);
+  ['#2fbf86', '#4da6ff', '#b26bff', '#ff7e5f'].forEach((col, i) => { c.strokeStyle = col; c.lineWidth = 0.09; c.lineCap = 'round'; c.beginPath(); c.arc(-0.35, -0.2, 0.32 - i * 0.04, Math.PI * (0.9 + i * 0.12), Math.PI * (1.55 + i * 0.12)); c.stroke(); });
+  line(c, -0.06, 0.2, -0.08, 0.42, '#ff9f43', 0.045); line(c, 0.08, 0.2, 0.1, 0.42, '#ff9f43', 0.045);
+  ell(c, 0, 0, 0.36, 0.28, '#c0502e'); ell(c, -0.04, 0, 0.2, 0.13, '#8a3a1e', -0.2);
+  const hx = 0.28, hy = -0.36 - (crow ? 0.05 : 0);
+  ell(c, hx - 0.05, hy + 0.15, 0.1, 0.16, '#f6c445');
+  circ(c, hx, hy, 0.14, '#c0502e');
+  c.fillStyle = '#ff2e4d'; for (let i = 0; i < 4; i++){ c.beginPath(); c.arc(hx - 0.09 + i * 0.06, hy - 0.15 - (i % 2) * 0.03, 0.055, 0, 7); c.fill(); }
+  ell(c, hx + 0.12, hy + 0.12, 0.04, 0.07, '#ff2e4d');
+  c.fillStyle = '#ffb13d'; c.beginPath(); c.moveTo(hx + 0.12, hy - 0.03); c.lineTo(hx + 0.26, hy + (crow ? -0.04 : 0.01)); c.lineTo(hx + 0.12, hy + 0.04); c.fill();
+  if (crow){ c.beginPath(); c.moveTo(hx + 0.12, hy + 0.04); c.lineTo(hx + 0.24, hy + 0.1); c.lineTo(hx + 0.12, hy + 0.07); c.fill(); }
+  circ(c, hx + 0.05, hy - 0.04, 0.03, '#3b2a33');
+  c.restore();
+}
+// inek Benekli: yerel, sola bakar; gövde merkezi (0,0), uzunluk ≈ 2
+function drawCow(c, x, y, s, t, o, dir = 1){
+  o = o || {};
+  const chew = o.chew ? Math.sin(t * 14) * 0.03 : 0, tail = Math.sin(t * 2.2) * 0.25, happy = o.happy;
+  c.save(); c.translate(x, y); c.scale(-s * dir, s);
+  c.strokeStyle = '#e9e2da'; c.lineWidth = 0.05; c.lineCap = 'round'; c.beginPath(); c.moveTo(-0.92, -0.25); c.quadraticCurveTo(-1.15, 0.1 + tail * 0.3, -1.05 + tail * 0.3, 0.45); c.stroke(); ell(c, -1.05 + tail * 0.3, 0.5, 0.06, 0.1, '#4a3b3b');
+  for (const lx of [-0.65, -0.4, 0.45, 0.68]){ rrc(c, lx - 0.08, 0.2, 0.16, 0.55, 0.06, '#f5f0ea'); rrc(c, lx - 0.09, 0.66, 0.18, 0.1, 0.04, '#5a4a4a'); }
+  c.beginPath(); if (c.roundRect) c.roundRect(-0.95, -0.5, 1.9, 0.85, 0.38); else c.rect(-0.95, -0.5, 1.9, 0.85); c.fillStyle = '#fffaf4'; c.fill();
+  c.save(); c.clip(); ell(c, -0.45, -0.3, 0.3, 0.22, '#4a3b3b'); ell(c, 0.3, -0.05, 0.25, 0.2, '#4a3b3b'); ell(c, -0.1, 0.28, 0.2, 0.12, '#4a3b3b'); ell(c, 0.8, -0.45, 0.22, 0.2, '#4a3b3b'); c.restore();
+  ell(c, -0.35, 0.37, 0.2, 0.1, '#ffb3c6'); for (const k of [-0.48, -0.36, -0.24]) ell(c, k, 0.46, 0.035, 0.05, '#ff9fb5');
+  // baş
+  c.save(); c.translate(1.05, -0.48 + (o.eat ? 0.25 : 0)); c.rotate(o.eat ? 0.4 : 0);
+  ell(c, -0.18, -0.22, 0.12, 0.05, '#f5e6c8', -0.5); ell(c, 0.18, -0.24, 0.12, 0.05, '#f5e6c8', 0.5);   // boynuzlar
+  ell(c, -0.28, -0.08, 0.14, 0.07, '#4a3b3b', -0.4); ell(c, 0.28, -0.08, 0.14, 0.07, '#fffaf4', 0.4);   // kulaklar
+  ell(c, 0, 0, 0.3, 0.32, '#fffaf4'); ell(c, -0.1, -0.12, 0.12, 0.1, '#4a3b3b');
+  ell(c, 0.02, 0.22 + chew, 0.24, 0.15, '#ffb3c6'); circ(c, -0.07, 0.22 + chew, 0.035, '#c2436f'); circ(c, 0.11, 0.22 + chew, 0.035, '#c2436f');
+  if (happy){ c.strokeStyle = '#3b2a33'; c.lineWidth = 0.025; c.beginPath(); c.arc(-0.1, -0.03, 0.045, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); c.beginPath(); c.arc(0.12, -0.03, 0.045, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+  else { circ(c, -0.1, -0.04, 0.045, '#3b2a33'); circ(c, 0.12, -0.04, 0.045, '#3b2a33'); circ(c, -0.09, -0.055, 0.015, '#fff'); circ(c, 0.13, -0.055, 0.015, '#fff');
+    c.strokeStyle = '#3b2a33'; c.lineWidth = 0.012; for (const ex of [-0.1, 0.12]) for (const a of [-2.2, -1.6, -1.0]){ c.beginPath(); c.moveTo(ex + Math.cos(a) * 0.05, -0.04 + Math.sin(a) * 0.05); c.lineTo(ex + Math.cos(a) * 0.08, -0.04 + Math.sin(a) * 0.08); c.stroke(); } }
+  circ(c, -0.2, 0.08, 0.04, 'rgba(255,110,160,.45)'); circ(c, 0.22, 0.08, 0.04, 'rgba(255,110,160,.45)');
+  c.restore();
+  // tasma ve çan
+  c.strokeStyle = '#ff5fa2'; c.lineWidth = 0.06; c.beginPath(); c.moveTo(0.82, -0.42); c.quadraticCurveTo(0.9, -0.2, 0.98, -0.12); c.stroke();
+  c.fillStyle = '#f6c445'; c.beginPath(); c.moveTo(0.88, -0.14); c.lineTo(1.02, -0.14); c.lineTo(1.05, 0.02); c.lineTo(0.85, 0.02); c.closePath(); c.fill(); circ(c, 0.95, 0.04, 0.025, '#b8860b');
+  c.restore();
+}
+function drawBunny(c, x, y, s, t, hop = 0, dir = 1){
+  c.save(); c.translate(x, y - hop * s); c.scale(s * dir, s);
+  const ear = Math.sin(t * 3) * 0.08;
+  circ(c, -0.28, -0.1, 0.09, '#ffffff');
+  ell(c, 0, -0.18, 0.3, 0.22, '#f4efea'); ell(c, 0.14, 0.0, 0.12, 0.05, '#ece4dc');
+  c.save(); c.translate(0.18, -0.52); c.rotate(-0.25 + ear); ell(c, 0, -0.16, 0.06, 0.2, '#f4efea'); ell(c, 0, -0.15, 0.03, 0.15, '#ffc2d1'); c.restore();
+  c.save(); c.translate(0.28, -0.5); c.rotate(0.2 - ear); ell(c, 0, -0.16, 0.06, 0.2, '#f4efea'); ell(c, 0, -0.15, 0.03, 0.15, '#ffc2d1'); c.restore();
+  circ(c, 0.24, -0.4, 0.16, '#f4efea');
+  circ(c, 0.36, -0.38, 0.03, '#ff8fa8'); circ(c, 0.27, -0.44, 0.028, '#3b2a33'); circ(c, 0.2, -0.34, 0.03, 'rgba(255,110,160,.5)');
+  c.restore();
+}
+function drawButterfly(c, x, y, s, t, col){
+  const fl = Math.abs(Math.sin(t * 11)); c.fillStyle = col;
+  c.beginPath(); c.ellipse(x - s * 0.5 * fl - s * 0.1, y, s * 0.55 * fl + s * 0.1, s * 0.75, -0.4, 0, 7); c.fill();
+  c.beginPath(); c.ellipse(x + s * 0.5 * fl + s * 0.1, y, s * 0.55 * fl + s * 0.1, s * 0.75, 0.4, 0, 7); c.fill();
+  c.fillStyle = '#4a2545'; c.fillRect(x - s * 0.06, y - s * 0.5, s * 0.12, s);
+}
+
+/* ============================================================ dünya: manzara nesneleri (yerel eksen: zemin y=0, metre) */
+const SCN = {
+  tree(c, t, w){ const sw = Math.sin(t * 1.3) * 0.05 * (1 + w * 3); c.save(); c.rotate(sw * 0.3); rrc(c, -0.15, -1.5, 0.3, 1.5, 0.06, '#a9744f'); c.translate(0, 0); c.rotate(sw);
+    circ(c, -0.6, -1.65, 0.62, '#8bdca5'); circ(c, 0.6, -1.7, 0.64, '#74c98f'); circ(c, 0, -2.1, 0.88, '#7fd39a'); circ(c, 0.15, -2.65, 0.55, '#8bdca5'); heart(c, -0.35, -1.95, 0.24, '#ff7eb6'); heart(c, 0.45, -2.3, 0.2, '#ff9ccb'); heart(c, 0.05, -2.75, 0.18, '#ff7eb6'); c.restore(); },
+  blossom(c, t, w){ const sw = Math.sin(t * 1.2 + 1) * 0.05 * (1 + w * 3); rrc(c, -0.13, -1.4, 0.26, 1.4, 0.06, '#8d6a55'); c.save(); c.rotate(sw);
+    circ(c, -0.55, -1.6, 0.6, '#ffc9e0'); circ(c, 0.55, -1.65, 0.62, '#ff9fc8'); circ(c, 0, -2.05, 0.82, '#ffb7d5'); circ(c, 0.1, -2.6, 0.5, '#ffc9e0'); for (let i = 0; i < 7; i++) circ(c, Math.cos(i * 2.4) * 0.6, -2 + Math.sin(i * 1.7) * 0.5, 0.06, '#fff'); c.restore(); },
+  pine(c, t, w){ const sw = Math.sin(t * 1.1 + 2) * 0.04 * (1 + w * 3); rrc(c, -0.1, -0.6, 0.2, 0.6, 0.04, '#8d6a55'); c.save(); c.rotate(sw);
+    [['#5fbf8f', -0.5, 1.0, 1.1], ['#6fcb9b', -1.2, 0.8, 1.0], ['#7fd6a8', -1.85, 0.58, 0.9]].forEach(([col, y, w2, h]) => { c.fillStyle = col; c.beginPath(); c.moveTo(-w2, y); c.lineTo(0, y - h); c.lineTo(w2, y); c.fill(); }); star(c, 0, -2.8, 0.14, '#ffe27a'); c.restore(); },
+  bush(c){ circ(c, -0.42, -0.3, 0.38, '#74c98f'); circ(c, 0.1, -0.42, 0.48, '#7fd39a'); circ(c, 0.55, -0.28, 0.34, '#8bdca5'); circ(c, -0.3, -0.45, 0.07, '#ff7eb6'); circ(c, 0.2, -0.62, 0.07, '#fff'); circ(c, 0.5, -0.35, 0.07, '#ffd36e'); },
+  mushroom(c){ for (const [x, k] of [[0, 1], [0.5, 0.65]]){ rrc(c, x - 0.1 * k, -0.4 * k, 0.2 * k, 0.4 * k, 0.07 * k, '#fff4e6'); c.beginPath(); c.arc(x, -0.38 * k, 0.36 * k, Math.PI, 0); c.fillStyle = '#ff6f91'; c.fill(); circ(c, x - 0.15 * k, -0.52 * k, 0.06 * k, '#fff'); circ(c, x + 0.12 * k, -0.6 * k, 0.05 * k, '#fff'); circ(c, x + 0.2 * k, -0.45 * k, 0.04 * k, '#fff'); } },
+  glowshroom(c, t){ for (const [x, k, col] of [[0, 1, '#b8a4ff'], [0.55, 0.7, '#7fe0ff'], [-0.45, 0.6, '#ff9ccb']]){ const gl = 0.5 + 0.5 * Math.sin(t * 2 + x * 4);
+      const g = c.createRadialGradient(x, -0.45 * k, 0, x, -0.45 * k, 0.9 * k); g.addColorStop(0, `rgba(255,255,255,${0.35 * gl})`); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(x - k, -1.4 * k, 2 * k, 1.4 * k);
+      rrc(c, x - 0.08 * k, -0.4 * k, 0.16 * k, 0.4 * k, 0.06 * k, '#f3eaff'); c.beginPath(); c.arc(x, -0.38 * k, 0.32 * k, Math.PI, 0); c.fillStyle = col; c.fill(); circ(c, x - 0.1 * k, -0.5 * k, 0.05 * k, 'rgba(255,255,255,.9)'); } },
+  flowers(c){ for (let i = 0; i < 5; i++){ const x = -0.8 + i * 0.4, h = 0.25 + (i % 3) * 0.08, col = ['#ff7eb6', '#ffd36e', '#c9a7ff', '#ffffff', '#7cc8ff'][i]; line(c, x, 0, x, -h, '#6fbf7a', 0.035); for (let k = 0; k < 5; k++) circ(c, x + Math.cos(k * 1.257) * 0.07, -h + Math.sin(k * 1.257) * 0.07, 0.06, col); circ(c, x, -h, 0.045, '#ffb13d'); } },
+  fence(c){ for (let i = 0; i < 6; i++){ rrc(c, i * 0.7 - 0.08, -0.8, 0.16, 0.8, 0.04, '#e8c48f'); c.fillStyle = '#e8c48f'; c.beginPath(); c.moveTo(i * 0.7 - 0.08, -0.8); c.lineTo(i * 0.7, -0.92); c.lineTo(i * 0.7 + 0.08, -0.8); c.fill(); } rrc(c, -0.1, -0.62, 3.75, 0.1, 0.03, '#d9ab72'); rrc(c, -0.1, -0.3, 3.75, 0.1, 0.03, '#d9ab72'); },
+  house(c, t){
+    for (let i = 0; i < 3; i++){ const k = (t * 0.35 + i / 3) % 1; circ(c, 0.55 + k * 0.5, -2.35 - k * 1.2, 0.1 + k * 0.16, `rgba(255,255,255,${0.75 * (1 - k)})`); }
+    rrc(c, 0.42, -2.3, 0.26, 0.7, 0.03, '#d9a3c0'); rrc(c, -0.9, -1.3, 1.8, 1.3, 0.06, '#fff1dc');
+    c.fillStyle = '#ff8fc0'; c.beginPath(); c.moveTo(-1.15, -1.25); c.lineTo(0, -2.3); c.lineTo(1.15, -1.25); c.fill();
+    rrc(c, -0.22, -0.8, 0.44, 0.8, 0.2, '#b26bff'); rrc(c, 0.42, -1.0, 0.34, 0.34, 0.05, '#bfe9ff'); rrc(c, -0.76, -1.0, 0.34, 0.34, 0.05, '#bfe9ff'); heart(c, 0, -1.55, 0.3, '#fff');
+  },
+  house2(c, t){
+    rrc(c, -1.0, -1.5, 2.0, 1.5, 0.06, '#e3f4ff'); c.fillStyle = '#7cc8ff'; c.beginPath(); c.moveTo(-1.25, -1.45); c.lineTo(0, -2.5); c.lineTo(1.25, -1.45); c.fill();
+    rrc(c, -0.25, -0.85, 0.5, 0.85, 0.22, '#ffb13d'); for (const x of [-0.7, 0.42]){ rrc(c, x, -1.15, 0.36, 0.36, 0.05, '#fff6c9'); line(c, x + 0.18, -1.15, x + 0.18, -0.79, '#c9d8e8', 0.03); }
+    for (let i = 0; i < 4; i++) circ(c, -0.9 + i * 0.24, -0.06, 0.12, ['#ff7eb6', '#ffd36e', '#c9a7ff', '#ff7eb6'][i]);
+  },
+  sign(c, t, w, e){ rrc(c, -0.05, -1.1, 0.1, 1.1, 0.03, '#a9744f'); rrc(c, -0.5, -1.45, 1.0, 0.62, 0.1, '#e8c48f'); if (e) emoji(c, e, 0, -1.14, 0.42); },
+};
+
+/* Mila'nın şatosu (başlangıç ve bitiş). Yerel: kapı ortası x=0, zemin y=0 */
+function drawHomeCastle(c, t){
+  const tower = (x, w, h, roof) => { rrc(c, x - w / 2, -h, w, h, 0.05, '#fff1f8'); for (let i = 0; i < 3; i++) rrc(c, x - w / 2 + i * w * 0.38, -h - 0.22, w * 0.24, 0.24, 0.03, '#fff1f8');
+    c.fillStyle = roof; c.beginPath(); c.moveTo(x - w / 2 - 0.15, -h - 0.2); c.lineTo(x, -h - 1.8); c.lineTo(x + w / 2 + 0.15, -h - 0.2); c.fill();
+    line(c, x, -h - 1.8, x, -h - 2.5, '#a57fc9', 0.06); const wv = Math.sin(t * 5 + x) * 0.1; c.fillStyle = '#ff5fa2'; c.beginPath(); c.moveTo(x, -h - 2.5); c.lineTo(x + 0.65, -h - 2.3 + wv); c.lineTo(x, -h - 2.1); c.fill();
+    rrc(c, x - 0.17, -h + 0.6, 0.34, 0.55, 0.17, '#bfe9ff'); heart(c, x, -h + 1.55, 0.3, '#ffb7d5'); };
+  tower(-3.4, 1.4, 4.6, '#ff8fc0'); tower(3.4, 1.4, 4.6, '#ff8fc0');
+  rrc(c, -2.8, -3.4, 5.6, 3.4, 0.05, '#ffe8f3'); for (let i = 0; i < 10; i++) rrc(c, -2.8 + i * 0.58, -3.65, 0.34, 0.27, 0.03, '#ffe8f3');
+  tower(0, 1.8, 5.8, '#b26bff');
+  c.fillStyle = '#c99be8'; c.beginPath(); c.moveTo(-0.85, 0); c.lineTo(-0.85, -1.3); c.arc(0, -1.3, 0.85, Math.PI, 0); c.lineTo(0.85, 0); c.fill();
+  c.fillStyle = '#a77bcf'; c.beginPath(); c.moveTo(-0.7, 0); c.lineTo(-0.7, -1.3); c.arc(0, -1.3, 0.7, Math.PI, 0); c.lineTo(0.7, 0); c.fill();
+  line(c, 0, 0, 0, -2.0, '#8f63ba', 0.05); circ(c, -0.2, -0.9, 0.06, '#f6c445'); circ(c, 0.2, -0.9, 0.06, '#f6c445');
+  heart(c, 0, -2.75, 0.55, '#ff5fa2');
+  for (const x of [-2.1, -1.4, 1.4, 2.1]) rrc(c, x - 0.22, -2.6, 0.44, 0.6, 0.22, '#bfe9ff');
+  for (let i = 0; i < 9; i++){ const x = -2.6 + i * 0.65; circ(c, x, -0.12, 0.2, ['#ff9ccb', '#ffd36e', '#c9a7ff'][i % 3]); }
+}
+/* Gökkuşağı Şatosu (uzakta, partinin olacağı yer) */
+function drawRainbowCastle(c, t){
+  const tower = (x, w, h, col, roof) => { rrc(c, x - w / 2, -h, w, h, 0.04, col); c.fillStyle = roof; c.beginPath(); c.moveTo(x - w / 2 - 0.12, -h - 0.15); c.lineTo(x, -h - 1.35); c.lineTo(x + w / 2 + 0.12, -h - 0.15); c.fill(); };
+  tower(-2.1, 1.0, 3.3, '#ead9ff', '#ff8fc0'); tower(2.1, 1.0, 3.3, '#ead9ff', '#ff8fc0'); rrc(c, -1.7, -2.3, 3.4, 2.3, 0.04, '#f5ecff'); tower(0, 1.3, 4.3, '#f0e2ff', '#b26bff');
+  ['#ff7eb6', '#ffd36e', '#8fe3a1', '#7cc8ff', '#c9a7ff'].forEach((col, i) => { c.strokeStyle = col; c.lineWidth = 0.12; c.beginPath(); c.arc(0, -4.4, 3.4 - i * 0.13, Math.PI * 1.12, Math.PI * 1.88); c.stroke(); });
+}
+/* Durak binaları — yerel: durağın x'i 0, zemin y=0 */
+function drawWindmill(c, t, spin){
+  c.fillStyle = '#fff1dc'; c.beginPath(); c.moveTo(-1.2, 0); c.lineTo(-0.75, -4.2); c.lineTo(0.75, -4.2); c.lineTo(1.2, 0); c.fill();
+  c.fillStyle = '#ffe2c2'; c.beginPath(); c.moveTo(0.4, 0); c.lineTo(0.55, -4.2); c.lineTo(0.75, -4.2); c.lineTo(1.2, 0); c.fill();
+  c.fillStyle = '#ff8fc0'; c.beginPath(); c.moveTo(-1.05, -4.1); c.lineTo(0, -5.4); c.lineTo(1.05, -4.1); c.fill();
+  rrc(c, -0.35, -1.2, 0.7, 1.2, 0.35, '#b26bff'); rrc(c, -0.25, -3.0, 0.5, 0.55, 0.08, '#bfe9ff'); heart(c, 0, -2.0, 0.35, '#ff9ccb');
+  c.save(); c.translate(0, -4.2); c.rotate(spin);
+  for (let i = 0; i < 4; i++){ c.rotate(Math.PI / 2); rrc(c, -0.06, -2.6, 0.12, 2.6, 0.03, '#a9744f'); rrc(c, 0.06, -2.5, 0.62, 1.8, 0.05, 'rgba(255,255,255,.92)');
+    c.strokeStyle = 'rgba(169,116,79,.5)'; c.lineWidth = 0.03; for (let k = 1; k < 4; k++){ c.beginPath(); c.moveTo(0.06, -2.5 + k * 0.45); c.lineTo(0.68, -2.5 + k * 0.45); c.stroke(); } }
+  c.restore(); circ(c, 0, -4.2, 0.2, '#f6c445');
+}
+function drawWheat(c, x, h, t, k, cut){   // tek başak: x, boy h, rüzgâr k
+  const sw = Math.sin(t * 2 + x * 3) * 0.06 * (1 + k * 4);
+  if (cut){ line(c, x, 0, x + sw * 0.2, -h * 0.3, '#d4a23c', 0.05); return; }
+  c.save(); c.translate(x, 0); c.rotate(sw);
+  line(c, 0, 0, 0, -h, '#d4a23c', 0.05);
+  ell(c, 0.08, -h * 0.45, 0.14, 0.04, '#9cc45e', -0.6);
+  for (let i = 0; i < 6; i++){ ell(c, -0.05, -h - i * 0.09, 0.05, 0.08, '#f2c14e', -0.4); ell(c, 0.05, -h - i * 0.09 - 0.04, 0.05, 0.08, '#e9b23a', 0.4); }
+  c.strokeStyle = '#f7d77e'; c.lineWidth = 0.015; for (let i = 0; i < 5; i++){ c.beginPath(); c.moveTo(0, -h - i * 0.1); c.lineTo((i % 2 ? 1 : -1) * 0.18, -h - i * 0.1 - 0.2); c.stroke(); }
+  c.restore();
+}
+function drawCoop(c, t){
+  rrc(c, -1.6, -2.2, 3.2, 2.2, 0.08, '#ff9f8a'); for (let i = 0; i < 6; i++) line(c, -1.6, -1.95 + i * 0.37, 1.6, -1.95 + i * 0.37, 'rgba(160,60,40,.18)', 0.04);
+  c.fillStyle = '#fff6ee'; c.beginPath(); c.moveTo(-1.95, -2.1); c.lineTo(0, -3.4); c.lineTo(1.95, -2.1); c.fill();
+  c.fillStyle = '#c0503e'; c.beginPath(); c.moveTo(-1.8, -2.15); c.lineTo(0, -3.25); c.lineTo(1.8, -2.15); c.lineTo(1.5, -2.15); c.lineTo(0, -3.0); c.lineTo(-1.5, -2.15); c.fill();
+  c.beginPath(); c.arc(0, -0.75, 0.48, Math.PI, 0); c.lineTo(0.48, 0); c.lineTo(-0.48, 0); c.closePath(); c.fillStyle = '#6b3b2a'; c.fill();
+  c.save(); c.translate(0.48, 0); c.rotate(-0.42); rrc(c, 0, -0.08, 1.4, 0.16, 0.04, '#e8c48f'); for (let i = 1; i < 5; i++) line(c, i * 0.28, -0.08, i * 0.28, 0.08, '#c9a46a', 0.03); c.restore();
+  rrc(c, -1.25, -1.6, 0.5, 0.45, 0.06, '#fff6c9'); heart(c, 1.0, -1.35, 0.4, '#fff');
+  c.fillStyle = '#f2d27a'; for (let i = 0; i < 7; i++) ell(c, -1.4 + i * 0.45, -0.04, 0.2, 0.06, '#f2d27a', (i % 2 ? 0.3 : -0.3));
+}
+function drawBarn(c, t){
+  rrc(c, -2.4, -3.0, 4.8, 3.0, 0.06, '#e8566b'); for (let i = 0; i < 9; i++) line(c, -2.2 + i * 0.55, -2.9, -2.2 + i * 0.55, -0.05, 'rgba(120,20,40,.15)', 0.05);
+  c.fillStyle = '#ffffff'; c.beginPath(); c.moveTo(-2.75, -2.85); c.lineTo(-1.2, -4.4); c.lineTo(1.2, -4.4); c.lineTo(2.75, -2.85); c.lineTo(2.4, -2.85); c.lineTo(1.05, -4.1); c.lineTo(-1.05, -4.1); c.lineTo(-2.4, -2.85); c.fill();
+  c.fillStyle = '#c23b55'; c.beginPath(); c.moveTo(-2.4, -2.85); c.lineTo(-1.05, -4.1); c.lineTo(1.05, -4.1); c.lineTo(2.4, -2.85); c.fill();
+  rrc(c, -1.0, -2.1, 2.0, 2.1, 0.04, '#ffffff'); rrc(c, -0.88, -1.98, 1.76, 1.98, 0.03, '#b8304a');
+  line(c, -0.88, -1.98, 0.88, 0, '#ffffff', 0.1); line(c, 0.88, -1.98, -0.88, 0, '#ffffff', 0.1); line(c, -0.88, -1.0, 0.88, -1.0, '#ffffff', 0.08);
+  rrc(c, -0.45, -3.6, 0.9, 0.7, 0.08, '#ffffff'); rrc(c, -0.36, -3.5, 0.72, 0.5, 0.06, '#ffd27a');
+  heart(c, 1.7, -2.2, 0.45, '#fff'); heart(c, -1.7, -2.2, 0.45, '#fff');
+}
+function drawChurn(c, x, y, s, ang, t){   // yayık: üç ayak, ipte asılı tahta fıçı
+  c.save(); c.translate(x, y); c.scale(s, s);
+  line(c, -0.9, 0, 0, -2.3, '#a9744f', 0.1); line(c, 0.9, 0, 0, -2.3, '#a9744f', 0.1); line(c, 0.2, 0, 0, -2.3, '#8d5f3e', 0.08); circ(c, 0, -2.3, 0.1, '#8d5f3e');
+  c.save(); c.translate(0, -2.25); c.rotate(ang);
+  line(c, -0.25, 0, -0.3, 1.0, '#d9c29a', 0.04); line(c, 0.25, 0, 0.3, 1.0, '#d9c29a', 0.04);
+  c.translate(0, 1.4);
+  ell(c, 0, 0, 0.62, 0.42, '#c98a55'); for (const k of [-0.36, 0, 0.36]) line(c, k, -0.4, k, 0.4, 'rgba(110,60,30,.35)', 0.04);
+  line(c, -0.6, -0.2, 0.6, -0.2, '#8d6a55', 0.07); line(c, -0.6, 0.2, 0.6, 0.2, '#8d6a55', 0.07);
+  ell(c, 0.62, 0, 0.07, 0.16, '#a86b3c'); heart(c, 0, 0, 0.32, '#ffd27a');
+  c.restore(); c.restore();
+}
+function drawCandyShop(c, t){
+  rrc(c, -2.2, -3.2, 4.4, 3.2, 0.08, '#fff1f8'); rrc(c, -2.2, -0.35, 4.4, 0.35, 0.04, '#ffd0e4');
+  c.save(); c.beginPath(); c.rect(-2.5, -3.75, 5.0, 0.75); c.clip(); for (let i = -10; i < 10; i++){ c.fillStyle = i % 2 ? '#ffffff' : '#ff7eb6'; c.fillRect(i * 0.5, -3.8, 0.5, 0.8); } c.restore();
+  for (let i = 0; i < 10; i++){ c.beginPath(); c.arc(-2.25 + i * 0.5, -3.0, 0.25, 0, Math.PI); c.fillStyle = i % 2 ? '#ffffff' : '#ff7eb6'; c.fill(); }
+  rrc(c, -0.45, -1.6, 0.9, 1.6, 0.4, '#b26bff'); circ(c, 0.25, -0.8, 0.06, '#f6c445');
+  rrc(c, -1.9, -2.2, 1.1, 1.0, 0.1, '#bfe9ff'); rrc(c, 0.8, -2.2, 1.1, 1.0, 0.1, '#bfe9ff');
+  [['#ff7eb6', -1.6], ['#ffd36e', -1.1], ['#8fe3b9', 1.1], ['#7cc8ff', 1.6]].forEach(([col, x]) => { rrc(c, x - 0.17, -1.75, 0.34, 0.46, 0.1, 'rgba(255,255,255,.75)'); circ(c, x, -1.47, 0.11, col); rrc(c, x - 0.19, -1.82, 0.38, 0.1, 0.04, col); });
+  line(c, 2.6, 0, 2.6, -3.2, '#ffffff', 0.12); c.save(); c.translate(2.6, -3.7);
+  for (let i = 0; i < 4; i++){ c.beginPath(); c.arc(0, 0, 0.62 - i * 0.15, 0, 7); c.fillStyle = ['#ff7eb6', '#ffffff', '#c9a7ff', '#ffe95c'][i]; c.fill(); }
+  c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 0.05; c.beginPath(); for (let a = 0; a < 12; a += 0.2) c.lineTo(Math.cos(a + t) * a * 0.05, Math.sin(a + t) * a * 0.05); c.stroke(); c.restore();
+}
+function drawBoutique(c, t){
+  rrc(c, -1.8, -2.8, 3.6, 2.8, 0.08, '#efe2ff'); c.fillStyle = '#b26bff'; c.beginPath(); c.moveTo(-2.1, -2.75); c.quadraticCurveTo(0, -4.0, 2.1, -2.75); c.fill();
+  crown(c, 0, -3.55, 0.8); rrc(c, -0.4, -1.5, 0.8, 1.5, 0.4, '#ff8fc0');
+  rrc(c, -1.55, -2.25, 0.85, 1.25, 0.1, '#ffffff'); rrc(c, 0.7, -2.25, 0.85, 1.25, 0.1, '#ffffff');
+  for (const [x, col] of [[-1.12, '#ff9ccb'], [1.12, '#8fd0ff']]){ c.fillStyle = col; c.beginPath(); c.moveTo(x - 0.12, -1.95); c.lineTo(x + 0.12, -1.95); c.lineTo(x + 0.3, -1.12); c.quadraticCurveTo(x, -1.05, x - 0.3, -1.12); c.closePath(); c.fill(); circ(c, x, -2.02, 0.06, '#f6c445'); }
+  for (let i = 0; i < 6; i++) sparkle(c, -1.6 + i * 0.64, -2.95 + Math.sin(t * 3 + i) * 0.05, 0.08 + 0.04 * Math.sin(t * 4 + i), '#fff');
+}
+function drawFountain(c, t){
+  ell(c, 0, -0.1, 1.6, 0.35, '#c9d8ff'); rrc(c, -1.6, -0.55, 3.2, 0.55, 0.2, '#e3ecff'); ell(c, 0, -0.55, 1.6, 0.3, '#b6d8ff');
+  rrc(c, -0.14, -1.7, 0.28, 1.2, 0.06, '#e3ecff'); ell(c, 0, -1.7, 0.6, 0.15, '#cfe2ff');
+  c.strokeStyle = 'rgba(160,210,255,.9)'; c.lineWidth = 0.06; c.lineCap = 'round';
+  for (let i = 0; i < 6; i++){ const k = ((t * 1.2 + i / 6) % 1); c.beginPath(); c.moveTo(0, -1.85); c.quadraticCurveTo((i - 2.5) * 0.25, -2.6 + k * 0.2, (i - 2.5) * 0.55, -0.6); c.stroke(); }
+  for (let i = 0; i < 5; i++){ const k = (t * 0.8 + i / 5) % 1; circ(c, (i - 2) * 0.5, -0.6 - k * 0.3, 0.05 * (1 - k), 'rgba(255,255,255,.9)'); }
+}
+function drawMagicTree(c, t){
+  rrc(c, -0.5, -3.0, 1.0, 3.0, 0.3, '#9a6fbf'); c.fillStyle = '#7d55a3'; c.beginPath(); c.moveTo(-0.5, 0); c.quadraticCurveTo(-1.1, 0, -1.2, 0.05); c.lineTo(-0.3, -0.6); c.fill(); c.beginPath(); c.moveTo(0.5, 0); c.quadraticCurveTo(1.1, 0, 1.3, 0.05); c.lineTo(0.3, -0.6); c.fill();
+  rrc(c, -0.28, -1.25, 0.56, 0.9, 0.28, '#5b3a7a'); circ(c, 0.14, -0.8, 0.05, '#f6c445');
+  const cols = ['#d6b8ff', '#ffb7e3', '#c3a0ff', '#ffc9f0'];
+  [[-1.4, -3.4, 1.1], [1.4, -3.5, 1.15], [0, -4.4, 1.35], [-0.8, -4.9, 0.9], [0.9, -4.9, 0.85], [0, -3.2, 1.0]].forEach(([x, y, r], i) => circ(c, x, y, r, cols[i % 4]));
+  for (let i = 0; i < 14; i++){ const a = i * 2.39, d = 0.4 + (i % 4) * 0.45, gl = 0.5 + 0.5 * Math.sin(t * 3 + i); circ(c, Math.cos(a) * d * 1.3, -4.0 + Math.sin(a) * d * 0.8, 0.06 + 0.04 * gl, `rgba(255,255,255,${0.5 + 0.5 * gl})`); }
+}
+// bal kabağı fayton (Köprü Ustası'ndaki gibi); içinde kral baba (ve binince Mila)
+function drawCarriage(c, x, y, s, t, withMila, wa){
+  c.save(); c.translate(x, y); c.scale(s, s);
+  const wheel = (wx) => { c.save(); c.translate(wx, -0.55); c.rotate(wa); circ(c, 0, 0, 0.55, '#c9962e'); circ(c, 0, 0, 0.46, '#fff4fa'); c.strokeStyle = '#e9b949'; c.lineWidth = 0.06;
+    for (let i = 0; i < 4; i++){ const a = i * Math.PI / 4; c.beginPath(); c.moveTo(-Math.cos(a) * 0.46, -Math.sin(a) * 0.46); c.lineTo(Math.cos(a) * 0.46, Math.sin(a) * 0.46); c.stroke(); } circ(c, 0, 0, 0.12, '#e9b949'); c.restore(); };
+  c.strokeStyle = '#e9b949'; c.lineWidth = 0.1; c.beginPath(); c.moveTo(-1.2, -0.55); c.quadraticCurveTo(0, -0.43, 1.2, -0.55); c.stroke();
+  ell(c, 0, -1.67, 1.18, 0.9, '#ffb3d4'); c.strokeStyle = '#ff8fc0'; c.lineWidth = 0.05; for (const rx of [0.8, 0.42]){ c.beginPath(); c.ellipse(0, -1.67, rx, 0.9, 0, 0, 7); c.stroke(); }
+  rrc(c, -0.95, -0.95, 1.9, 0.15, 0.07, '#e9b949');
+  c.save(); c.beginPath(); if (c.roundRect) c.roundRect(-0.6, -2.2, 1.2, 0.95, 0.4); else c.rect(-0.6, -2.2, 1.2, 0.95); c.fillStyle = '#fff8fd'; c.fill(); c.clip();
+  drawKing(c, withMila ? 0.25 : 0.05, -1.72, 0.85, t, speaker === 'kral', 1);
+  if (withMila){ c.save(); c.translate(-0.28, -1.2); c.scale(0.8, 0.8); drawMila(c, 0, 0, 1.0, t, {dir:1, talk:speaker === 'mila'}); c.restore(); }
+  c.restore();
+  c.strokeStyle = '#e9b949'; c.lineWidth = 0.07; c.beginPath(); if (c.roundRect) c.roundRect(-0.6, -2.2, 1.2, 0.95, 0.4); else c.rect(-0.6, -2.2, 1.2, 0.95); c.stroke();
+  crown(c, 0, -2.53, 0.42); star(c, -0.85, -2.05, 0.1, '#fff'); star(c, 0.85, -2.05, 0.1, '#fff');
+  wheel(-1.2); wheel(1.2);
+  circ(c, 1.2, -1.55, 0.09, '#fff6c9');
+  c.restore();
+}
+
+/* ============================================================ dünya durumu */
+const mila = {x:store.x, tx:store.x, dir:1, ph:0, moving:false, then:null, hop:0, mustache:0, wave:0};
+const cam = {x:store.x + 2, s:40, gy:300};
+let fx = [], parts = [], floats = [], leaves = [], rain = [];
+let finale = null, flash = 0, stormBoost = 0;
+const doneCount = () => STATIONS.filter(s => store.done[s.id]).length;
+const stormK = () => store.finished && !finale ? 0 : Math.min(1, doneCount() / STATIONS.length * 0.85 + stormBoost);
+function layoutWorld(){
+  const tall = H > W * 1.1;
+  cam.s = tall ? Math.min(W / 9.2, H / 13) : Math.min(H / 8.4, W / 14);
+  cam.gy = H - Math.max(H * (tall ? 0.24 : 0.17), 1.2 * cam.s);
+}
+const wx2s = x => (x - cam.x) * cam.s + W / 2;
+const wy2s = y => cam.gy + y * cam.s;
+const s2wx = sx => (sx - W / 2) / cam.s + cam.x;
+const s2wy = sy => (sy - cam.gy) / cam.s;
+
+// sabit manzara (rastgele ama her açılışta aynı)
+let seed = 7; const srnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const DECOR = [];
+(function buildDecor(){
+  const add = (type, x, k, extra) => DECOR.push(Object.assign({type, x, k:k || 1}, extra));
+  add('flowers', -8.5); add('bush', 6.5); add('flowers', 9); add('tree', 11, 1.2); add('sign', 14, 1, {e:'🍓'}); add('blossom', 16.5, 1.3);
+  add('fence', 19.2); add('bush', 31); add('flowers', 33);
+  for (let x = 34; x < 58; x += 2.1 + srnd() * 1.6) if (Math.abs(x - 46) > 4.5) add(srnd() < 0.55 ? 'pine' : 'tree', x, 1.15 + srnd() * 0.5, {back:srnd() < 0.5});
+  add('glowshroom', 41.5); add('glowshroom', 50.5); add('mushroom', 38); add('mushroom', 55);
+  add('flowers', 60); add('sign', 62, 1, {e:'🌾'}); add('bush', 80); add('house', 84, 1.1); add('flowers', 86.5);
+  add('house2', 100, 1.1); add('tree', 103, 1.2); add('flowers', 118); add('house', 120.5, 1.05); add('blossom', 135, 1.3);
+  add('flowers', 141); add('tree', 149, 1.2);
+})();
+// yıldız saklanan çalılar (her biri bir kez)
+const STAR_BUSHES = [[8, 'y1'], [17.5, 'y2'], [31, 'y3'], [37, 'y4'], [53, 'y5'], [59.5, 'y6'], [80, 'y7'], [87, 'y8'], [104.5, 'y9'], [116.5, 'y10'], [134, 'y11'], [147.5, 'y12']];
+const bushShake = {};
+// yoldaki hayvanlar (dokununca çıkartma)
+const CRITTERS = [
+  {k:'tavsan', x:28.5, y:0, w:1.0, h:1.0},
+  {k:'kirpi', x:36.2, y:0, w:0.8, h:0.6, e:'🦔'},
+  {k:'baykus', x:44.2, y:-4.6, w:0.8, h:0.8, e:'🦉'},
+  {k:'sincap', x:52.7, y:-2.2, w:0.8, h:0.8, e:'🐿️'},
+  {k:'horoz', x:92.8, y:-3.3, w:1.1, h:1.1},
+  {k:'kurbaga', x:139.2, y:-0.5, w:0.7, h:0.6, e:'🐸'},
+];
+const critterAnim = {};
+// kelebekler (dokununca yakalanır, yıldız verir, bir süre sonra yenisi gelir)
+const BUTTERFLIES = [];
+function spawnButterfly(i){
+  const x = (i === undefined ? rr(WORLD_X0 + 6, WORLD_X1 - 6) : rr(cam.x - 12, cam.x + 12));
+  BUTTERFLIES[i === undefined ? BUTTERFLIES.length : i] = {x0:x, y0:rr(-3.2, -1.2), ph:Math.random() * 7, col:rnd(['#ff7eb6', '#7cc8ff', '#ffd36e', '#c9a7ff', '#8fe3a1']), caught:0, t:0};
+}
+for (let i = 0; i < 7; i++) spawnButterfly();
+const bfPos = (b, t) => [b.x0 + Math.sin(t * 0.5 + b.ph) * 2.2, b.y0 + Math.sin(t * 1.3 + b.ph * 2) * 0.5];
+const nextStation = () => STATIONS.find(s => !store.done[s.id]);
+
+/* ============================================================ dünyayı çiz */
+function drawSky(t){
+  const k = stormK();
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  const mix = (a, b) => { const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16), f = (s) => Math.round(lerp(pa >> s & 255, pb >> s & 255, k)); return `rgb(${f(16)},${f(8)},${f(0)})`; };
+  g.addColorStop(0, mix('#a9dcff', '#6d6fa6')); g.addColorStop(0.55, mix('#ffe3f1', '#b3a3c8')); g.addColorStop(1, mix('#fff2d9', '#d2bfd2'));
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const sx = W * 0.82, sy = H * (0.15 + k * 0.3), sg = ctx.createRadialGradient(sx, sy, 8, sx, sy, 110);
+  sg.addColorStop(0, `rgba(255,246,200,${1 - k * 0.7})`); sg.addColorStop(0.25, `rgba(255,232,170,${0.55 - k * 0.4})`); sg.addColorStop(1, 'rgba(255,240,180,0)');
+  ctx.fillStyle = sg; ctx.fillRect(sx - 120, sy - 120, 240, 240);
+  // bulutlar: fırtına yaklaştıkça çoğalır ve kararır
+  const n = 4 + Math.round(k * 6);
+  for (let i = 0; i < n; i++){
+    const sp = 6 + (i * 7) % 11, x = ((i * 0.37 * (W + 400) + t * sp - cam.x * cam.s * 0.08) % (W + 400) + W + 400) % (W + 400) - 200, y = H * (0.06 + (i * 0.13) % 0.3), s = 22 + (i * 13) % 22;
+    const dk = i >= 4 ? k : k * 0.6, cc = Math.round(lerp(255, 140, dk));
+    ctx.fillStyle = `rgba(${cc},${cc},${Math.round(lerp(255, 170, dk))},${0.85})`;
+    ctx.beginPath(); ctx.ellipse(x, y, s * 2.2, s * 0.8, 0, 0, 7); ctx.ellipse(x - s, y - s * 0.5, s, s * 0.8, 0, 0, 7); ctx.ellipse(x + s * 0.7, y - s * 0.6, s * 1.2, s, 0, 0, 7); ctx.fill();
+  }
+  ctx.strokeStyle = `rgba(138,106,154,${1 - k})`; ctx.lineWidth = 2; ctx.lineCap = 'round';   // kuşlar
+  for (let i = 0; i < 3; i++){ const x = ((t * 38 + i * 410) % (W + 240)) - 120, y = H * (0.1 + 0.07 * i) + Math.sin(t * 1.4 + i * 2) * 9, fl = Math.sin(t * 8 + i) * 5;
+    ctx.beginPath(); ctx.moveTo(x - 9, y - 3 + fl); ctx.quadraticCurveTo(x - 4, y - 5, x, y); ctx.quadraticCurveTo(x + 4, y - 5, x + 9, y - 3 + fl); ctx.stroke(); }
+}
+function drawRidges(t){
+  const k = stormK(), s = cam.s;
+  const ridge = (col, par, base, a1, f1, a2, f2, ph) => {
+    ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(0, H);
+    for (let x = 0; x <= W + 8; x += 8){ const wx = (x - W / 2) / s + cam.x * par; ctx.lineTo(x, cam.gy - s * (base + a1 * Math.sin(wx * f1 + ph) + a2 * Math.sin(wx * f2 + ph * 2))); }
+    ctx.lineTo(W, H); ctx.fill();
+  };
+  // uzaktaki gökkuşağı ve Gökkuşağı Şatosu
+  const rcx = W * 0.35 - cam.x * s * 0.05, rr0 = s * 9;
+  if (k < 0.9){ ctx.lineWidth = s * 0.5; ['#ff8fb8', '#ffc77a', '#fff08a', '#9fe6a8', '#8fd0ff', '#c9a7ff'].forEach((col, i) => { ctx.strokeStyle = col; ctx.globalAlpha = 0.55 * (1 - k); ctx.beginPath(); ctx.arc(rcx, cam.gy - s * 2, rr0 - i * s * 0.5, Math.PI, 0); ctx.stroke(); }); ctx.globalAlpha = 1; }
+  const cx = W / 2 + (156 - cam.x) * s * 0.2;   // yolun sonunda, uzakta partinin olacağı Gökkuşağı Şatosu
+  if (cx > -s * 4 && cx < W + s * 4){ ctx.save(); ctx.translate(cx, cam.gy - s * 5.6); ctx.scale(s * 0.34, s * 0.34); ctx.globalAlpha = 0.55; drawRainbowCastle(ctx, t); ctx.restore(); ctx.globalAlpha = 1; }
+  ridge(k > 0.5 ? '#b9acd6' : '#d3c1f2', 0.2, 5.2, 1.6, 0.13, 0.7, 0.41, 1.3);
+  ridge(k > 0.5 ? '#94c9a4' : '#a9e3b9', 0.45, 2.6, 0.8, 0.21, 0.4, 0.57, 0.4);
+}
+function worldT(){ ctx.setTransform(DPR * cam.s, 0, 0, DPR * cam.s, DPR * (W / 2 - cam.x * cam.s), DPR * cam.gy); }
+function screenT(){ ctx.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function drawGround(t){
+  const x0 = s2wx(0) - 1, x1 = s2wx(W) + 1, yB = s2wy(H) + 1;
+  const g = ctx.createLinearGradient(0, 0, 0, 3); g.addColorStop(0, '#9be08f'); g.addColorStop(1, '#6cc47a');
+  ctx.fillStyle = '#7fcf86'; ctx.fillRect(x0, 0, x1 - x0, yB);
+  ctx.fillStyle = g; ctx.fillRect(x0, 0, x1 - x0, 3);
+  // patika
+  ctx.fillStyle = '#f3dcc0'; ctx.beginPath(); ctx.moveTo(x0, 0.25); for (let x = Math.floor(x0); x <= x1; x += 0.5) ctx.lineTo(x, 0.3 + Math.sin(x * 0.7) * 0.05); ctx.lineTo(x1, 1.0); for (let x = Math.ceil(x1); x >= x0; x -= 0.5) ctx.lineTo(x, 0.95 + Math.sin(x * 0.5) * 0.06); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = 'rgba(200,160,120,.35)'; for (let x = Math.floor(x0); x < x1; x += 1.3) ell(ctx, x + (x * 7 % 3) * 0.2, 0.62, 0.12, 0.05, 'rgba(200,160,120,.35)');
+  ctx.fillStyle = '#9be08f'; ctx.fillRect(x0, -0.02, x1 - x0, 0.14);
+  // yolun önündeki çimende çiçek öbekleri ve otlar
+  for (let x = Math.floor(x0 / 1.7) * 1.7; x < x1; x += 1.7){
+    const kk = Math.abs(Math.round(x / 1.7)), py = 1.5 + (kk * 13 % 7) * 0.32; if (kk % 4 === 3) continue;
+    if (kk % 3 === 0){ ctx.strokeStyle = '#5fb86f'; ctx.lineWidth = 0.06; ctx.lineCap = 'round'; for (let i = -2; i <= 2; i++){ ctx.beginPath(); ctx.moveTo(x + i * 0.08, py); ctx.lineTo(x + i * 0.14, py - 0.3 - Math.abs(i % 2) * 0.12); ctx.stroke(); } continue; }
+    const col = ['#ff7eb6', '#ffffff', '#ffd36e', '#c9a7ff', '#7cc8ff'][kk % 5];
+    for (const [ox, oy, r] of [[0, 0, 0.11], [0.3, 0.12, 0.09], [-0.26, 0.1, 0.08]]){ for (let i = 0; i < 5; i++) circ(ctx, x + ox + Math.cos(i * 1.257) * r, py + oy + Math.sin(i * 1.257) * r, r * 0.75, col); circ(ctx, x + ox, py + oy, r * 0.55, col === '#ffd36e' ? '#ff9f43' : '#ffd36e'); }
+  }
+  for (let x = Math.ceil(x0 / 0.8) * 0.8; x < x1; x += 0.8){
+    const kk = Math.abs(Math.round(x / 0.8)); if (kk % 3 === 1) continue;
+    const px = x + (kk * 37 % 10) / 25, py = 0.1, col = ['#ff7eb6', '#ffffff', '#ffd36e', '#c9a7ff'][kk % 4];
+    for (let i = 0; i < 4; i++) circ(ctx, px + Math.cos(i * 1.571 + 0.8) * 0.06, py + Math.sin(i * 1.571 + 0.8) * 0.06, 0.05, col);
+    circ(ctx, px, py, 0.035, col === '#ffd36e' ? '#fff' : '#ffd36e');
+  }
+}
+function inView(x, pad){ const hw = W / 2 / cam.s + (pad || 4); return x > cam.x - hw && x < cam.x + hw; }
+function drawStationArt(t){
+  const k = stormK();
+  // Mila'nın şatosu
+  if (inView(-2, 8)){ ctx.save(); ctx.translate(-2, 0); drawHomeCastle(ctx, t); ctx.restore();
+    const qTalk = speaker === 'kralice', bTalk = speaker === 'bebek';
+    if (!finale || finale.phase === 'home' || finale.phase === 'end') drawQueen(ctx, 1.8, 0, 1.55, t, qTalk, bTalk); }
+  for (const s of STATIONS){
+    if (!inView(s.x, 9)) continue;
+    ctx.save(); ctx.translate(s.x, 0);
+    if (s.id === 'cilek'){
+      for (const [bx, sc] of [[-2.4, 1], [0.2, 1.15], [2.6, 0.95]]){ ctx.save(); ctx.translate(bx, 0); ctx.scale(sc, sc); circ(ctx, -0.55, -0.42, 0.5, '#5fbf6f'); circ(ctx, 0.1, -0.6, 0.62, '#6fcb7f'); circ(ctx, 0.7, -0.4, 0.46, '#5fbf6f');
+        for (let i = 0; i < 6; i++){ const a = i * 1.1, rx = Math.cos(a) * 0.55, ry = -0.55 + Math.sin(a) * 0.28; ctx.save(); ctx.translate(rx, ry); ctx.fillStyle = '#ff3b5c'; ctx.beginPath(); ctx.moveTo(0, 0.13); ctx.quadraticCurveTo(-0.12, 0.02, -0.08, -0.05); ctx.quadraticCurveTo(0, -0.1, 0.08, -0.05); ctx.quadraticCurveTo(0.12, 0.02, 0, 0.13); ctx.fill(); circ(ctx, 0, -0.07, 0.04, '#3fa34d'); ctx.restore(); }
+        ctx.restore(); }
+    } else if (s.id === 'peri'){
+      drawMagicTree(ctx, t);
+      for (let i = 0; i < 9; i++){ const a = i / 9 * Math.PI * 2; ctx.save(); ctx.translate(Math.cos(a) * 2.6, -0.02 + Math.sin(a) * 0.25); ctx.scale(0.5, 0.5); SCN.mushroom(ctx); ctx.restore(); }
+      drawFairy(ctx, 1.6, -2.6, 1.3, t, speaker === 'peri');
+      for (let i = 0; i < 8; i++){ const fx2 = Math.sin(t * 0.7 + i * 2.1) * 3, fy = -1.5 - Math.abs(Math.sin(t * 0.9 + i)) * 2.5; circ(ctx, fx2, fy, 0.06 + 0.03 * Math.sin(t * 6 + i), 'rgba(255,250,170,.95)'); }
+    } else if (s.id === 'degirmen'){
+      for (let x = -4.6; x < 4.8; x += 0.32) if (x < -1.6 || x > 1.6) drawWheat(ctx, x, 0.9 + Math.abs(Math.sin(x * 7)) * 0.3, t, k, store.done.degirmen && Math.abs(x) > 3.3);
+      drawWindmill(ctx, t, t * (0.6 + k * 2.5));
+      drawMouse(ctx, -1.5, 0, 1.15, t, speaker === 'findik', 1);
+    } else if (s.id === 'kumes'){
+      drawCoop(ctx, t);
+      drawHen(ctx, -2.6, -0.45, 0.85, t, 0, {peck:true}, 1); drawHen(ctx, 2.7, -0.45, 0.8, t + 1, 2, {peck:true}, -1);
+      const ca = critterAnim.horoz || 0; drawRooster(ctx, 0.2, -3.86, 1.1, t, t - ca < 1.2, 1);
+    } else if (s.id === 'ahir'){
+      drawBarn(ctx, t);
+      drawCow(ctx, 3.9, -1.2, 1.15, t, {chew:true, happy:store.done.ahir}, 1);
+      drawChurn(ctx, -3.6, 0, 0.8, Math.sin(t * 1.4) * 0.05, t);
+      drawNine(ctx, -2.3, 0, 1.6, t, speaker === 'nine', 1);
+    } else if (s.id === 'sekerci'){
+      drawCandyShop(ctx, t);
+      drawLale(ctx, -1.2, 0, 1.6, t, speaker === 'lale', 1);
+    }
+    ctx.restore();
+  }
+  if (inView(138, 6)){ ctx.save(); ctx.translate(138.5, 0); drawFountain(ctx, t); ctx.restore(); }
+  if (inView(146, 6)){ ctx.save(); ctx.translate(146, 0); drawBoutique(ctx, t); ctx.restore(); }
+}
+function drawDecor(t, back){
+  const w = stormK();
+  for (const d of DECOR){
+    if (!!d.back !== back || !inView(d.x, 4)) continue;
+    ctx.save(); ctx.translate(d.x, back ? -0.15 : 0); ctx.scale(d.k * (back ? 0.85 : 1), d.k * (back ? 0.85 : 1)); if (back) ctx.globalAlpha = 0.85;
+    SCN[d.type](ctx, t, w, d.e); ctx.restore(); ctx.globalAlpha = 1;
+  }
+  if (back) return;
+  for (const [x, key] of STAR_BUSHES){
+    if (!inView(x, 3)) continue;
+    const sh = bushShake[key] ? Math.max(0, 1 - (t - bushShake[key]) * 2) : 0;
+    ctx.save(); ctx.translate(x + Math.sin(t * 40) * 0.05 * sh, 0); ctx.scale(1.1, 1.1); SCN.bush(ctx);
+    if (!store.found[key]){ const gl = 0.5 + 0.5 * Math.sin(t * 3 + x); sparkle(ctx, 0.15, -0.95, 0.12 + gl * 0.08, `rgba(255,236,140,${0.6 + 0.4 * gl})`); }
+    ctx.restore();
+  }
+}
+function drawCritters(t){
+  for (const cr of CRITTERS){
+    if (!inView(cr.x, 3)) continue;
+    const a = critterAnim[cr.k], ag = a ? t - a : 9, hop = ag < 0.6 ? Math.sin(ag / 0.6 * Math.PI) * 0.5 : 0, found = store.stickers[cr.k];
+    if (cr.k === 'tavsan'){ const bh = Math.max(0, Math.sin(t * 2.4)) * 0.18; drawBunny(ctx, cr.x + Math.sin(t * 0.4) * 0.8, 0.05, 1.0, t, hop + bh, Math.cos(t * 0.4) > 0 ? 1 : -1); }
+    else if (cr.k === 'horoz') continue;   // kümesin çatısında çizilir
+    else { const sz = cr.k === 'kirpi' ? 0.75 : 0.85; emoji(ctx, cr.e, cr.x, cr.y - sz * 0.45 - hop, sz, Math.sin(t * 2 + cr.x) * 0.05); }
+    if (!found){ const gl = 0.5 + 0.5 * Math.sin(t * 4 + cr.x); sparkle(ctx, cr.x + 0.45, cr.y - (cr.k === 'tavsan' ? 1.1 : 0.9) - hop, 0.08 + gl * 0.06, `rgba(255,255,255,${0.5 + gl * 0.5})`); }
+  }
+}
+function drawButterflies(t){
+  for (const b of BUTTERFLIES){
+    if (!b) continue;
+    let [x, y] = bfPos(b, t);
+    if (b.caught){ const k = Math.min(1, (t - b.caught) / 0.6); y -= k * 2; ctx.globalAlpha = 1 - k; }
+    if (inView(x, 2)) drawButterfly(ctx, x, y, 0.22, t + b.ph, b.col);
+    ctx.globalAlpha = 1;
+  }
+}
+// durak işareti: yardımcının başının üstünde (dx, y) ve dokunma genişliği
+const MARK = {cilek:[0.2, -2.5, 3.6], peri:[1.6, -4.7, 3.2], degirmen:[-1.5, -2.7, 3.4], kumes:[-2.6, -1.95, 3.2], ahir:[-2.3, -3.4, 4.8], sekerci:[-1.2, -3.4, 3.0]};
+function stationMarkers(t){
+  const nx = nextStation();
+  for (const s of STATIONS){
+    if (!inView(s.x, 4)) continue;
+    const done = store.done[s.id], m = MARK[s.id], bx = s.x + m[0], by = m[1] + Math.sin(t * 3 + s.x) * 0.12;
+    ctx.save(); ctx.translate(bx, by);
+    ctx.shadowColor = 'rgba(160,60,120,.3)'; ctx.shadowBlur = 8; ctx.shadowOffsetY = 2;
+    circ(ctx, 0, 0, 0.62, done ? '#ffffff' : nx === s ? '#ffffff' : 'rgba(255,255,255,.9)'); ctx.shadowColor = 'transparent';
+    ctx.lineWidth = 0.08; ctx.strokeStyle = done ? '#3fbf86' : '#ff5fa2'; ctx.beginPath(); ctx.arc(0, 0, 0.62, 0, 7); ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(-0.18, 0.56); ctx.lineTo(0, 0.86); ctx.lineTo(0.18, 0.56); ctx.fill();
+    emoji(ctx, s.e, 0, 0, 0.72);
+    if (done){ circ(ctx, 0.48, -0.42, 0.22, '#3fbf86'); ctx.fillStyle = '#fff'; ctx.font = `700 0.3px Fredoka,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('✓', 0.48, -0.4); }
+    else if (nx === s && !finale){ const p = (t * 1.2) % 1; ctx.globalAlpha = 1 - p; ctx.strokeStyle = '#ff5fa2'; ctx.lineWidth = 0.06; ctx.beginPath(); ctx.arc(0, 0, 0.62 + p * 0.6, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
+      if (!store.yolTip) emoji(ctx, '👆', 0.75, 1.15 + Math.sin(t * 5) * 0.18, 0.95, -0.5); }   // ilk kez oynayana: buraya dokun
+    ctx.restore();
+  }
+}
+function basketItems(){ return ITEMS.filter(i => store.items[i.k]).map(i => i.e); }
+function drawMilaWorld(t){
+  if (finale && (finale.phase === 'ride' || (finale.phase === 'board' && finale.t > 0.8) || (finale.phase === 'home' && finale.t < 0.6))) return;
+  const items = basketItems();
+  drawMila(ctx, mila.x, 0.42, 2.25, t, {dir:mila.dir, walk:mila.ph, moving:mila.moving, talk:speaker === 'mila', basket:items.length / 8, items, mustache:mila.mustache > 0, hop:mila.hop, wave:mila.wave > 0});
+}
+function drawCarriageWorld(t){
+  if (!finale || !finale.car) return;
+  const F = finale;
+  drawCarriage(ctx, F.car.x, 0.45, 1.25, t, F.withMila, F.car.wa);
+}
+function drawWeather(t, d){
+  const k = stormK();
+  if (finale || k > 0.75){
+    const wind = finale ? 1 : (k - 0.75) * 4;
+    if (Math.random() < d * 14 * wind) leaves.push({x:W + 20, y:Math.random() * H * 0.8, vx:-(160 + Math.random() * 200), vy:30 + Math.random() * 40, r:Math.random() * 6, col:rnd(['#8bdca5', '#ffb7d5', '#f2c14e', '#74c98f'])});
+  }
+  screenT();
+  for (const l of leaves){ l.x += l.vx * d; l.y += l.vy * d + Math.sin(t * 5 + l.r) * 0.8; l.r += d * 6; ctx.save(); ctx.translate(l.x, l.y); ctx.rotate(l.r); ell(ctx, 0, 0, 7, 3.5, l.col); ctx.restore(); }
+  leaves = leaves.filter(l => l.x > -30);
+  if (finale && finale.rain){
+    if (rain.length < 160) for (let i = 0; i < 6; i++) rain.push({x:Math.random() * (W + 200), y:-20 - Math.random() * H * 0.3, v:520 + Math.random() * 260});
+    ctx.strokeStyle = 'rgba(220,230,255,.6)'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (const r of rain){ r.y += r.v * d; r.x -= r.v * d * 0.3; ctx.moveTo(r.x, r.y); ctx.lineTo(r.x + 5, r.y - 16); if (r.y > H){ r.y = -20; r.x = Math.random() * (W + 200); } }
+    ctx.stroke();
+  }
+  if (flash > 0){ ctx.fillStyle = `rgba(240,240,255,${flash * 0.55})`; ctx.fillRect(0, 0, W, H); flash = Math.max(0, flash - d * 2.5); }
+  if (k > 0.2){ ctx.fillStyle = `rgba(60,40,90,${k * 0.16})`; ctx.fillRect(0, 0, W, H); }
+}
+function drawWorld(t, d){
+  drawSky(t); drawRidges(t);
+  worldT();
+  drawDecor(t, true);
+  drawGround(t);
+  drawDecor(t, false);
+  drawStationArt(t);
+  drawCritters(t);
+  drawCarriageWorld(t);
+  drawMilaWorld(t);
+  drawButterflies(t);
+  stationMarkers(t);
+  drawWeather(t, d);
+  drawParts(d);
+}
+
+/* ============================================================ dünyada hareket */
+function walkTo(x, then){
+  if (finale) return;
+  mila.tx = clamp(x, WORLD_X0 + 1.5, WORLD_X1 - 1.5); mila.then = then || null;
+  if (Math.abs(mila.tx - mila.x) < 0.05){ mila.then = null; then && then(); }
+}
+function updateWorld(d, t){
+  if (!finale){
+    const dx = mila.tx - mila.x, dist = Math.abs(dx);
+    if (dist > 0.04){
+      const sp = dist > 6 ? Math.min(16, 3.8 + (dist - 6) * 0.55) : 3.8, step = Math.min(dist, sp * d);   // uzak yere koşarak gider
+      mila.x += Math.sign(dx) * step; mila.dir = Math.sign(dx); mila.ph += step * (sp > 6 ? 1.6 : 2.4); mila.moving = true; mila.sp = sp; SFX.step();
+    } else if (mila.moving){ mila.moving = false; mila.x = mila.tx; store.x = mila.x; saveStore(); const f = mila.then; mila.then = null; if (f) f(); }
+    else mila.moving = false;
+  } else updateFinale(d, t);
+  mila.hop = Math.max(0, mila.hop - d * 3);
+  if (mila.wave > 0) mila.wave -= d;
+  if (mila.mustache > 0 && !finale) mila.mustache -= d * 0.02;
+  // kamera Mila'yı izler (biraz önüne bakar)
+  const target = finale && finale.car && finale.phase === 'ride' ? finale.car.x - 2 : mila.x + mila.dir * 1.8;
+  const hw = W / 2 / cam.s;
+  cam.x += (clamp(target, WORLD_X0 + hw, WORLD_X1 - hw) - cam.x) * (1 - Math.exp(-d * (3 + (mila.moving ? (mila.sp || 0) * 0.5 : 0))));
+  // kelebekler yenilenir
+  BUTTERFLIES.forEach((b, i) => { if (b && b.caught && t - b.caught > 14) spawnButterfly(i); });
+  // radyo kapalıyken arada bir kuş cıvıltısı (fırtına yaklaşınca susarlar)
+  updateWorld.bird = (updateWorld.bird || 5) - d;
+  if (updateWorld.bird <= 0){ updateWorld.bird = 5 + Math.random() * 7; if (!finale && !MilaFM.on && stormK() < 0.6 && !narr && !modalOpen()) SFX.chirp(); }
+}
+function hitWorld(sx, sy, t){
+  const wx = s2wx(sx), wy = s2wy(sy), tol = 26 / cam.s;
+  // kelebek
+  for (const b of BUTTERFLIES){ if (!b || b.caught) continue; const [x, y] = bfPos(b, t); if (Math.hypot(wx - x, wy - y) < 0.5 + tol){ catchButterfly(b, t); return true; } }
+  // hayvanlar
+  for (const cr of CRITTERS){
+    let x = cr.x, y = cr.y; if (cr.k === 'tavsan') x += Math.sin(t * 0.4) * 0.8;
+    if (cr.k === 'horoz'){ x = ST.kumes.x + 0.2; y = -3.3; }
+    if (Math.abs(wx - x) < cr.w / 2 + tol && wy < y + 0.1 + tol && wy > y - cr.h - 0.4 - tol){ pokeCritter(cr, t, x, y); return true; }
+  }
+  // yıldız çalıları
+  for (const [x, key] of STAR_BUSHES){ if (Math.abs(wx - x) < 0.9 + tol && wy > -1.3 - tol && wy < 0.3){ shakeBush(x, key, t); return true; } }
+  // duraklar
+  for (const s of STATIONS){ if (Math.abs(wx - s.x) < MARK[s.id][2] && wy > -6.4 && wy < 0.6){ goStation(s); return true; } }
+  if (Math.abs(wx - 1.8) < 0.9 + tol && wy > -2.3 - tol && wy < 0.4){ walkTo(3.4, () => { mila.dir = -1; showList(true); }); return true; }   // kraliçe anne
+  if (Math.abs(wx - 146) < 2 && wy > -4 && wy < 0.4){ walkTo(143.6, () => { mila.dir = 1; showShop(); }); return true; }   // Prenses Butiği
+  if (Math.abs(wx - mila.x) < 0.7 && wy > -2.4 && wy < 0.5){ tapMila(t); return true; }
+  walkTo(wx); return true;
+}
+function tapMila(t){
+  if (mila.mustache > 0){ mila.mustache = 0; SFX.pop(); toast('Mila bıyığını sildi 😄'); return; }
+  mila.hop = 0.5; mila.wave = 1.2; SFX.boop();
+}
+function catchButterfly(b, t){
+  b.caught = t; SFX.star(); store.butterflies = (store.butterflies || 0) + 1;
+  const [x, y] = bfPos(b, t);
+  burstW(x, y, 10, [b.col, '#fff'], 'star'); addStars(1, wx2s(x), wy2s(y));
+  if (lim('kelebekSes', 9000)) sayLine('kelebek', true);
+  if (store.butterflies >= 3) giveSticker('kelebek');
+  saveStore();
+}
+function pokeCritter(cr, t, x, y){
+  critterAnim[cr.k] = t;
+  ({tavsan:() => SFX.boing(), kirpi:() => SFX.squeak(), baykus:() => SFX.hoot(), sincap:() => SFX.squeak(), horoz:() => SFX.rooster(), kurbaga:() => SFX.ribbit()})[cr.k]();
+  burstW(x, y - 0.6, 8, PASTEL, 'heart');
+  giveSticker(cr.k);
+}
+function shakeBush(x, key, t){
+  bushShake[key] = t; SFX.rustle();
+  if (!store.found[key]){ store.found[key] = 1; saveStore(); burstW(x + 0.15, -1, 12, ['#ffe27a', '#fff'], 'star'); addStars(1, wx2s(x), wy2s(-1)); }
+}
+function goStation(s){
+  if (finale || game || iris) return;
+  if (!store.yolTip){ store.yolTip = 1; saveStore(); }
+  const stand = s.x - (s.id === 'ahir' ? 4.2 : s.id === 'sekerci' ? 2.6 : s.id === 'degirmen' ? 2.8 : 2.6);
+  walkTo(stand, () => { mila.dir = 1; openGame(s.id); });
+}
+
+/* ============================================================ final: fırtına, kral babanın faytonu, eve dönüş */
+function startFinale(){
+  if (finale) return;
+  finale = {phase:'wind', t:0, withMila:false, car:null, rain:false, said:{}};
+  mila.tx = mila.x; mila.moving = false; mila.then = null;
+  SFX.wind(); setTimeout(() => SFX.thunder(), 900); flash = 0.6;
+  sayLine('firtina');
+}
+function updateFinale(d, t){
+  const F = finale; F.t += d;
+  stormBoost = Math.min(0.3, stormBoost + d * 0.2);
+  const once = (k, fn) => { if (!F.said[k]){ F.said[k] = 1; fn(); } };
+  if (Math.random() < d * 0.25){ flash = 0.7; setTimeout(() => SFX.thunder(), 400 + Math.random() * 600); }
+  if (F.phase === 'wind'){
+    mila.dir = Math.sin(F.t * 2) > 0 ? 1 : -1;
+    if (F.t > 3.2){ F.phase = 'car'; F.t = 0; F.car = {x:mila.x - W / 2 / cam.s - 3, wa:0}; F.rain = true; }
+  } else if (F.phase === 'car'){
+    const target = mila.x - 2.6, dx = target - F.car.x;
+    F.car.x += Math.sign(dx) * Math.min(Math.abs(dx), 7 * d); F.car.wa += Math.min(Math.abs(dx), 7 * d) / 0.55;
+    mila.dir = -1;
+    if (Math.abs(dx) < 0.05){ once('kral', () => { sayLine('kral_gel'); voice('mila_baba', true); }); if (F.t > 4.2 && (!narr || F.t > 12)){ F.phase = 'board'; F.t = 0; } }   // ses takılırsa da ilerle
+    else F.t = Math.min(F.t, 0.5);
+  } else if (F.phase === 'board'){
+    const k = Math.min(1, F.t / 0.8);
+    mila.hop = Math.sin(k * Math.PI) * 1.2; mila.x = lerp(mila.x, F.car.x, k * 0.2);
+    if (F.t > 0.8) F.withMila = true;
+    if (F.t > 1.4){ F.phase = 'ride'; F.t = 0; }
+  } else if (F.phase === 'ride'){
+    const target = 4.2, dx = target - F.car.x, sp = Math.min(11, 2 + F.t * 6);
+    F.car.x += Math.sign(dx) * Math.min(Math.abs(dx), sp * d); F.car.wa -= Math.min(Math.abs(dx), sp * d) / 0.55; mila.x = F.car.x;
+    if (Math.abs(dx) < 0.05){ F.phase = 'home'; F.t = 0; F.withMila = false; mila.x = mila.tx = F.car.x + 1.4; mila.dir = -1; mila.hop = 0.8; F.rain = true; }
+  } else if (F.phase === 'home'){
+    once('kralice', () => { sayLine('kralice_aferin'); voice('bebek', true); });
+    if (F.t > 1.0) once('kutla', () => celebrate('🧺 SEPET DOLDU! 🧺'));
+    if (F.t > 4.6 && (!narr || F.t > 14)) { F.phase = 'end'; F.t = 0; finishGame(); }
+  }
+}
+
+/* ============================================================ mini oyun ortak parçaları */
+const GAMES = {};
+const hit = (p, x, y, r) => Math.hypot(p.x - x, p.y - y) < r;
+const finger = (e, px) => e && e.pointerType !== 'mouse' ? px : 0;   // dokunmatikte en az bu kadar piksel
+function sceneBG(kind, t, gy){
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  if (kind === 'orman'){ g.addColorStop(0, '#5e4b9c'); g.addColorStop(0.55, '#b98fd8'); g.addColorStop(1, '#ffc9e6'); }
+  else { g.addColorStop(0, '#a9dcff'); g.addColorStop(0.6, '#ffe3f1'); g.addColorStop(1, '#fff2d9'); }
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  if (kind === 'orman'){
+    for (let i = 0; i < 40; i++){ const x = (i * 97.3) % W, y = (i * 53.7) % (gy * 0.9), gl = 0.5 + 0.5 * Math.sin(t * 2 + i); circ(ctx, x, y, 1 + gl * 1.6, `rgba(255,255,230,${0.3 + gl * 0.6})`); }
+    ctx.fillStyle = 'rgba(80,50,120,.35)'; for (let i = 0; i < 7; i++){ const x = i * W / 6, w = W / 5; ctx.beginPath(); ctx.ellipse(x, gy - H * 0.18, w * 0.6, H * 0.3, 0, Math.PI, 0); ctx.fill(); }
+  } else {
+    const sx = W * 0.85, sy = H * 0.14, sg = ctx.createRadialGradient(sx, sy, 6, sx, sy, 90); sg.addColorStop(0, 'rgba(255,246,200,1)'); sg.addColorStop(1, 'rgba(255,240,180,0)'); ctx.fillStyle = sg; ctx.fillRect(sx - 100, sy - 100, 200, 200);
+    ctx.fillStyle = 'rgba(255,255,255,.85)'; for (let i = 0; i < 3; i++){ const x = ((i * 0.37 * (W + 300) + t * (8 + i * 4)) % (W + 300)) - 150, y = H * (0.08 + i * 0.07), s = 18 + i * 6; ctx.beginPath(); ctx.ellipse(x, y, s * 2, s * 0.7, 0, 0, 7); ctx.ellipse(x - s, y - s * 0.4, s, s * 0.7, 0, 0, 7); ctx.ellipse(x + s * 0.7, y - s * 0.5, s * 1.1, s * 0.9, 0, 0, 7); ctx.fill(); }
+    ctx.fillStyle = '#d3c1f2'; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= W + 10; x += 10) ctx.lineTo(x, gy - H * 0.16 - Math.sin(x * 0.011 + 1) * H * 0.05); ctx.lineTo(W, gy); ctx.fill();
+    ctx.fillStyle = '#a9e3b9'; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= W + 10; x += 10) ctx.lineTo(x, gy - H * 0.07 - Math.sin(x * 0.02) * H * 0.025); ctx.lineTo(W, gy); ctx.fill();
+  }
+  const gg = ctx.createLinearGradient(0, gy, 0, H); gg.addColorStop(0, kind === 'orman' ? '#8fd6a0' : '#9be08f'); gg.addColorStop(1, kind === 'orman' ? '#5aa878' : '#6cc47a');
+  ctx.fillStyle = gg; ctx.fillRect(0, gy, W, H - gy);
+  for (let x = 6; x < W; x += 22){ const k = Math.round(x / 22); if (k % 3 === 1) continue; const col = ['#ff7eb6', '#ffffff', '#ffd36e', '#c9a7ff'][k % 4], py = gy + 8 + (k * 7 % 3) * 6; for (let i = 0; i < 4; i++) circ(ctx, x + Math.cos(i * 1.571 + 0.8) * 3, py + Math.sin(i * 1.571 + 0.8) * 3, 2.6, col); circ(ctx, x, py, 1.8, '#ffd36e'); }
+}
+function bigBasket(c, x, y, w, items, t, drawItem){   // geniş hasır sepet (y: ağız çizgisi)
+  const h = w * 0.55;
+  c.save(); c.translate(x, y);
+  c.strokeStyle = '#a0672f'; c.lineWidth = w * 0.05; c.lineCap = 'round'; c.beginPath(); c.ellipse(0, 0, w * 0.42, w * 0.42, 0, Math.PI * 1.06, Math.PI * 1.94); c.stroke();
+  ell(c, 0, 0, w * 0.5, w * 0.1, '#7a4a22');
+  if (drawItem) for (let i = 0; i < items; i++){ const a = (i * 2.39) % 1 - 0.5, row = Math.floor(i / 5); drawItem(c, a * w * 0.7, -w * 0.02 - row * w * 0.08 + Math.abs(a) * w * 0.04, w * 0.16, i); }
+  c.beginPath(); c.moveTo(-w * 0.5, 0); c.lineTo(w * 0.5, 0); c.lineTo(w * 0.4, h); c.lineTo(-w * 0.4, h); c.closePath(); c.fillStyle = '#d99a52'; c.fill();
+  c.save(); c.clip(); c.strokeStyle = '#b97a3a'; c.lineWidth = w * 0.022;
+  for (let i = 1; i < 6; i++){ c.beginPath(); c.moveTo(-w * 0.5, h * i / 6); c.lineTo(w * 0.5, h * i / 6); c.stroke(); }
+  for (let i = -6; i <= 6; i++){ c.beginPath(); c.moveTo(i * w * 0.08, 0); c.lineTo(i * w * 0.065, h); c.stroke(); } c.restore();
+  rrc(c, -w * 0.53, -w * 0.035, w * 1.06, w * 0.07, w * 0.035, '#c98843');
+  c.fillStyle = '#ff7eb6'; c.beginPath(); c.moveTo(w * 0.3, h * 0.25); c.lineTo(w * 0.16, h * 0.1); c.lineTo(w * 0.16, h * 0.42); c.closePath(); c.fill(); c.beginPath(); c.moveTo(w * 0.3, h * 0.25); c.lineTo(w * 0.44, h * 0.1); c.lineTo(w * 0.44, h * 0.42); c.closePath(); c.fill(); circ(c, w * 0.3, h * 0.25, w * 0.04, '#ff4f9a');
+  c.restore();
+}
+function drawStrawberry(c, x, y, s, ripe, rot){
+  const col = ripe >= 1 ? '#ff3b5c' : ripe > 0.66 ? '#ff7a8c' : ripe > 0.33 ? '#f6efc9' : '#9ad46e';
+  c.save(); c.translate(x, y); if (rot) c.rotate(rot); c.scale(s, s);
+  c.fillStyle = col; c.beginPath(); c.moveTo(0, 0.55); c.bezierCurveTo(-0.55, 0.2, -0.55, -0.35, -0.2, -0.38); c.quadraticCurveTo(0, -0.42, 0.2, -0.38); c.bezierCurveTo(0.55, -0.35, 0.55, 0.2, 0, 0.55); c.fill();
+  c.fillStyle = ripe >= 1 ? '#ffe9a8' : 'rgba(255,255,255,.6)'; for (let i = 0; i < 9; i++){ const a = i * 2.4, r = 0.12 + (i % 3) * 0.1; ell(c, Math.cos(a) * r, 0.05 + Math.sin(a) * r * 0.9, 0.025, 0.04, c.fillStyle); }
+  ell(c, -0.18, -0.15, 0.08, 0.13, 'rgba(255,255,255,.45)', -0.4);
+  c.fillStyle = '#3fa34d'; for (let i = 0; i < 5; i++){ const a = -Math.PI / 2 + (i - 2) * 0.55; c.beginPath(); c.moveTo(0, -0.36); c.lineTo(Math.cos(a) * 0.32, -0.36 + Math.sin(a) * 0.14 - 0.02); c.lineTo(Math.cos(a + 0.25) * 0.12, -0.4); c.fill(); }
+  line(c, 0, -0.42, 0.02, -0.6, '#3fa34d', 0.06);
+  c.restore();
+}
+
+/* ============================================================ 1) Çilek Tarlası */
+GAMES.cilek = () => {
+  const need = 8; let got = 0, done = false, L = null, last = -9;
+  // her çalıda 5 çilek; bazıları yaprak altında saklı, bazıları henüz yeşil
+  const RIPE = [[1, 0.2, 1, 1, 0.5], [1, 0.0, 1, 0.35, 1], [0.6, 1, 0.1, 1, 1]];
+  const HID = [[0, 0, 0, 1, 0], [0, 1, 0, 0, 0], [1, 0, 0, 0, 0]];
+  const OFF = [[-0.55, -0.32], [0.02, -0.66], [0.56, -0.28], [-0.22, 0.08], [0.36, 0.14]];
+  const bushes = [0, 1, 2].map(b => ({berries:OFF.map((o, i) => ({o, ripe:RIPE[b][i], hid:!!HID[b][i], picked:false, wob:-9, leaf:HID[b][i] ? 0 : 1})), bug:b === 1 ? {leaf:0, x:0, found:false} : null, bugLeaf:b === 1 ? 0 : 1}));
+  const bunny = {x:0, hop:-9, dir:1};
+  const bpos = i => { const b = L.b[i]; return b; };
+  function lay(){
+    const tall = H > W * 1.1, u = tall ? Math.min(W / 6.2, H / 10.5) : Math.min(W / 10, H / 6.6), gy = H * (tall ? 0.36 : 0.84);
+    const r = u * (tall ? 1.15 : 1.35), floor = gy - u * 0.1 - r * 0.8;   // çalılar çimenin üstünde, çitin önünde
+    const b = tall ? [[0.3, H * 0.46], [0.72, H * 0.57], [0.33, H * 0.71]] : [[0.15, floor], [0.41, floor - u * 0.25], [0.67, floor]];
+    L = {u, gy, tall, r, b:b.map(([fx, y]) => ({x:W * fx, y})), bk:tall ? {x:W * 0.74, y:H * 0.8, w:u * 2.0} : {x:W * 0.88, y:gy - u * 0.7, w:u * 2.0}};
+    bunny.x = bunny.x || W * 0.12;
+  }
+  const berryXY = (bi, j) => { const B = L.b[bi], o = bushes[bi].berries[j].o; return [B.x + o[0] * L.r, B.y + o[1] * L.r]; };
+  function update(d, t){
+    for (const B of bushes) for (const be of B.berries) if (!be.picked && be.ripe < 1) be.ripe = Math.min(1, be.ripe + d * 0.11);
+    bunny.x += Math.sin(t * 0.5) * d * L.u * 0.5; bunny.dir = Math.cos(t * 0.5) > 0 ? 1 : -1;
+  }
+  function draw(t){
+    sceneBG('tarla', t, L.gy);
+    for (let x = W * 0.02; x < W; x += L.u * 0.9){ rrc(ctx, x - L.u * 0.06, L.gy - L.u * 1.3, L.u * 0.12, L.u * 0.9, L.u * 0.04, '#e8c48f'); }
+    rrc(ctx, 0, L.gy - L.u * 1.15, W, L.u * 0.1, L.u * 0.03, '#d9ab72'); rrc(ctx, 0, L.gy - L.u * 0.75, W, L.u * 0.1, L.u * 0.03, '#d9ab72');
+    bushes.forEach((B, bi) => {
+      const P = L.b[bi], r = L.r;
+      ell(ctx, P.x, P.y + r * 0.62, r * 1.05, r * 0.16, 'rgba(60,120,60,.25)');
+      circ(ctx, P.x - r * 0.55, P.y - r * 0.05, r * 0.62, '#4fae63'); circ(ctx, P.x + r * 0.55, P.y, r * 0.58, '#4fae63'); circ(ctx, P.x, P.y - r * 0.35, r * 0.75, '#5fbf6f'); circ(ctx, P.x, P.y + r * 0.2, r * 0.6, '#58b86a');
+      for (let i = 0; i < 6; i++) circ(ctx, P.x + Math.cos(i * 1.2) * r * 0.7, P.y + Math.sin(i * 1.7) * r * 0.35 - r * 0.15, r * 0.06, '#ffffff');
+      B.berries.forEach((be, j) => {
+        if (be.picked) return;
+        const [x, y] = berryXY(bi, j), wb = t - be.wob < 0.5 ? Math.sin((t - be.wob) * 40) * 0.25 * (1 - (t - be.wob) / 0.5) : 0;
+        drawStrawberry(ctx, x, y, r * 0.3, be.ripe, wb);
+        if (be.ripe >= 1 && !be.hid){ const gl = 0.5 + 0.5 * Math.sin(t * 4 + j + bi); sparkle(ctx, x + r * 0.13, y - r * 0.12, r * (0.04 + 0.03 * gl), 'rgba(255,255,255,.95)'); }
+      });
+      if (B.bug && B.bugLeaf === 1 && !B.bug.found){ const bx = P.x + Math.sin(t * 0.8) * r * 0.5, by = P.y - r * 0.2 + Math.cos(t * 1.1) * r * 0.15; emoji(ctx, '🐞', bx, by, r * 0.28, Math.sin(t * 3) * 0.3); B.bug.x = bx; B.bug.y = by; }
+      // yapraklar (saklı çilekleri ve uğur böceğini örter)
+      const leaves = []; B.berries.forEach((be, j) => { if (be.hid) leaves.push([j, be.leaf]); }); if (B.bug) leaves.push(['bug', B.bugLeaf]);
+      for (const [j, lift] of leaves){
+        const [x, y] = j === 'bug' ? [P.x + r * 0.1, P.y - r * 0.15] : berryXY(bi, j), k = ease(Math.min(1, lift));
+        ctx.save(); ctx.translate(x - k * r * 0.5, y - k * r * 0.4); ctx.rotate(-0.4 - k * 1.2); ctx.globalAlpha = 1 - k * 0.65;
+        ell(ctx, -r * 0.16, 0, r * 0.26, r * 0.16, '#3f9a52', -0.4); ell(ctx, r * 0.16, 0, r * 0.26, r * 0.16, '#48a85c', 0.4); line(ctx, -r * 0.3, 0, r * 0.3, 0, '#2f7d40', r * 0.03);
+        ctx.restore(); ctx.globalAlpha = 1;
+        if (lift < 1 && lift > 0){ const B2 = j === 'bug' ? B : null; if (B2) B.bugLeaf = Math.min(1, lift + 0.05); else B.berries[j].leaf = Math.min(1, lift + 0.05); }
+      }
+    });
+    const tb = t - bunny.hop, hp = tb < 0.6 ? Math.sin(tb / 0.6 * Math.PI) * 0.6 : Math.max(0, Math.sin(t * 2.6)) * 0.12;
+    drawBunny(ctx, bunny.x, L.tall ? H * 0.94 : L.gy + L.u * 0.25, L.u * 1.1, t, hp, bunny.dir);
+    bigBasket(ctx, L.bk.x, L.bk.y, L.bk.w, got, t, (c, x, y, s) => drawStrawberry(c, x, y, s * 0.9, 1, x * 0.01));
+    if (got === 0 && t - last > 4.5){   // bir süre dokunulmazsa: olgun bir çileği göster
+      outer: for (let bi = 0; bi < 3; bi++) for (let j = 0; j < 5; j++){ const be = bushes[bi].berries[j]; if (!be.picked && !be.hid && be.ripe >= 1){ const [x, y] = berryXY(bi, j); emoji(ctx, '👆', x + L.r * 0.12, y + L.r * 0.42 + Math.sin(t * 5) * L.r * 0.08, L.r * 0.5, -0.4); break outer; } }
+    }
+  }
+  function down(p, e, t){
+    if (done) return;
+    last = t;
+    const fr = finger(e, 26);
+    const tb = t - bunny.hop, by = L.tall ? H * 0.94 : L.gy + L.u * 0.25; if (tb > 0.6 && hit(p, bunny.x, by - L.u * 0.45, Math.max(L.u * 0.6, fr))){ bunny.hop = t; SFX.boing(); giveSticker('tavsan'); return; }
+    for (let bi = 0; bi < 3; bi++){
+      const B = bushes[bi];
+      if (B.bug && B.bugLeaf >= 1 && !B.bug.found && B.bug.x && hit(p, B.bug.x, B.bug.y, Math.max(L.r * 0.25, fr))){ B.bug.found = true; SFX.star(); burst(B.bug.x, B.bug.y, 12, ['#ff3b5c', '#222', '#fff'], 'dot'); giveSticker('ugur'); return; }
+      let best = null, bd = 1e9;
+      B.berries.forEach((be, j) => { if (be.picked) return; const [x, y] = berryXY(bi, j), dd = Math.hypot(p.x - x, p.y - y); if (dd < Math.max(L.r * 0.3, fr) && dd < bd){ bd = dd; best = j; } });
+      if (best == null){
+        if (B.bug && B.bugLeaf === 0 && hit(p, L.b[bi].x + L.r * 0.1, L.b[bi].y - L.r * 0.15, Math.max(L.r * 0.32, fr))){ B.bugLeaf = 0.01; SFX.rustle(); return; }
+        continue;
+      }
+      const be = B.berries[best], [x, y] = berryXY(bi, best);
+      if (be.hid && be.leaf < 1){ be.leaf = Math.max(be.leaf, 0.01); SFX.rustle(); return; }
+      if (be.ripe < 1){ be.wob = t; SFX.nope(); floatText(x, y - L.r * 0.3, 'Henüz olmamış! 🌱', '#3f9a52'); if (lim('olmadi', 8000)) sayLine('cilek_olmadi', true); return; }
+      be.picked = true; SFX.pop(); burst(x, y, 10, ['#ff3b5c', '#ffd1dc', '#fff'], 'dot');
+      flyTo((c, fx, fy, k) => drawStrawberry(c, fx, fy, L.r * 0.3, 1, k * 6), x, y, L.bk.x + rr(-0.2, 0.2) * L.bk.w, L.bk.y, 0.75, () => {
+        if (!alive(self)) return;
+        got++; SFX.plop(); hudSet(`🍓 ${got}/${need}`, true); burst(L.bk.x, L.bk.y, 8, PASTEL, 'heart');
+        if (got >= need && !done){ done = true; lockBack(); sayLine('cilek_bitti'); setTimeout(() => winGame('cilek', self), 1600); }
+      });
+      return;
+    }
+  }
+  const self = {lay, update, draw, down, start(t){ last = t; hudSet(`🍓 0/${need}`); sayLine('cilek_gel'); voice('cilek_nasil', true); setTimeout(() => { if (alive(self)) setSay(plain(SAY.cilek_nasil[1]), 'cilek_nasil', '', true); }, 3200); }};
+  return self;
+};
+
+/* ============================================================ 2) Peri Bahçesi: şarkı söyleyen çiçekler + çikolata yağmuru */
+GAMES.peri = () => {
+  const NOTES = [523.25, 587.33, 659.25, 783.99, 880], COLS = ['#ff7eb6', '#ffd36e', '#8fe3b9', '#7cc8ff', '#c9a7ff'];
+  let L = null, phase = 'intro', ph0 = 0, round = 0, seq = [], idx = 0, misses = 0, demoAt = 0, nextNote = 0, bloom = 0;
+  const ROUNDS = [2, 3, 4];
+  const fl = COLS.map((col, i) => ({col, f:NOTES[i], glow:-9, sing:-9}));
+  // yağmur
+  let drops = [], spawnT = 0, caught = 0, need = 8, bx = 0, tx = 0, pods = 0, done = false;
+  function lay(){
+    const tall = H > W * 1.1, u = tall ? Math.min(W / 6, H / 10) : Math.min(W / 10, H / 6.6), gy = H * (tall ? 0.82 : 0.86);
+    L = {u, gy, tall, fairy:tall ? {x:W * 0.76, y:H * 0.3} : {x:W * 0.84, y:H * 0.34}, hearts:{x:W * 0.5, y:H * (tall ? 0.36 : 0.38)}};
+    fl.forEach((f, i) => { const k = i / 4; f.x = W * (0.1 + k * 0.8); f.h = u * (tall ? 2.6 : 2.0) * (0.78 + 0.22 * Math.sin(k * Math.PI)); f.r = Math.min(u * 0.62, W * 0.075); f.base = gy; f.top = gy - f.h; });
+    L.bk = {y:gy - u * 0.75, w:u * 2.1}; const bw = L.bk.w / 2;   // ekran dönerse sepet ekranda kalsın
+    bx = clamp(bx || W / 2, bw, W - bw); tx = clamp(tx || bx, bw, W - bw);
+  }
+  const newSeq = n => { const s = []; while (s.length < n){ const v = Math.random() * 5 | 0; if (v !== s[s.length - 1]) s.push(v); } return s; };
+  function playDemo(t){ phase = 'demo'; idx = 0; nextNote = t + 0.7; }
+  function sing(i, t){ fl[i].sing = t; SFX.note(fl[i].f); burst(fl[i].x, fl[i].top, 6, [fl[i].col, '#fff'], 'star'); }
+  function update(d, t){
+    if (phase === 'intro' && ((t - ph0 > 2 && !narr) || t - ph0 > 11)){ seq = newSeq(ROUNDS[0]); playDemo(t); }   // peri sözünü bitirsin
+    if (phase === 'demo' && t >= nextNote){
+      if (idx < seq.length){ sing(seq[idx], t); idx++; nextNote = t + 0.62; }
+      else { phase = 'turn'; idx = 0; setSay(plain(SAY.peri_sira[1]), 'peri_sira'); if (round === 0 && misses === 0) voice('peri_sira'); }
+    }
+    if ((phase === 'good' || phase === 'oops') && t >= nextNote && (!narr || t > nextNote + 3)){
+      if (phase === 'good'){ round++; misses = 0;
+        if (round >= ROUNDS.length){ phase = 'bloom'; ph0 = t; sayLine('peri_aferin'); SFX.magic(); hudSet('🌸 3/3', true); }
+        else { seq = newSeq(ROUNDS[round]); playDemo(t); hudSet(`🎵 ${round + 1}/3`, true); } }
+      else playDemo(t);
+    }
+    if (phase === 'bloom'){ bloom = Math.min(1, (t - ph0) / 1.4);
+      if (t - ph0 > 1.6 && pods < 3 && t - ph0 > 1.6 + pods * 0.35){ const f = fl[[0, 2, 4][pods]]; pods++; flyTo('🍦', f.x, f.top, W * 0.5, -40, 0.9, () => { SFX.coin(); }); burst(f.x, f.top, 14, ['#fff6c9', '#ffe39a'], 'star'); }
+      if (t - ph0 > 3.6){ phase = 'rain'; ph0 = t; sayLine('peri_yagmur'); hudSet(`🍫 0/${need}`); }
+    }
+    if (phase === 'rain'){
+      bx += (tx - bx) * (1 - Math.exp(-d * 14));
+      const cx = W / 2 + Math.sin(t * 0.7) * W * 0.32, cy = H * 0.2;
+      spawnT -= d;
+      if (spawnT <= 0 && t - ph0 > 2.2 && !done){ spawnT = 0.62 + Math.random() * 0.35;
+        const x = Math.random() < 0.42 ? clamp(bx + rr(-0.7, 0.7) * L.u, L.u, W - L.u) : clamp(cx + rr(-1, 1) * L.u, L.u, W - L.u);
+        drops.push({x, y:cy + L.u * 0.4, v:L.u * (2.0 + Math.random() * 0.6), sw:Math.random() * 7, star:Math.random() < 0.16, rot:Math.random() * 6, dead:0}); }
+      for (const dr of drops){
+        if (dr.dead){ dr.dead += d; continue; }
+        dr.y += dr.v * d; dr.x += Math.sin(t * 2 + dr.sw) * L.u * 0.3 * d; dr.rot += d * 2;
+        if (dr.y > L.bk.y - L.u * 0.1 && dr.y < L.bk.y + L.u * 0.3 && Math.abs(dr.x - bx) < L.bk.w * 0.48){
+          dr.dead = -1;
+          if (dr.star){ SFX.star(); addStars(1, dr.x, dr.y); burst(dr.x, dr.y, 10, ['#ffe27a', '#fff'], 'star'); }
+          else { caught++; SFX.plop(); burst(dr.x, dr.y, 8, ['#7a4a2e', '#c98a55', '#fff'], 'dot'); hudSet(`🍫 ${caught}/${need}`, true);
+            if (caught >= need && !done){ done = true; lockBack(); sayLine('peri_bitti'); setTimeout(() => winGame('peri', self), 2200); } }
+        } else if (dr.y > L.gy + L.u * 0.1){ dr.dead = 0.001; }
+      }
+      drops = drops.filter(dr => dr.dead >= 0 && dr.dead < 0.6);
+    }
+  }
+  function drawFlower(f, i, t){
+    const sing = Math.max(0, 1 - (t - f.sing) / 0.5), pulse = phase === 'turn' && misses >= 2 && seq[idx] === i ? 0.5 + 0.5 * Math.sin(t * 8) : 0;
+    const b = bloom, R = f.r * (1 + sing * 0.18 + b * 0.25), sway = Math.sin(t * 1.5 + i) * 0.04;
+    ctx.save(); ctx.translate(f.x, f.base); ctx.rotate(sway);
+    line(ctx, 0, 0, 0, -f.h + R * 0.4, '#5cb86e', f.r * 0.16);
+    ell(ctx, -f.r * 0.45, -f.h * 0.35, f.r * 0.5, f.r * 0.2, '#6fcb7f', -0.5); ell(ctx, f.r * 0.45, -f.h * 0.55, f.r * 0.5, f.r * 0.2, '#6fcb7f', 0.5);
+    ctx.translate(0, -f.h);
+    if (sing > 0 || pulse > 0){ const g = ctx.createRadialGradient(0, 0, R * 0.3, 0, 0, R * 2.2); g.addColorStop(0, `rgba(255,255,255,${0.7 * Math.max(sing, pulse * 0.6)})`); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(-R * 2.2, -R * 2.2, R * 4.4, R * 4.4); }
+    const np = 6 + Math.round(b * 2);
+    for (let k = 0; k < np; k++){ const a = k / np * Math.PI * 2 + t * 0.2 * b; ell(ctx, Math.cos(a) * R * 0.62, Math.sin(a) * R * 0.62, R * 0.52, R * 0.34, f.col, a); }
+    circ(ctx, 0, 0, R * 0.55, '#fff6d6');
+    // yüz: şarkı söylerken ağzı açılır
+    const open = sing > 0 ? 0.6 + 0.4 * Math.sin(t * 30) : 0;
+    if (sing > 0 || b > 0.5){ circ(ctx, -R * 0.18, -R * 0.08, R * 0.07, '#4a2545'); circ(ctx, R * 0.18, -R * 0.08, R * 0.07, '#4a2545'); }
+    else { ctx.strokeStyle = '#4a2545'; ctx.lineWidth = R * 0.05; ctx.lineCap = 'round'; for (const ex of [-0.18, 0.18]){ ctx.beginPath(); ctx.arc(R * ex, -R * 0.1, R * 0.08, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke(); } }
+    circ(ctx, -R * 0.33, R * 0.12, R * 0.08, 'rgba(255,110,160,.5)'); circ(ctx, R * 0.33, R * 0.12, R * 0.08, 'rgba(255,110,160,.5)');
+    if (open){ ell(ctx, 0, R * 0.17, R * 0.1, R * 0.07 + open * R * 0.08, '#c2436f'); } else { ctx.strokeStyle = '#c2436f'; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, R * 0.1, R * 0.12, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke(); }
+    if (sing > 0) for (let k = 0; k < 2; k++){ const q = (t * 1.5 + k * 0.5) % 1; ctx.globalAlpha = sing * (1 - q); ctx.fillStyle = f.col; ctx.font = `700 ${R * 0.6}px Fredoka,sans-serif`; ctx.textAlign = 'center'; ctx.fillText('♪', R * (0.6 + q * 0.5) * (k ? -1 : 1), -R * (0.7 + q)); ctx.globalAlpha = 1; }
+    if (b > 0 && i % 2 === 0 && pods <= [0, 2, 4].indexOf(i)){ ctx.save(); ctx.rotate(-0.3); rrc(ctx, -R * 0.06, -R * 0.2, R * 0.12, R * 0.9, R * 0.06, '#5a3a22'); ctx.restore(); }
+    ctx.restore();
+  }
+  function draw(t){
+    sceneBG('orman', t, L.gy);
+    if (phase !== 'rain'){
+      fl.forEach((f, i) => drawFlower(f, i, t));
+      drawFairy(ctx, L.fairy.x + Math.sin(t * 0.8) * L.u * 0.25, L.fairy.y, L.u * 1.4, t, speaker === 'peri');
+      // ilerleme: üç tur, üç kalp
+      for (let i = 0; i < ROUNDS.length; i++) heart(ctx, L.hearts.x + (i - 1) * L.u * 0.62, L.hearts.y, L.u * 0.55, i < round ? '#ff4f9a' : 'rgba(255,255,255,.55)');
+    } else {
+      const cx = W / 2 + Math.sin(t * 0.7) * W * 0.32, cy = H * 0.2, s = L.u;
+      ctx.fillStyle = '#f7d9ff'; ctx.beginPath(); ctx.ellipse(cx, cy, s * 1.6, s * 0.55, 0, 0, 7); ctx.ellipse(cx - s * 0.8, cy - s * 0.35, s * 0.7, s * 0.55, 0, 0, 7); ctx.ellipse(cx + s * 0.6, cy - s * 0.45, s * 0.85, s * 0.7, 0, 0, 7); ctx.fill();
+      circ(ctx, cx - s * 0.35, cy - s * 0.05, s * 0.07, '#4a2545'); circ(ctx, cx + s * 0.35, cy - s * 0.05, s * 0.07, '#4a2545'); ctx.strokeStyle = '#c2436f'; ctx.lineWidth = s * 0.05; ctx.beginPath(); ctx.arc(cx, cy + s * 0.05, s * 0.15, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+      drawFairy(ctx, cx + s * 1.9, cy - s * 0.3, s * 1.0, t, speaker === 'peri');
+      for (const dr of drops){
+        ctx.globalAlpha = dr.dead > 0 ? 1 - dr.dead / 0.6 : 1;
+        if (dr.star) star(ctx, dr.x, dr.y, L.u * 0.28, '#ffe27a', dr.rot);
+        else { ctx.save(); ctx.translate(dr.x, dr.y); ctx.rotate(Math.sin(dr.rot) * 0.4); const q = L.u * 0.38; rrc(ctx, -q / 2, -q / 2, q, q * 0.9, q * 0.18, '#7a4a2e'); ctx.strokeStyle = '#5e3721'; ctx.lineWidth = q * 0.08; ctx.beginPath(); ctx.moveTo(0, -q / 2); ctx.lineTo(0, q * 0.4); ctx.moveTo(-q / 2, -q * 0.05); ctx.lineTo(q / 2, -q * 0.05); ctx.stroke(); ell(ctx, -q * 0.2, -q * 0.3, q * 0.12, q * 0.06, 'rgba(255,255,255,.35)'); ctx.restore(); }
+      }
+      ctx.globalAlpha = 1;
+      bigBasket(ctx, bx, L.bk.y, L.bk.w, Math.min(caught, 10), t, (c, x, y, s) => { rrc(c, x - s * 0.5, y - s * 0.4, s, s * 0.8, s * 0.15, '#7a4a2e'); });
+      if (t - ph0 < 3.5){ const k = (t * 1.4) % 1; ctx.globalAlpha = 1 - k; emoji(ctx, '👆', bx + Math.sin(t * 3) * L.u, L.bk.y + L.u * 1.0, L.u * 0.7); ctx.globalAlpha = 1; }
+    }
+  }
+  function down(p, e, t){
+    if (phase === 'rain'){ tx = clamp(p.x, L.bk.w * 0.5, W - L.bk.w * 0.5); return; }
+    const fr = finger(e, 30);
+    for (let i = 0; i < 5; i++){
+      const f = fl[i];
+      if (!hit(p, f.x, f.top, Math.max(f.r * 1.15, fr)) && !(Math.abs(p.x - f.x) < f.r && p.y > f.top && p.y < f.base)) continue;
+      sing(i, t);
+      if (phase !== 'turn') return;
+      if (seq[idx] === i){ idx++; if (idx >= seq.length){ phase = 'good'; nextNote = t + 1.0; SFX.win(); burst(L.fairy.x, L.fairy.y, 16, PASTEL, 'heart'); if (round < ROUNDS.length - 1) sayLine('aferin'); } }
+      else { misses++; phase = 'oops'; nextNote = t + 1.4; setTimeout(() => SFX.boing(), 120); sayLine('peri_tekrar'); }
+      return;
+    }
+    if (hit(p, L.fairy.x, L.fairy.y, L.u * 0.9)){ giveSticker('peri'); SFX.magic(); burst(L.fairy.x, L.fairy.y, 14, PASTEL, 'star'); }
+  }
+  function move(p){ if (phase === 'rain') tx = clamp(p.x, L.bk.w * 0.5, W - L.bk.w * 0.5); }
+  const self = {lay, update, draw, down, move, start(t){ ph0 = t; sayLine('peri_gel'); voice('peri_dinle', true); hudSet('🎵 1/3'); }, get dbg(){ return {phase, seq, idx, round, flowers:fl.map(f => [Math.round(f.x), Math.round(f.top)]), caught, bx:Math.round(bx)}; }};
+  return self;
+};
+
+/* ============================================================ 3) Değirmen: buğday biçme + kanatları çevirme */
+GAMES.degirmen = () => {
+  let L = null, phase = 'wheat', cutN = 0, need = 10, trail = [], last = null, ang = 0, om = 0, prog = 0, grab = null, done = false, hinted = 0, sheaves = 0;
+  const stalks = Array.from({length:need}, (_, i) => ({i, cut:false, cutT:-9, cutAt:0.5}));
+  function lay(){
+    const tall = H > W * 1.1, u = tall ? Math.min(W / 6.2, H / 10.5) : Math.min(W / 10, H / 6.6), gy = H * (tall ? 0.62 : 0.86);
+    L = {u, gy, tall};
+    stalks.forEach((s, i) => {
+      if (tall){ const row = i < 5 ? 0 : 1, k = i % 5; s.x = W * (0.14 + k * 0.18 + (row ? 0.04 : 0)); s.base = row ? gy + u * 1.7 : gy; s.h = u * 2.1; }
+      else { s.x = W * (0.2 + i * 0.07); s.base = gy - u * 0.15; s.h = u * 2.4; }
+    });
+    L.mouse = tall ? {x:W * 0.14, y:H - u * 0.15} : {x:W * 0.08, y:gy};
+    L.cart = tall ? {x:W * 0.8, y:H - u * 0.15} : {x:W * 0.92, y:gy};
+    L.hub = tall ? {x:W * 0.56, y:H * 0.36} : {x:W * 0.6, y:H * 0.36}; L.sail = Math.min(W, H) * (tall ? 0.36 : 0.3);
+    L.sack = tall ? {x:W * 0.2, y:gy - u * 0.2} : {x:W * 0.22, y:gy - u * 0.2};
+  }
+  function cutStalk(s, t, fromY){
+    s.cut = true; s.cutT = t; s.cutAt = clamp((s.base - fromY) / s.h, 0.2, 0.75); cutN++; SFX.swish();
+    const hy = s.base - s.h; burst(s.x, hy, 10, ['#f2c14e', '#ffe9a8', '#e9b23a'], 'dot');
+    setTimeout(() => { if (alive(self)) flyTo('🌾', s.x, hy, L.cart.x, L.cart.y - L.u * 0.8, 0.7, () => { sheaves++; SFX.pick(); }); }, 250);
+    hudSet(`🌾 ${cutN}/${need}`, true);
+    if (cutN >= need){ setTimeout(() => { if (!alive(self)) return; phase = 'mill'; sayLine('findik_ruzgar'); hudSet('💨 0%'); }, 1300); }
+  }
+  function segHit(a, b, s){   // a-b parmak yolu, başak gövdesi kesişiyor mu
+    const p = {x:s.x, y:s.base - s.h * 0.2}, q = {x:s.x, y:s.base - s.h * 1.05};
+    const cr = (o, u, v) => (u.x - o.x) * (v.y - o.y) - (u.y - o.y) * (v.x - o.x);
+    const d1 = cr(a, b, p), d2 = cr(a, b, q), d3 = cr(p, q, a), d4 = cr(p, q, b);
+    if (((d1 > 0) !== (d2 > 0)) && ((d3 > 0) !== (d4 > 0))){ const k = Math.abs(d3) / (Math.abs(d3) + Math.abs(d4) || 1); return a.y + (b.y - a.y) * k; }
+    return null;
+  }
+  function update(d, t){
+    trail = trail.filter(q => t - q.t < 0.25);
+    if (phase === 'mill'){
+      if (!grab) om *= Math.exp(-d * 0.45);
+      ang += om * d;
+      const sp = Math.abs(om);
+      if (sp > 0.3 && !done){ prog = Math.min(1, prog + sp * d / (Math.PI * 2 * 4.5)); SFX.creak(); if (sp > 1.5) SFX.grind();
+        if (Math.random() < d * sp * 2) burst(L.hub.x - L.u * 0.1, H * 0.95 - L.u * 0.5, 2, ['rgba(255,255,255,.9)'], 'smoke');
+        hudSet(`💨 ${Math.round(prog * 100)}%`);
+        if (prog >= 1){ done = true; lockBack(); SFX.win(); sayLine('findik_bitti'); flyTo('🌾', L.sack.x, L.sack.y - L.u, W / 2, -40, 1.0); setTimeout(() => winGame('degirmen', self), 2600); } }
+    }
+  }
+  function drawMillScene(t){
+    const s = L.sail, hx = L.hub.x, hy = L.hub.y, base = L.gy;
+    ctx.fillStyle = '#fff1dc'; ctx.beginPath(); ctx.moveTo(hx - s * 0.42, base); ctx.lineTo(hx - s * 0.26, hy); ctx.lineTo(hx + s * 0.26, hy); ctx.lineTo(hx + s * 0.42, base); ctx.fill();
+    ctx.fillStyle = '#ffe2c2'; ctx.beginPath(); ctx.moveTo(hx + s * 0.14, base); ctx.lineTo(hx + s * 0.18, hy); ctx.lineTo(hx + s * 0.26, hy); ctx.lineTo(hx + s * 0.42, base); ctx.fill();
+    ctx.fillStyle = '#ff8fc0'; ctx.beginPath(); ctx.moveTo(hx - s * 0.36, hy + s * 0.02); ctx.lineTo(hx, hy - s * 0.42); ctx.lineTo(hx + s * 0.36, hy + s * 0.02); ctx.fill();
+    rrc(ctx, hx - s * 0.12, base - s * 0.42, s * 0.24, s * 0.42, s * 0.12, '#b26bff'); rrc(ctx, hx - s * 0.08, hy + s * 0.3, s * 0.16, s * 0.18, s * 0.03, '#bfe9ff');
+    ctx.save(); ctx.translate(hx, hy); ctx.rotate(ang);
+    for (let i = 0; i < 4; i++){ ctx.rotate(Math.PI / 2); rrc(ctx, -s * 0.025, -s, s * 0.05, s, s * 0.01, '#a9744f'); rrc(ctx, s * 0.025, -s * 0.96, s * 0.24, s * 0.7, s * 0.02, 'rgba(255,255,255,.95)');
+      ctx.strokeStyle = 'rgba(169,116,79,.45)'; ctx.lineWidth = s * 0.012; for (let k = 1; k < 4; k++){ ctx.beginPath(); ctx.moveTo(s * 0.025, -s * 0.96 + k * s * 0.175); ctx.lineTo(s * 0.265, -s * 0.96 + k * s * 0.175); ctx.stroke(); }
+      heart(ctx, s * 0.145, -s * 0.62, s * 0.1, PASTEL[i]); }
+    ctx.restore(); circ(ctx, hx, hy, s * 0.07, '#f6c445'); circ(ctx, hx, hy, s * 0.03, '#ffffff');
+    if (!hinted && phase === 'mill'){ const k = (t * 0.8) % 1; ctx.strokeStyle = `rgba(255,95,162,${1 - k})`; ctx.lineWidth = 4; ctx.setLineDash([10, 8]); ctx.beginPath(); ctx.arc(hx, hy, s * 0.7, t, t + 4.5); ctx.stroke(); ctx.setLineDash([]); emoji(ctx, '👆', hx + Math.cos(t * 2) * s * 0.7, hy + Math.sin(t * 2) * s * 0.7, L.u * 0.7); }
+    // un çuvalı: dolarken şişer
+    const sk = L.sack, f = prog, w = L.u * (1.1 + f * 0.35), h = L.u * (1.0 + f * 0.6);
+    ctx.save(); ctx.translate(sk.x, sk.y);
+    ctx.fillStyle = '#f4ead8'; ctx.beginPath(); ctx.moveTo(-w * 0.45, 0); ctx.quadraticCurveTo(-w * 0.62, -h * 0.6, -w * 0.3, -h); ctx.lineTo(w * 0.3, -h); ctx.quadraticCurveTo(w * 0.62, -h * 0.6, w * 0.45, 0); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#d9c7a8'; ctx.lineWidth = 3; ctx.stroke();
+    ell(ctx, 0, -h, w * 0.32, h * 0.08, '#ffffff'); line(ctx, -w * 0.3, -h * 0.9, w * 0.3, -h * 0.9, '#ff7eb6', 4);
+    ctx.fillStyle = '#c9a46a'; ctx.font = `700 ${L.u * 0.32}px Fredoka,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('UN', 0, -h * 0.45);
+    rrc(ctx, -w * 0.4, L.u * 0.2, w * 0.8, L.u * 0.16, L.u * 0.08, 'rgba(255,255,255,.7)'); rrc(ctx, -w * 0.4, L.u * 0.2, w * 0.8 * prog, L.u * 0.16, L.u * 0.08, '#ff5fa2');
+    ctx.restore();
+  }
+  function draw(t){
+    sceneBG('tarla', t, L.gy);
+    if (phase === 'wheat'){
+      for (const s of stalks){
+        ctx.save(); ctx.translate(s.x, s.base); ctx.scale(L.u, L.u);
+        const hh = s.h / L.u, bunch = (cut) => { drawWheat(ctx, -0.16, hh * 0.9, t + 0.7, 0, cut); drawWheat(ctx, 0.17, hh * 0.94, t + 1.3, 0, cut); drawWheat(ctx, 0, hh, t, 0, cut); };
+        if (!s.cut) bunch(false);
+        else { bunch(true); const k = Math.min(1, (t - s.cutT) / 0.7); if (k < 1){ ctx.globalAlpha = 1 - k; ctx.translate(0, -hh * s.cutAt + k * 0.8); ctx.rotate(k * 1.6); drawWheat(ctx, -0.16, hh * (0.9 - s.cutAt), t, 0, false); drawWheat(ctx, 0.17, hh * (0.94 - s.cutAt), t, 0, false); drawWheat(ctx, 0, hh * (1 - s.cutAt), t, 0, false); ctx.globalAlpha = 1; } }
+        ctx.restore();
+      }
+      if (cutN === 0){ const k = (t * 0.7) % 1, a = stalks[0], b = stalks[Math.min(4, need - 1)]; ctx.globalAlpha = Math.sin(k * Math.PI); emoji(ctx, '👆', lerp(a.x, b.x, k), a.base - a.h * 0.55, L.u * 0.8); ctx.globalAlpha = 1; }
+      // araba
+      const c0 = L.cart; rrc(ctx, c0.x - L.u * 0.9, c0.y - L.u * 1.0, L.u * 1.8, L.u * 0.65, L.u * 0.12, '#c98a55');
+      for (let i = 0; i < Math.min(sheaves, 10); i++) emoji(ctx, '🌾', c0.x - L.u * 0.6 + (i % 5) * L.u * 0.3, c0.y - L.u * 1.15 - Math.floor(i / 5) * L.u * 0.25, L.u * 0.5, (i % 2 ? 0.2 : -0.2));
+      for (const k of [-0.55, 0.55]){ circ(ctx, c0.x + k * L.u, c0.y - L.u * 0.3, L.u * 0.32, '#8d5f3e'); circ(ctx, c0.x + k * L.u, c0.y - L.u * 0.3, L.u * 0.12, '#f6c445'); }
+      // parmak izi: altın yay
+      if (trail.length > 1){ ctx.lineCap = 'round'; ctx.lineJoin = 'round'; for (let i = 1; i < trail.length; i++){ const a = trail[i - 1], b = trail[i], k = 1 - (t - b.t) / 0.25; ctx.strokeStyle = `rgba(255,230,140,${k})`; ctx.lineWidth = 10 * k + 2; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); } }
+    } else drawMillScene(t);
+    drawMouse(ctx, L.mouse.x, L.mouse.y, L.u * 1.7, t, speaker === 'findik', 1);
+  }
+  function down(p, e, t){
+    if (phase === 'wheat'){
+      last = {x:p.x, y:p.y}; trail.push({x:p.x, y:p.y, t});
+      const fr = finger(e, 22);
+      for (const s of stalks) if (!s.cut && Math.abs(p.x - s.x) < Math.max(L.u * 0.35, fr) && p.y < s.base - s.h * 0.15 && p.y > s.base - s.h * 1.25){ cutStalk(s, t, p.y); break; }
+      if (hit(p, L.mouse.x, L.mouse.y - L.u * 1.0, L.u * 0.9)){ SFX.squeak(); giveSticker('findik'); }
+      return;
+    }
+    if (hit(p, L.mouse.x, L.mouse.y - L.u * 1.0, L.u * 0.9)){ SFX.squeak(); giveSticker('findik'); }
+    if (Math.hypot(p.x - L.hub.x, p.y - L.hub.y) < L.sail * 1.25){ grab = {a:Math.atan2(p.y - L.hub.y, p.x - L.hub.x), t}; hinted = 1; }
+  }
+  function move(p, e, t){
+    if (phase === 'wheat'){
+      if (!last) return;
+      const a = last, b = {x:p.x, y:p.y}; trail.push({x:p.x, y:p.y, t});
+      for (const s of stalks){ if (s.cut) continue; const y = segHit(a, b, s); if (y != null) cutStalk(s, t, y); }
+      last = b; return;
+    }
+    if (!grab) return;
+    const a = Math.atan2(p.y - L.hub.y, p.x - L.hub.x); let da = a - grab.a; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2;
+    const dt = Math.max(0.008, t - grab.t); ang += da; om = lerp(om, clamp(da / dt, -14, 14), 0.5); grab = {a, t};
+  }
+  function up(p, e, t){
+    if (phase === 'wheat' && last && p){ const b = {x:p.x, y:p.y}; for (const s of stalks){ if (s.cut) continue; const y = segHit(last, b, s); if (y != null) cutStalk(s, t, y); } }   // son parça da sayılsın
+    last = null; grab = null;
+  }
+  const self = {lay, update, draw, down, move, up, start(){ hudSet(`🌾 0/${need}`); sayLine('findik_gel'); voice('findik_bic', true); }, get dbg(){ return {phase, cutN, prog, om, hub:L.hub, sail:L.sail}; }};
+  return self;
+};
+
+/* ============================================================ iç mekân arka planı (kümes, ahır, dükkân) */
+function indoorBG(kind, t, floorY){
+  const wall = kind === 'dukkan' ? ['#fff1f8', '#ffe1ef'] : kind === 'ahir' ? ['#f1c9a5', '#e2b38c'] : ['#f6d7b0', '#e9c296'];
+  ctx.fillStyle = wall[0]; ctx.fillRect(0, 0, W, floorY);
+  if (kind === 'dukkan'){ for (let x = 0; x < W; x += 36){ ctx.fillStyle = 'rgba(255,159,203,.18)'; ctx.fillRect(x, 0, 18, floorY); } for (let x = 18; x < W; x += 72) heart(ctx, x, 40 + (x * 7 % 30), 10, 'rgba(255,127,182,.25)'); }
+  else { ctx.strokeStyle = 'rgba(140,90,50,.22)'; ctx.lineWidth = 2; for (let y = 24; y < floorY; y += 34){ ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); } for (let i = 0; i < 30; i++){ const x = (i * 131) % W, y = 24 + ((i * 7) % Math.max(1, Math.floor(floorY / 34))) * 34; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 34); ctx.stroke(); } }
+  const fg = ctx.createLinearGradient(0, floorY, 0, H); fg.addColorStop(0, kind === 'dukkan' ? '#e7c0a0' : '#f2d27a'); fg.addColorStop(1, kind === 'dukkan' ? '#cf9f7c' : '#ddb35a');
+  ctx.fillStyle = fg; ctx.fillRect(0, floorY, W, H - floorY);
+  if (kind !== 'dukkan'){ ctx.strokeStyle = 'rgba(190,140,40,.55)'; ctx.lineWidth = 2; for (let i = 0; i < 70; i++){ const x = (i * 53.3) % W, y = floorY + 6 + (i * 17.7) % Math.max(10, H - floorY - 8), a = (i % 7) * 0.5; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a) * 12, y + Math.sin(a) * 4); ctx.stroke(); } }
+  // pencere
+  const ww = Math.min(W * 0.18, 120), wh = ww * 0.75, wx = W * 0.5 - ww / 2, wy = Math.max(8, floorY * 0.08);
+  if (kind !== 'dukkan'){ rrc(ctx, wx, wy, ww, wh, 10, '#bfe9ff'); ctx.strokeStyle = '#fff'; ctx.lineWidth = 5; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(wx, wy, ww, wh, 10) : ctx.rect(wx, wy, ww, wh); ctx.stroke(); line(ctx, wx + ww / 2, wy, wx + ww / 2, wy + wh, '#fff', 4); line(ctx, wx, wy + wh / 2, wx + ww, wy + wh / 2, '#fff', 4); }
+}
+function drawEgg(c, x, y, s, kind, rot){
+  c.save(); c.translate(x, y); if (rot) c.rotate(rot);
+  const col = kind === 'gold' ? '#f6c445' : kind === 'brown' ? '#e9c29a' : '#fffaf2';
+  ell(c, 0, 0, s * 0.36, s * 0.46, col); ell(c, -s * 0.12, -s * 0.16, s * 0.08, s * 0.13, 'rgba(255,255,255,.7)', -0.3);
+  if (kind === 'gold'){ sparkle(c, s * 0.25, -s * 0.35, s * 0.14, '#fff'); c.strokeStyle = '#d9a425'; c.lineWidth = s * 0.03; c.beginPath(); c.ellipse(0, 0, s * 0.36, s * 0.46, 0, 0, 7); c.stroke(); }
+  c.restore();
+}
+
+/* ============================================================ 4) Kümes: tavukların altındaki yumurtalar */
+GAMES.kumes = () => {
+  const need = 6; let L = null, got = 0, done = false, laid = 0, chickShown = false, goldGiven = false, roosterT = -9, lastTap = 0;
+  const hens = Array.from({length:5}, (_, i) => ({i, kind:i % 3, state:'sit', st:0, nest:i === 2 ? 'chick' : (i % 2 ? 'brown' : 'white'), layAt:-1, wig:-9}));
+  let chick = null;
+  function lay(){
+    const tall = H > W * 1.1, u = tall ? Math.min(W / 6.4, H / 10.5) : Math.min(W / 10.5, H / 6.4), floorY = H * (tall ? 0.7 : 0.74);
+    L = {u, tall, floorY};
+    const pos = tall ? [[0.2, 0.33], [0.5, 0.33], [0.8, 0.33], [0.34, 0.55], [0.66, 0.55]] : [[0.12, 0.5], [0.31, 0.5], [0.5, 0.5], [0.69, 0.5], [0.88, 0.5]];
+    hens.forEach((h, i) => { h.x = W * pos[i][0]; h.y = H * pos[i][1]; });
+    L.box = tall ? {x:W * 0.5, y:H * 0.86} : {x:W * 0.72, y:H * 0.87}; L.rooster = tall ? {x:W * 0.14, y:H * 0.86} : {x:W * 0.12, y:H * 0.8};
+  }
+  const nestR = () => L.u * 0.85;
+  const slotXY = i => { const b = L.box, sw = L.u * 0.62; return [b.x + ((i % 3) - 1) * sw, b.y + (Math.floor(i / 3) - 0.5) * L.u * 0.5]; };
+  function update(d, t){
+    for (const h of hens){
+      h.st += d;
+      if (h.state === 'up' && h.st > 0.5){ h.state = 'away'; h.st = 0; }
+      else if (h.state === 'away' && h.st > 3.6){ h.state = 'back'; h.st = 0; }
+      else if (h.state === 'back' && h.st > 0.5){ h.state = 'sit'; h.st = 0; if (!h.nest && laid < 6) h.layAt = t + 1.5 + Math.random() * 2.5; }
+      if (h.state === 'sit' && h.layAt > 0 && t > h.layAt){ h.layAt = -1; laid++; h.nest = !goldGiven && got >= 3 ? 'gold' : Math.random() < 0.5 ? 'white' : 'brown'; if (h.nest === 'gold') goldGiven = true; h.wig = t; SFX.cluck(); floatText(h.x, h.y - L.u * 1.1, 'Gıdak! 🥚', '#c2436f'); }
+    }
+    if (chick){ chick.t += d; if (chick.t > 0.8){ chick.x += chick.dir * L.u * 1.1 * d; if (chick.x < L.u) chick.dir = 1; else if (chick.x > W - L.u) chick.dir = -1; } }   // ekran dönse de geri gelir
+  }
+  function draw(t){
+    indoorBG('kumes', t, L.floorY);
+    for (const h of hens){
+      const nr = nestR();
+      rrc(ctx, h.x - nr * 1.15, h.y + nr * 0.25, nr * 2.3, nr * 0.22, 6, '#b5835a');   // raf
+      ell(ctx, h.x, h.y + nr * 0.12, nr, nr * 0.38, '#e2b65e'); ctx.strokeStyle = '#c99a3e'; ctx.lineWidth = 2; for (let k = 0; k < 9; k++){ const a = k * 0.7; ctx.beginPath(); ctx.moveTo(h.x + Math.cos(a) * nr * 0.9, h.y + nr * 0.1 + Math.sin(a) * nr * 0.3); ctx.lineTo(h.x + Math.cos(a + 0.5) * nr * 0.6, h.y + nr * 0.1 + Math.sin(a + 0.5) * nr * 0.2); ctx.stroke(); }
+      const showNest = h.state !== 'sit';
+      if (showNest && h.nest && h.nest !== 'chick') drawEgg(ctx, h.x, h.y - nr * 0.05, nr * 0.75, h.nest);
+      if (showNest && h.nest === 'chick' && !chick) drawChick(ctx, h.x, h.y - nr * 0.15, nr * 0.75, t, 1, Math.abs(Math.sin(t * 6)) * 0.1);
+      let hx = h.x, hy = h.y - nr * 0.2, sit = true, flap = false; const side = h.x > W * 0.6 ? -1 : 1;   // sağdakiler sola kaçar
+      if (h.state === 'up'){ const k = h.st / 0.5; hx = h.x + side * k * nr * 1.0; hy = h.y - nr * 0.2 - Math.sin(k * Math.PI) * nr * 0.9; sit = false; flap = true; }
+      else if (h.state === 'away'){ hx = h.x + side * nr * 1.0; hy = h.y - nr * 0.05; sit = false; }
+      else if (h.state === 'back'){ const k = h.st / 0.5; hx = h.x + side * (1 - k) * nr * 1.0; hy = h.y - nr * 0.2 - Math.sin(k * Math.PI) * nr * 0.7; sit = false; flap = true; }
+      const wig = t - h.wig < 0.6 ? Math.sin((t - h.wig) * 40) * 0.08 : 0;
+      ctx.save(); ctx.translate(hx, hy); ctx.rotate(wig); drawHen(ctx, 0, 0, nr * 1.3, t + h.i, h.kind, {sit, flap, peck:h.state === 'away'}, h.state === 'away' ? -side : 1); ctx.restore();
+      if (h.state === 'sit' && h.nest && !done){ const gl = 0.5 + 0.5 * Math.sin(t * 4 + h.i); sparkle(ctx, h.x + nr * 0.55, h.y - nr * 0.85, nr * (0.1 + gl * 0.06), `rgba(255,255,255,${0.6 + gl * 0.4})`); }
+    }
+    // yumurta kutusu
+    const b = L.box, bw = L.u * 2.1, bh = L.u * 1.15;
+    rrc(ctx, b.x - bw / 2, b.y - bh / 2, bw, bh, L.u * 0.2, '#c8b39a'); rrc(ctx, b.x - bw / 2 + 4, b.y - bh / 2 + 4, bw - 8, bh - 8, L.u * 0.16, '#ddcbb5');
+    for (let i = 0; i < 6; i++){ const [x, y] = slotXY(i); ell(ctx, x, y + L.u * 0.08, L.u * 0.24, L.u * 0.12, '#b9a284'); if (i < got) drawEgg(ctx, x, y, L.u * 0.6, eggs[i]); }
+    // horoz ve civciv
+    const rc = t - roosterT < 1.3;
+    rrc(ctx, L.rooster.x - L.u * 0.15, L.rooster.y - L.u * 0.4, L.u * 0.3, L.u * 0.6, 4, '#a9744f');
+    drawRooster(ctx, L.rooster.x, L.rooster.y - L.u * 0.85, L.u * 1.0, t, rc, 1);
+    if (chick) drawChick(ctx, chick.x, L.floorY + L.u * 0.4, L.u * 0.75, t, chick.dir, Math.abs(Math.sin(t * 8)) * 0.15);
+    if (got === 0 && t - lastTap > 5){ const h = hens.find(q => q.state === 'sit' && q.nest); if (h) emoji(ctx, '👆', h.x + nestR() * 0.4, h.y + nestR() * 0.55 + Math.sin(t * 5) * nestR() * 0.12, nestR() * 0.7, -0.4); }   // ipucu
+  }
+  const eggs = [];
+  function takeEgg(h, t){
+    const kind = h.nest, nr = nestR(); h.nest = null;
+    if (kind === 'gold'){ giveSticker('altin'); sayLine('kumes_altin', true); SFX.magic(); }
+    else SFX.pick();
+    const i = got + fx.filter(f => f.egg).length; if (i >= 6) return;
+    const [sx, sy] = slotXY(Math.min(5, i));
+    const f = flyTo((c, x, y, k) => drawEgg(c, x, y, nr * 0.75, kind, k * 6), h.x, h.y - nr * 0.05, sx, sy, 0.75, () => {
+      if (!alive(self)) return;
+      eggs.push(kind); got++; SFX.plop(); hudSet(`🥚 ${got}/${need}`, true);
+      if (got >= need && !done){ done = true; lockBack(); sayLine('kumes_bitti'); setTimeout(() => winGame('kumes', self), 1800); }
+    }); f.egg = true;
+  }
+  function down(p, e, t){
+    if (done) return;
+    lastTap = t;
+    const fr = finger(e, 30);
+    if (hit(p, L.rooster.x, L.rooster.y - L.u * 1.0, Math.max(L.u * 0.7, fr))){ roosterT = t; SFX.rooster(); giveSticker('horoz'); return; }
+    if (chick && hit(p, chick.x, L.floorY + L.u * 0.3, Math.max(L.u * 0.5, fr))){ SFX.cheep(); chick.dir *= -1; giveSticker('civciv'); burst(chick.x, L.floorY, 8, ['#ffe14d', '#fff'], 'heart'); return; }
+    for (const h of hens){
+      const nr = nestR();
+      if (h.state !== 'sit' && h.nest && h.nest !== 'chick' && hit(p, h.x, h.y - nr * 0.05, Math.max(nr * 0.55, fr))){ takeEgg(h, t); return; }
+      if (h.state !== 'sit' && h.nest === 'chick' && hit(p, h.x, h.y - nr * 0.1, Math.max(nr * 0.6, fr))){ h.nest = null; chick = {x:h.x, dir:1, t:0}; SFX.cheep(); if (!chickShown){ chickShown = true; sayLine('kumes_civciv', true); } return; }
+      if (h.state === 'sit' && hit(p, h.x, h.y - nr * 0.3, Math.max(nr * 0.85, fr))){
+        h.state = 'up'; h.st = 0; SFX.cluck(); burst(h.x, h.y - nr * 0.4, 8, ['#ffffff', '#f3e3cc'], 'feather');
+        if (!h.nest){ floatText(h.x, h.y - nr * 1.2, 'Boş! 🙈', '#a3748f'); h.layAt = -1; }
+        if (h.nest === 'chick' && !chickShown){ chickShown = true; setTimeout(() => { if (alive(self)) sayLine('kumes_civciv', true); }, 400); }
+        return;
+      }
+    }
+  }
+  const self = {lay, update, draw, down, start(t){ lastTap = t; roosterT = t + 0.3; setTimeout(() => SFX.rooster(), 300); hudSet(`🥚 0/${need}`); sayLine('kumes_gel'); voice('kumes_nasil', true); }, get dbg(){ return {got, hens:hens.map(h => ({x:Math.round(h.x), y:Math.round(h.y), state:h.state, nest:h.nest})), nr:nestR(), chick:!!chick}; }};
+  return self;
+};
+
+/* ============================================================ 5) Ahır: Benekli'yi besle, yayık salla (süt + tereyağı + ayran bıyığı) */
+GAMES.ahir = () => {
+  let L = null, phase = 'feed', fed = 0, eating = -9, drag = null, milk = 0, ph0 = 0, done = false;
+  let ang = 0, av = 0, swings = 0, lastSign = 0, grabX = null, churnProg = 0, mustache = false, drinkT = -9, cowTap = -9;
+  const bundles = [0, 1, 2].map(i => ({i, home:null, x:0, y:0, eaten:false, back:0}));
+  function lay(){
+    const tall = H > W * 1.1, u = tall ? Math.min(W / 6.2, H / 10.5) : Math.min(W / 10.5, H / 6.4), floorY = H * (tall ? 0.72 : 0.78);
+    L = {u, tall, floorY};
+    L.cow = tall ? {x:W * 0.62, y:floorY - u * 1.35, s:u * 1.25} : {x:W * 0.66, y:floorY - u * 1.45, s:u * 1.35};
+    L.mouth = {x:L.cow.x - L.cow.s * 1.05, y:L.cow.y - L.cow.s * 0.45 + L.cow.s * 0.22};
+    L.nine = tall ? {x:W * 0.16, y:floorY + u * 0.2} : {x:W * 0.1, y:floorY + u * 0.1};
+    L.basket = tall ? {x:W * 0.24, y:H * 0.88} : {x:W * 0.28, y:floorY + u * 0.4};
+    bundles.forEach((b, i) => { b.home = {x:L.basket.x + (i - 1) * u * 0.55, y:L.basket.y - u * 0.35}; if (!drag || drag.b !== b){ b.x = b.home.x; b.y = b.home.y; } });
+    L.bucket = {x:L.cow.x - L.cow.s * 0.35, y:L.floorY + u * 0.05};
+    L.churn = tall ? {x:W * 0.58, y:floorY + u * 0.4, s:u * 1.25} : {x:W * 0.55, y:floorY + u * 0.25, s:u * 1.15};
+    L.mila = tall ? {x:W * 0.2, y:H * 0.96} : {x:W * 0.27, y:floorY + u * 0.7};
+  }
+  function update(d, t){
+    for (const b of bundles) if (b.back){ b.back = Math.max(0, b.back - d * 3); b.x = lerp(b.x, b.home.x, 1 - b.back); b.y = lerp(b.y, b.home.y, 1 - b.back); }
+    if (phase === 'feed' && t - eating < 1.8 && Math.random() < d * 4) SFX.chomp();
+    if (phase === 'milk'){ milk = Math.min(1, (t - ph0) / 2.6); if (Math.random() < d * 6) noise(.08, .05, 3000, 'highpass');
+      if (t - ph0 > 3.0 && (!narr || t - ph0 > 10)){ phase = 'churnIntro'; ph0 = t; flyTo('🥛', L.bucket.x, L.bucket.y - L.u, W / 2, -40, 1.0, () => SFX.coin()); sayLine('nine_yayik'); hudSet('🧈 0%'); } }
+    if (phase === 'churnIntro' && t - ph0 > 1.2) phase = 'churn';
+    if (phase === 'churn' || phase === 'churnIntro'){
+      if (grabX != null){ const target = clamp((grabX - L.churn.x) / (L.u * 2.2), -0.75, 0.75); av += (target - ang) * 30 * d; av *= Math.exp(-d * 4); }
+      else { av += -Math.sin(ang) * 9 * d; av *= Math.exp(-d * 0.8); }
+      ang += av * d; ang = clamp(ang, -0.9, 0.9);
+      const sg = Math.sign(ang);
+      if (sg && sg !== lastSign && lastSign && Math.abs(av) > 0.9 && !done){ swings++; SFX.slosh(); churnProg = Math.min(1, swings / 14); hudSet(`🧈 ${Math.round(churnProg * 100)}%`, true);
+        if (churnProg >= 1){ done = true; lockBack(); phase = 'butter'; ph0 = t; SFX.win(); burst(L.churn.x, L.churn.y - L.churn.s * 1.0, 18, ['#ffe08a', '#fff'], 'star'); } }
+      if (sg) lastSign = sg;
+    }
+    if (phase === 'butter'){
+      ang *= Math.exp(-d * 3);
+      if (t - ph0 > 0.6 && !bundles.butterFlew){ bundles.butterFlew = 1; flyTo('🧈', L.churn.x, L.churn.y - L.churn.s * 0.9, W / 2, -40, 1.0, () => SFX.coin()); }
+      if (t - ph0 > 1.8 && !bundles.ayran){ bundles.ayran = 1; sayLine('nine_ayran'); flyTo('🥛', L.nine.x, L.nine.y - L.u * 2, L.mila.x + L.u * 0.4, L.mila.y - L.u * 1.7, 1.0, () => { drinkT = now(); }); }
+      if (drinkT > 0 && now() - drinkT > 1.2 && !mustache){ mustache = true; SFX.boing(); burst(L.mila.x, L.mila.y - L.u * 1.7, 12, ['#ffffff', '#e3f6ff'], 'dot'); sayLine('mila_ayran', true); giveSticker('ayran'); mila.mustache = 1; }
+      if (mustache && now() - drinkT > 2.4 && (!narr || now() - drinkT > 10) && !bundles.end){ bundles.end = 1; sayLine('nine_bitti', true); setTimeout(() => winGame('ahir', self), 2600); }
+    }
+  }
+  function drawBundle(b){ const u = L.u; ctx.save(); ctx.translate(b.x, b.y); for (let k = -2; k <= 2; k++){ line(ctx, k * u * 0.05, u * 0.25, k * u * 0.12, -u * 0.1, '#4fae63', u * 0.06); } for (let k = 0; k < 5; k++){ const a = k * 1.26; for (let j = 0; j < 3; j++) circ(ctx, Math.cos(a) * u * 0.14 + Math.cos(j * 2.1) * u * 0.07, -u * 0.15 + Math.sin(a) * u * 0.1 + Math.sin(j * 2.1) * u * 0.07, u * 0.07, '#5fbf6f'); } rrc(ctx, -u * 0.12, u * 0.05, u * 0.24, u * 0.06, 2, '#ff7eb6'); circ(ctx, u * 0.05, -u * 0.32, u * 0.06, '#ffffff'); ctx.restore(); }
+  function draw(t){
+    indoorBG('ahir', t, L.floorY);
+    const eat = phase === 'feed' && t - eating < 1.8, cowHappy = fed >= 3 || t - cowTap < 1;
+    if (phase === 'feed' || phase === 'milk'){
+      // kova
+      const bk = L.bucket, u = L.u; rrc(ctx, bk.x - u * 0.45, bk.y - u * 0.75, u * 0.9, u * 0.75, u * 0.1, '#b9c7d6'); ell(ctx, bk.x, bk.y - u * 0.75, u * 0.45, u * 0.12, '#8fa0b3');
+      if (milk > 0){ ell(ctx, bk.x, bk.y - u * 0.75 + u * 0.05, u * 0.4 * Math.min(1, milk * 1.5), u * 0.1, '#ffffff'); if (phase === 'milk' && milk < 1) for (let k = 0; k < 3; k++) line(ctx, bk.x - u * 0.1 + k * u * 0.1, bk.y - u * 1.25, bk.x - u * 0.08 + k * u * 0.08, bk.y - u * 0.8, 'rgba(255,255,255,.9)', 3); }
+      drawCow(ctx, L.cow.x, L.cow.y, L.cow.s, t, {chew:eat || cowHappy, eat, happy:cowHappy}, 1);
+      if (eat) for (let k = 0; k < 2; k++){ const q = ((t - eating) * 0.8 + k * 0.5) % 1; heart(ctx, L.mouth.x - L.u * 0.2 + k * L.u * 0.3, L.mouth.y - L.u * (0.6 + q), L.u * 0.4 * (1 - q * 0.5), PASTEL[k * 2]); }
+      // yonca sepeti
+      const bs = L.basket; bigBasket(ctx, bs.x, bs.y - L.u * 0.3, L.u * 1.9, 0, t);
+      for (const b of bundles) if (!b.eaten && (!drag || drag.b !== b)) drawBundle(b);
+      if (drag) drawBundle(drag.b);
+      if (fed === 0 && !drag){ const k = (t * 0.6) % 1, b = bundles.find(x => !x.eaten); if (b){ ctx.globalAlpha = Math.sin(k * Math.PI); emoji(ctx, '👆', lerp(b.home.x, L.mouth.x, ease(k)), lerp(b.home.y, L.mouth.y, ease(k)) + L.u * 0.4, L.u * 0.75); ctx.globalAlpha = 1; } }
+      for (let i = 0; i < 3; i++) heart(ctx, L.cow.x - L.u * 0.6 + i * L.u * 0.6, L.cow.y - L.cow.s * 1.25, L.u * 0.45, i < fed ? '#ff4f9a' : 'rgba(255,255,255,.7)');
+    } else {
+      // yayık
+      drawChurn(ctx, L.churn.x, L.churn.y, L.churn.s, ang, t);
+      const u = L.u, w = u * 2.6, x0 = L.churn.x - w / 2, y0 = L.churn.y + u * 0.25;
+      rrc(ctx, x0, y0, w, u * 0.22, u * 0.11, 'rgba(255,255,255,.75)'); rrc(ctx, x0, y0, w * churnProg, u * 0.22, u * 0.11, '#ffd23f');
+      emoji(ctx, '🧈', x0 + w * churnProg, y0 + u * 0.11, u * 0.45);
+      if (phase === 'churn' && swings === 0 && grabX == null){ const k = Math.sin(t * 2.5); emoji(ctx, '👆', L.churn.x + k * u * 1.6, L.churn.y - L.churn.s * 0.9, u * 0.75); line(ctx, L.churn.x - u * 1.8, L.churn.y - L.churn.s * 1.6, L.churn.x + u * 1.8, L.churn.y - L.churn.s * 1.6, 'rgba(255,95,162,.35)', 4); }
+      // Mila (ayran içer)
+      const dk = drinkT > 0 ? clamp((now() - drinkT) / 1.2, 0, 1) : 0;
+      drawMila(ctx, L.mila.x, L.mila.y, u * 2.3, t, {dir:1, talk:speaker === 'mila', mustache, wave:false});
+      if (drinkT > 0 && dk < 1){ ctx.save(); ctx.translate(L.mila.x + u * 0.45, L.mila.y - u * 1.72); ctx.rotate(-dk * 1.4); rrc(ctx, -u * 0.12, -u * 0.32, u * 0.24, u * 0.36, u * 0.05, 'rgba(230,245,255,.9)'); rrc(ctx, -u * 0.1, -u * 0.25 + dk * u * 0.2, u * 0.2, u * 0.27 - dk * u * 0.2, u * 0.04, '#ffffff'); ctx.restore(); }
+    }
+    drawNine(ctx, L.nine.x, L.nine.y, L.u * 2.0, t, speaker === 'nine', 1);
+  }
+  function down(p, e, t){
+    const fr = finger(e, 30);
+    if (phase === 'feed'){
+      for (const b of bundles) if (!b.eaten && !b.back && hit(p, b.x, b.y - L.u * 0.1, Math.max(L.u * 0.45, fr))){ drag = {b, dx:b.x - p.x, dy:b.y - p.y - (e.pointerType === 'mouse' ? 0 : L.u * 0.5)}; SFX.pick(); return; }
+      if (hit(p, L.cow.x, L.cow.y, L.cow.s * 1.0)){ cowTap = t; SFX.moo(); giveSticker('benekli'); burst(L.mouth.x, L.mouth.y - L.u * 0.5, 8, PASTEL, 'heart'); }
+      return;
+    }
+    if (phase === 'churn' || phase === 'churnIntro'){ grabX = p.x; }
+  }
+  function move(p){
+    if (drag){ drag.b.x = p.x + drag.dx; drag.b.y = p.y + drag.dy; return; }
+    if (grabX != null) grabX = p.x;
+  }
+  function up(p, e, t){
+    grabX = null;
+    if (!drag) return;
+    const b = drag.b; drag = null;
+    if (Math.hypot(b.x - L.mouth.x, b.y - L.mouth.y) < L.u * 1.4 && t - eating > 1.8){
+      b.eaten = true; eating = t; fed++; SFX.moo(); hudSet(`🍀 ${fed}/3`, true);
+      if (fed >= 3){ setTimeout(() => { if (!alive(self)) return; phase = 'milk'; ph0 = now(); sayLine('nine_sut'); }, 1900); }
+    } else { b.back = 1; SFX.nope(); }
+  }
+  const self = {lay, update, draw, down, move, up, start(){ hudSet('🍀 0/3'); sayLine('nine_gel'); }, get dbg(){ return {phase, fed, swings, churnProg, mustache, mouth:L.mouth, bundles:bundles.map(b => [Math.round(b.x), Math.round(b.y), b.eaten]), churn:L.churn}; }};
+  return self;
+};
+
+/* ============================================================ 6) Şekerci: şekerleri renklerine göre kavanozlara */
+GAMES.sekerci = () => {
+  const JC = [['#ff7eb6', '#ffc2dc'], ['#ffd23f', '#fff0a8'], ['#5fd3a0', '#c6f5df'], ['#5fb4ff', '#c9e6ff']];
+  let L = null, drag = null, placed = 0, done = false, laleSay = -99;
+  const jars = JC.map((c, i) => ({i, col:c[0], light:c[1], n:0, shake:-9}));
+  const candies = Array.from({length:12}, (_, i) => ({i, c:i % 4, shape:['round', 'wrap', 'star', 'heart'][(i * 3 + Math.floor(i / 4)) % 4], fx:0, fy:0, x:0, y:0, back:0, inJar:false, rot:(Math.random() - 0.5) * 0.8}));
+  candies.sort(() => Math.random() - 0.5);
+  function lay(){
+    const tall = H > W * 1.1, u = tall ? Math.min(W / 6.2, H / 10.5) : Math.min(W / 10.5, H / 6.4), counterY = H * (tall ? 0.58 : 0.62);
+    L = {u, tall, counterY, jw:Math.min(u * 1.3, W * 0.19), jh:Math.min(u * 1.6, H * 0.26)};
+    jars.forEach((j, i) => { j.x = tall ? W * (0.13 + i * 0.19) : W * (0.13 + i * 0.2); j.y = counterY - L.jh * 0.1; });
+    L.lale = tall ? {x:W * 0.87, y:counterY + u * 1.6} : {x:W * 0.9, y:counterY + u * 1.6};   // tezgâhın arkasında
+    const cols = tall ? 4 : 6, rows = Math.ceil(12 / cols), area = {x0:W * 0.08, x1:tall ? W * 0.92 : W * 0.86, y0:counterY + u * 0.9, y1:H - u * 0.55};
+    candies.forEach((c, k) => { const cx = k % cols, cy = Math.floor(k / cols); c.fx = lerp(area.x0, area.x1, (cx + 0.5) / cols) + Math.sin(k * 7.1) * u * 0.12; c.fy = lerp(area.y0, area.y1, rows === 1 ? 0.5 : cy / (rows - 1)) + Math.cos(k * 3.3) * u * 0.08; if (!c.inJar && (!drag || drag.c !== c)){ c.x = c.fx; c.y = c.fy; } });
+  }
+  function drawCandy(c, x, y, s, col, shape, rot){
+    c.save(); c.translate(x, y); c.rotate(rot || 0);
+    if (shape === 'wrap'){ c.fillStyle = shade(col, 0.25); for (const k of [-1, 1]){ c.beginPath(); c.moveTo(k * s * 0.35, 0); c.lineTo(k * s * 0.75, -s * 0.28); c.lineTo(k * s * 0.75, s * 0.28); c.closePath(); c.fill(); } ell(c, 0, 0, s * 0.42, s * 0.32, col); c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = s * 0.06; for (const k of [-0.15, 0.1]){ c.beginPath(); c.moveTo(k * s - s * 0.1, -s * 0.28); c.lineTo(k * s + s * 0.1, s * 0.28); c.stroke(); } }
+    else if (shape === 'star') star(c, 0, 0, s * 0.55, col);
+    else if (shape === 'heart') heart(c, 0, 0, s * 1.15, col);
+    else { circ(c, 0, 0, s * 0.42, col); c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = s * 0.07; c.beginPath(); for (let a = 0; a < 9; a += 0.25) c.lineTo(Math.cos(a) * a * s * 0.045, Math.sin(a) * a * s * 0.045); c.stroke(); }
+    ell(c, -s * 0.12, -s * 0.14, s * 0.1, s * 0.06, 'rgba(255,255,255,.6)', -0.5);
+    c.restore();
+  }
+  function drawJar(j, t){
+    const w = L.jw, h = L.jh, js = t - j.shake, sh = js >= 0 && js < 0.5 ? Math.sin(js * 50) * 0.08 * (1 - js / 0.5) : 0, hot = drag && jarAt(drag.c) === j;
+    ctx.save(); ctx.translate(j.x, j.y); ctx.rotate(sh);
+    if (hot){ ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.beginPath(); ctx.ellipse(0, -h * 0.5, w * 0.8, h * 0.72, 0, 0, 7); ctx.fill(); }
+    rrc(ctx, -w / 2, -h, w, h, w * 0.25, 'rgba(230,245,255,.75)');
+    for (let k = 0; k < j.n; k++){ const cx = ((k * 0.37) % 1 - 0.5) * w * 0.6, cy = -w * 0.18 - Math.floor(k / 3) * w * 0.22 - (k % 3) * w * 0.05; circ(ctx, cx, cy, w * 0.13, j.col); circ(ctx, cx - w * 0.04, cy - w * 0.04, w * 0.04, 'rgba(255,255,255,.7)'); }
+    ctx.strokeStyle = 'rgba(255,255,255,.95)'; ctx.lineWidth = 3; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-w / 2, -h, w, h, w * 0.25); else ctx.rect(-w / 2, -h, w, h); ctx.stroke();
+    ell(ctx, -w * 0.22, -h * 0.55, w * 0.06, h * 0.25, 'rgba(255,255,255,.55)');
+    rrc(ctx, -w * 0.42, -h - w * 0.16, w * 0.84, w * 0.2, w * 0.08, j.col);
+    rrc(ctx, -w * 0.3, -h * 0.55, w * 0.6, w * 0.32, w * 0.08, '#ffffff'); drawCandy(ctx, 0, -h * 0.55 + w * 0.16, w * 0.32, j.col, 'round', 0);
+    ctx.restore();
+  }
+  function jarAt(c){   // şekerin bırakıldığı yere en yakın kavanoz (yan yana kavanozlar karışmasın)
+    let best = null, bd = 1e9;
+    for (const q of jars){ const dx = Math.abs(c.x - q.x); if (dx < L.jw * 0.8 && c.y > q.y - L.jh - L.u * 0.8 && c.y < q.y + L.u * 0.7 && dx < bd){ bd = dx; best = q; } }
+    return best;
+  }
+  function update(d){ for (const c of candies) if (c.back){ c.back = Math.max(0, c.back - d * 3); c.x = lerp(c.x, c.fx, 1 - c.back); c.y = lerp(c.y, c.fy, 1 - c.back); } }
+  function draw(t){
+    indoorBG('dukkan', t, L.counterY);
+    drawLale(ctx, L.lale.x, L.lale.y, L.u * 2.0, t, speaker === 'lale', -1);
+    // raf ve tezgâh (Lale Teyze tezgâhın arkasında)
+    rrc(ctx, W * 0.03, L.counterY - L.u * 0.12, W * 0.94, L.u * 0.18, 6, '#e8a6c6');
+    const cg = ctx.createLinearGradient(0, L.counterY, 0, H); cg.addColorStop(0, '#ffd6e8'); cg.addColorStop(1, '#ffb7d5'); ctx.fillStyle = cg; ctx.fillRect(0, L.counterY + L.u * 0.5, W, H);
+    rrc(ctx, -10, L.counterY + L.u * 0.4, W + 20, L.u * 0.22, 6, '#fff4f9');
+    for (let x = W * 0.06; x < W; x += W * 0.12) heart(ctx, x, L.counterY + L.u * 1.0, L.u * 0.32, 'rgba(255,255,255,.55)');
+    for (const j of jars) drawJar(j, t);
+    for (const c of candies) if (!c.inJar && (!drag || drag.c !== c)) drawCandy(ctx, c.x, c.y, L.u * 0.62, JC[c.c][0], c.shape, c.rot);
+    if (drag) drawCandy(ctx, drag.c.x, drag.c.y, L.u * 0.75, JC[drag.c.c][0], drag.c.shape, drag.c.rot);
+    if (placed === 0 && !drag){ const c = candies.find(x => !x.inJar); if (c){ const j = jars[c.c], k = (t * 0.55) % 1; ctx.globalAlpha = Math.sin(k * Math.PI); emoji(ctx, '👆', lerp(c.fx, j.x, ease(k)), lerp(c.fy, j.y - L.jh * 0.5, ease(k)) + L.u * 0.4, L.u * 0.75); ctx.globalAlpha = 1; } }
+  }
+  function down(p, e){
+    if (done) return;
+    const fr = finger(e, 28);
+    let best = null, bd = 1e9;
+    for (const c of candies){ if (c.inJar || c.back) continue; const d = Math.hypot(p.x - c.x, p.y - c.y); if (d < Math.max(L.u * 0.5, fr) && d < bd){ bd = d; best = c; } }
+    if (best){ drag = {c:best, dx:best.x - p.x, dy:best.y - p.y - (e.pointerType === 'mouse' ? 0 : L.u * 0.45)}; SFX.pick(); return; }
+    if (hit(p, L.lale.x, L.lale.y - L.u * 2.4, L.u * 0.8)){ SFX.boop(); burst(L.lale.x, L.lale.y - L.u * 2.6, 8, PASTEL, 'heart'); }
+  }
+  function move(p){ if (drag){ drag.c.x = p.x + drag.dx; drag.c.y = p.y + drag.dy; } }
+  function up(p, e, t){
+    if (!drag) return;
+    const c = drag.c; drag = null;
+    const j = jarAt(c);
+    if (!j){ c.back = 1; return; }
+    if (j.i === c.c){
+      c.inJar = true; j.n++; placed++; SFX.plink(); burst(j.x, j.y - L.jh, 10, [j.col, '#fff'], 'star'); hudSet(`🍬 ${placed}/12`, true);
+      if (placed === 6) sayLine('harika', true);
+      if (placed >= 12 && !done){ done = true; lockBack(); setTimeout(() => { if (!alive(self)) return; sayLine('lale_bitti'); SFX.magic(); flyTo('🍬', L.lale.x, L.lale.y - L.u * 2.4, W / 2, -40, 1.0, () => SFX.coin()); setTimeout(() => { flyTo('🍭', L.lale.x, L.lale.y - L.u * 2.4, W / 2, -40, 1.0); giveSticker('lolipop'); }, 800); }, 500); setTimeout(() => winGame('sekerci', self), 5200); }
+    } else {
+      c.back = 1; j.shake = t; jars[c.c].shake = t + 0.25; SFX.boing();
+      if (t - laleSay > 7){ laleSay = t; sayLine('lale_yanlis'); }
+    }
+  }
+  const self = {lay, update, draw, down, move, up, start(){ hudSet('🍬 0/12'); sayLine('lale_gel'); }, get dbg(){ return {placed, jars:jars.map(j => [Math.round(j.x), Math.round(j.y - L.jh * 0.5)]), candies:candies.filter(c => !c.inJar).map(c => [Math.round(c.x), Math.round(c.y), c.c])}; }};
+  return self;
+};
+
+/* ============================================================ efektler (ekran koordinatı) */
+function burst(x, y, n, cols, kind){
+  for (let i = 0; i < n; i++){ const a = Math.random() * 7, v = 60 + Math.random() * 160;
+    parts.push({x, y, vx:Math.cos(a) * v, vy:Math.sin(a) * v - (kind === 'smoke' ? 20 : 120), life:kind === 'smoke' ? 1.4 : 1, col:rnd(cols), kind:kind || 'dot', s:kind === 'smoke' ? 6 : 3 + Math.random() * 3, rot:Math.random() * 7}); }
+}
+const burstW = (x, y, n, cols, kind) => burst(wx2s(x), wy2s(y), n, cols, kind);
+function floatText(x, y, text, col){ floats.push({x, y, text, col:col || '#ff4f9a', life:1.4}); }
+// uçan nesne: emoji ya da çizim fonksiyonu (c, x, y, k)
+function flyTo(what, x0, y0, x1, y1, dur, cb, size){ const f = {what, x0, y0, x1, y1, t:0, dur, cb, size:size || Math.min(W, H) * 0.09}; fx.push(f); return f; }
+function drawParts(d){
+  screenT();
+  for (const p of parts){
+    p.x += p.vx * d; p.y += p.vy * d; p.life -= d;
+    if (p.kind === 'smoke'){ p.vx *= 0.97; p.s += d * 16; } else if (p.kind === 'feather'){ p.vy = p.vy * 0.95 + 30 * d; p.vx *= 0.96; p.rot += d * 3; } else p.vy += 420 * d;
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.life));
+    if (p.kind === 'heart') heart(ctx, p.x, p.y, p.s * 4, p.col);
+    else if (p.kind === 'star') star(ctx, p.x, p.y, p.s * 1.7, p.col, p.rot);
+    else if (p.kind === 'feather'){ ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ell(ctx, 0, 0, p.s * 2.2, p.s * 0.8, p.col); ctx.restore(); }
+    else circ(ctx, p.x, p.y, p.s, p.col);
+  }
+  ctx.globalAlpha = 1; parts = parts.filter(p => p.life > 0);
+  for (const f of fx){
+    f.t += d / f.dur; const k = Math.min(1, f.t), e = ease(k), x = lerp(f.x0, f.x1, e), y = lerp(f.y0, f.y1, e) - Math.sin(k * Math.PI) * Math.min(W, H) * 0.18;
+    if (typeof f.what === 'function') f.what(ctx, x, y, k); else emoji(ctx, f.what, x, y, f.size * (1 + Math.sin(k * Math.PI) * 0.3), k * 6);
+    if (k >= 1 && !f.done){ f.done = true; f.cb && f.cb(); }
+  }
+  fx = fx.filter(f => !f.done);
+  ctx.font = '800 17px Fredoka,system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 4; ctx.strokeStyle = '#fff';
+  for (const f of floats){ f.y -= d * 40; f.life -= d; ctx.globalAlpha = Math.min(1, f.life * 1.5); ctx.fillStyle = f.col; ctx.strokeText(f.text, f.x, f.y); ctx.fillText(f.text, f.x, f.y); }
+  ctx.globalAlpha = 1; floats = floats.filter(f => f.life > 0);
+}
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2400); }
+function hudSet(html, pop){ if (html && (!game || game.closing)) return; const el = $('#hud'); el.innerHTML = html ? `<span class="h${pop ? ' pop' : ''}">${html}</span>` : ''; }
+function elCenter(el){ const r = el.getBoundingClientRect(), s = cv.getBoundingClientRect(); return {x:r.left + r.width / 2 - s.left, y:r.top + r.height / 2 - s.top}; }
+function addStars(n, sx, sy){
+  const to = elCenter($('#stars'));
+  for (let i = 0; i < n; i++) flyTo((c, x, y, k) => star(c, x, y, 13 + Math.sin(k * Math.PI) * 6, '#ffd23f', k * 8), sx, sy, to.x, to.y, 0.8 + i * 0.12, () => {
+    store.stars++; saveStore(); const el = $('#stars'); el.textContent = `⭐ ${store.stars}`; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); SFX.coin();
+  });
+}
+function giveSticker(k){
+  if (store.stickers[k] || !STK[k]) return;
+  store.stickers[k] = Date.now(); saveStore();
+  const [, e, n] = STK[k]; toast(`🌟 Yeni çıkartma: ${e} ${n}!`); setTimeout(() => SFX.magic(), 150);
+  if (lim('cikartmaSes', 12000)) voice('cikartma', true);
+  if (Object.keys(store.stickers).length >= STICKERS.length - 1) { store.stickers.gokkusagi = store.stickers.gokkusagi || Date.now(); saveStore(); }
+}
+
+/* ============================================================ başlık: kraliçe annenin listesi */
+function renderList(popK){
+  $('#list').innerHTML = ITEMS.map(i => `<span class="it${store.items[i.k] ? ' got' : ''}${popK && popK.includes(i.k) ? ' pop' : ''}" title="${i.n}">${i.e}</span>`).join('');
+  $('#stars').textContent = `⭐ ${store.stars}`;
+}
+
+/* ============================================================ pencereler */
+function showModal(html, buttons, wide){
+  const card = $('#card'); card.classList.toggle('wide', !!wide); card.innerHTML = html + '<div class="row"></div>';
+  const row = card.querySelector('.row');
+  for (const b of buttons){ const el = document.createElement('button'); el.textContent = b.label; if (b.primary) el.className = 'primary'; el.onclick = b.action; row.appendChild(el); }
+  $('#modal').hidden = false; card.scrollTop = 0;
+}
+function closeModal(){
+  $('#modal').hidden = true;
+  if (finale && finale.phase === 'end'){ finale = null; stormBoost = 0; mila.tx = mila.x; }   // final penceresi nasıl kapanırsa kapansın dünya açılır
+}
+const modalOpen = () => !$('#modal').hidden;
+function showStory(then){
+  store.storySeen = true; saveStore();
+  showModal(`<div class="story"><div class="bigE">🏰🧺🌳</div><h2>Mila'nın Sepeti</h2><p>${plain(SAY.hikaye[1])}</p></div>`,
+    [{label:'🔈 Dinle', action:() => voice('hikaye')}, {label:'Listeye bak! ▶', primary:true, action:() => { stopVoice(); closeModal(); then && then(); }}]);
+  voice('hikaye');
+}
+function showList(withVoice, then){
+  showModal(`<h2>📜 Kraliçe annenin listesi</h2><div class="qlist">${ITEMS.map(i => `<div class="${store.items[i.k] ? 'got' : ''}"><b>${i.e}</b>${i.n}</div>`).join('')}<div class="sign">Sevgiler, Annen 👑</div></div>
+    <p style="font-size:13.5px;color:var(--muted)">${doneCount() >= STATIONS.length ? 'Hepsini topladın! 💖' : `Yolda ${STATIONS.length - doneCount()} durak daha var. Parlayan işaretlere dokun!`}</p>`,
+    [{label:'🔈 Dinle', action:() => voice('liste')}, {label:'Tamam ▶', primary:true, action:() => { stopVoice(); closeModal(); then && then(); }}]);
+  if (withVoice) voice('liste');
+}
+function showHelp(){
+  showModal(`<h2>Nasıl oynanır? 🧺</h2>
+  <div class="kid">
+    <div><b>👆</b><span>Gitmek istediğin yere dokun: Mila oraya yürür.</span></div>
+    <div><b>🍓</b><span>Parlayan işaretli yerlere dokun: Mila orada yardım eder, malzemeleri sepetine koyar.</span></div>
+    <div><b>🦋</b><span>Kelebekleri yakala, çalıları salla: ⭐ yıldız kazanırsın.</span></div>
+    <div><b>🐰</b><span>Saklanan hayvanları bul: çıkartma albümün dolsun!</span></div>
+    <div><b>👗</b><span>Yıldızlarınla köydeki Prenses Butiği'nden elbise ve taç al.</span></div>
+  </div>
+  <details><summary>Anne-babalar için ayrıntılar</summary><ul>
+    <li><b>Hikâye:</b> Mila'nın Masalı'nın 1. bölümü. Mila, Pamuk'un doğum günü pastası için ormandan ve köyden malzeme toplar; sepet dolunca fırtına çıkar, kral baba onu faytonla eve götürür. Sonra Pasta Atölyesi başlar.</li>
+    <li><b>Duraklar:</b> 🍓 Çilek Tarlası (olgunları seç, yeşillerin olgunlaşmasını bekle), 🧚 Peri Bahçesi (çiçeklerin çaldığı ezgiyi tekrar et, çikolata yağmurunu sepetle yakala), 🌾 Değirmen (buğdayı biç, kanatları çevir), 🐔 Kümes (tavukların altındaki yumurtalar), 🐄 Ahır (Benekli'yi besle, yayık salla), 🍬 Şekerci (renklere göre ayır).</li>
+    <li>Kaybetmek yok: yanlış dokunuşlar yalnızca nazik bir uyarı verir. Duraklar bitince yeniden oynanabilir.</li>
+    <li>Toplanan malzemeler Pasta Atölyesi'nde görünür. Butikte seçilen elbise ve taç bütün oyunlarda Mila'nın üstünde olur.</li>
+    <li>Klavye: ← → yürü, Boşluk/Enter yakındaki durağa gir, Esc pencereyi kapatır.</li>
+    <li>Oyun bu tarayıcıya otomatik kaydedilir. ☰ Menü'den baştan başlanabilir.</li>
+  </ul></details>`, [{label:'🔈 Dinle', action:() => voice('yardim')}, {label:'Başla', primary:true, action:() => { stopVoice(); store.helpSeen = true; saveStore(); closeModal(); }}]);
+  setTimeout(() => voice('yardim'), 250);
+}
+function showMenu(){
+  showModal(`<h2>☰ Menü</h2><p style="font-size:13px;color:var(--muted)">Sepette ${Object.keys(store.items).length}/8 malzeme · ⭐ ${store.stars} · çıkartma ${Object.keys(store.stickers).length}/${STICKERS.length}</p><div class="ml" id="ml"></div>`, [{label:'▶ Oyuna dön', primary:true, action:closeModal}], true);
+  const items = [
+    ['🏠', 'Oyun Kulübü’ne dön', () => { location.href = '../../'; }],
+    ['🧁', 'Pasta Atölyesi (2. bölüm)', () => { location.href = '../pasta-atolyesi/'; }],
+    ['🌉', 'Köprü Ustası (3. bölüm)', () => { location.href = '../kopru-ustasi/'; }],
+    ['📜', 'Kraliçe annenin listesi', () => showList(true)],
+    ['📖', 'Hikâyeyi tekrar dinle', () => showStory()],
+    ['❓', 'Nasıl oynanır?', showHelp],
+    ['🌟', 'Çıkartma albümü', showAlbum],
+    ['👗', 'Prenses Butiği', showShop],
+    [store.muted ? '🔇' : '🔊', store.muted ? 'Sesi aç' : 'Sesi kapat', () => { store.muted = !store.muted; if (store.muted) stopVoice(); saveStore(); showMenu(); }],
+    window.MGMobil && MGMobil.tamEkranVar ? ['⛶', MGMobil.tamEkranda() ? 'Tam ekrandan çık' : 'Tam ekran', () => { MGMobil.tamEkran(); closeModal(); }] : null,
+    ['🌱', 'Baştan başla', () => showModal('<h2>🌱 Baştan başlayalım mı?</h2><p>Sepet boşalır, duraklar yeniden açılır ve hikâye en baştan başlar. Yıldızların, çıkartmaların ve aldığın elbiseler <b>silinmez</b>.</p>',
+      [{label:'Vazgeç', action:showMenu}, {label:'Evet, baştan başla', primary:true, action:restart}]), true],
+  ].filter(Boolean);
+  const ml = $('#ml');
+  for (const [e, n, fn, danger] of items){ const b = document.createElement('button'); b.className = 'mi' + (danger ? ' danger' : ''); b.innerHTML = `<span class="e">${e}</span>${n}`; b.onclick = fn; ml.appendChild(b); }
+}
+function restart(){
+  store.done = {}; store.items = {}; store.finished = false; store.storySeen = false; store.found = {}; store.x = 3; saveStore();
+  try { localStorage.removeItem('mg-kulup-sepet'); } catch (e) {}
+  finale = null; stormBoost = 0; mila.x = mila.tx = 3; mila.dir = 1; cam.x = 5; renderList(); closeModal(); toast('🌱 Yeni bir gün başladı!');
+  showStory(() => showList(true));
+}
+function showAlbum(){
+  const got = STICKERS.filter(s => store.stickers[s[0]]).length;
+  showModal(`<h2>🌟 Çıkartma albümü <span style="font-size:15px;color:var(--muted)">${got}/${STICKERS.length}</span></h2><p style="font-size:13px;color:var(--muted)">Yolda ve duraklarda saklanan sürprizleri bul! Kelebekleri yakala, hayvanlara dokun, yaprakların altına bak…</p>
+    <div class="album">${STICKERS.map(([k, e, n]) => `<div class="${store.stickers[k] ? 'got' : ''}"><b>${e}</b><span>${store.stickers[k] ? n : '?'}</span></div>`).join('')}</div>`,
+    [{label:'Kapat', primary:true, action:closeModal}], true);
+}
+function showShop(){
+  const keepScroll = modalOpen() && $('#shopD') ? $('#card').scrollTop : 0;   // satın alınca liste yerinde kalsın
+  showModal(`<h2>👗 Prenses Butiği</h2><p>Yıldızlarınla Mila'ya elbise ve taç al! Seçtiğin kıyafet <b>bütün oyunlarda</b> görünür. Yıldızların: <b>⭐ ${store.stars}</b></p>
+    <h3>Elbiseler</h3><div class="shop" id="shopD"></div><h3>Taçlar</h3><div class="shop" id="shopC"></div>`, [{label:'Kapat', primary:true, action:closeModal}], true);
+  if (lim('butikSes', 20000)) voice('butik');
+  const mk = (host, kind, k, name, price) => {
+    const own = !!store.owned[kind][k], on = (kind === 'dress' ? store.dress : store.crown) === k, b = document.createElement('button');
+    b.className = (own ? 'own' : '') + (on ? ' on' : '');
+    b.innerHTML = `<canvas></canvas><span>${name}</span><span class="pr">${on ? 'Giyiliyor ✓' : own ? 'Senin — giy' : `⭐ ${price}`}</span>`;
+    b.onclick = () => {
+      if (!own){ if (store.stars < price){ SFX.nope(); toast('Yeterli yıldız yok ⭐ Kelebek yakala, çalıları salla!'); return; } store.stars -= price; store.owned[kind][k] = 1; SFX.magic(); toast(`✨ ${name} senin!`); }
+      else SFX.pick();
+      if (kind === 'dress') store.dress = k; else store.crown = k;
+      saveStore(); saveLook(); renderList(); showShop();
+    };
+    host.appendChild(b);
+    const cvs = b.querySelector('canvas'), r = cvs.getBoundingClientRect(), dp = Math.min(2, window.devicePixelRatio || 1);
+    cvs.width = r.width * dp; cvs.height = r.height * dp;
+    const c = cvs.getContext('2d'), keep = [store.dress, store.crown]; c.setTransform(dp, 0, 0, dp, 0, 0);
+    if (kind === 'dress') store.dress = k; else store.crown = k;
+    drawMila(c, r.width / 2 - 4, r.height - 4, r.height * 0.9, 0.3, {dir:1});
+    [store.dress, store.crown] = keep;
+  };
+  for (const [k, [name, , price]] of Object.entries(DRESSES)) mk($('#shopD'), 'dress', k, name, price);
+  for (const [k, [name, price]] of Object.entries(CROWNS)) mk($('#shopC'), 'crown', k, name, price);
+  $('#card').scrollTop = keepScroll;
+}
+function celebrate(sub){
+  const el = $('#celebrate'), lc = [['#ff4f9a', '#c2185b'], ['#ffb300', '#c77800'], ['#2fcf8f', '#158a5a'], ['#4da6ff', '#1f6fc2']];
+  el.innerHTML = '<div class="stack"><div class="crownTop">👑</div><div class="word">' + [...'MİLA'].map((ch, i) => `<span style="--i:${i};--c:${lc[i][0]};--d:${lc[i][1]}">${ch}</span>`).join('') + `</div><div class="sub">${sub}</div></div>`;
+  el.hidden = false; clearTimeout(celebrate.h); celebrate.h = setTimeout(() => { el.hidden = true; }, 3700);
+  SFX.win(); for (let i = 0; i < 6; i++) setTimeout(() => burst(W * (0.15 + Math.random() * 0.7), H * (0.2 + Math.random() * 0.4), 26, PASTEL, i % 2 ? 'star' : 'heart'), i * 280);
+}
+function finishGame(){
+  store.finished = true; saveStore();
+  try { localStorage.setItem('mg-kulup-sepet', JSON.stringify({when:Date.now(), items:ITEMS.map(i => i.k), extra:['kiraz', 'lolipop']})); } catch (e) {}
+  showModal(`<div class="story"><div class="bigE">🏰🧺💖</div><h2>Sepet doldu!</h2><div class="basket">${ITEMS.map(i => `<span title="${i.n}">${i.e}</span>`).join('')}</div><p>${plain(SAY.bitti[1])}</p>
+    <p style="font-size:13px;color:var(--muted)">Topladığın malzemeler Pasta Atölyesi'nde seni bekliyor. İstersen yolda dolaşıp kelebek yakalamaya, butikten elbise almaya devam edebilirsin.</p></div>`,
+    [{label:'🔈 Dinle', action:() => voice('bitti')}, {label:'Yolda gez', action:() => { stopVoice(); closeModal(); finale = null; stormBoost = 0; }},
+     {label:'🧁 Pastayı yapalım! ▶', primary:true, action:() => { location.href = '../pasta-atolyesi/'; }}]);
+  voice('bitti', true);
+}
+
+/* ============================================================ mini oyuna giriş/çıkış (perde geçişi) */
+let game = null, iris = null;
+function irisTo(x, y, then){ iris = {t:0, x, y, phase:'close', then}; }
+function openGame(id){
+  if (game || iris || !GAMES[id]) return;
+  stopVoice(); setSay('');
+  irisTo(wx2s(mila.x), wy2s(-1.2), () => {
+    game = {id, G:GAMES[id](), t:0};
+    game.G.lay(); $('#backBtn').hidden = false; document.body.classList.add('ingame');
+    game.G.start && game.G.start(now());
+  });
+}
+function closeGame(after){
+  if (!game || iris) return;
+  const g = game; g.closing = true;   // perde kapanırken oyun durur (HUD ve replikler dünyaya sızmasın)
+  stopVoice(); setSay(''); hudSet('');
+  irisTo(W / 2, H / 2, () => { game = null; stopVoice(); setSay(''); hudSet(''); $('#backBtn').hidden = true; document.body.classList.remove('ingame'); layoutWorld(); g.afterWin && g.afterWin(); after && after(); });
+}
+const alive = G => !!(game && game.G === G && !game.closing);   // gecikmeli işler yalnızca aynı oyun açıkken çalışsın
+const lockBack = () => { $('#backBtn').hidden = true; };   // hedefe ulaşıldı: kutlama bitmeden çıkılmasın
+function winGame(id, G){
+  if (!game || game.id !== id || game.won || game.closing || (G && game.G !== G)) return;
+  game.won = true; lockBack();
+  const st = ST[id], first = !store.done[id];
+  store.done[id] = true; for (const k of st.items) store.items[k] = true; saveStore();
+  celebrate(first ? `${st.items.map(k => ITEM[k].e).join(' ')} SEPETTE!` : '✨ HARİKA! ✨');
+  addStars(first ? 3 : 1, W / 2, H / 2);
+  game.afterWin = () => {   // dünyaya dönünce (nasıl dönülürse dönülsün) bir kez çalışır
+    renderList(st.items); mila.dir = 1; mila.hop = 0.6; mila.wave = 1.5;
+    if (doneCount() >= STATIONS.length && !store.finished) setTimeout(startFinale, 1200);
+    else if (first){ const nx = nextStation(); if (nx) setTimeout(() => toast(`Sıradaki durak: ${nx.e} ${nx.name} →`), 900); }
+  };
+  const g = game; setTimeout(() => { if (game === g) closeGame(); }, 3300);
+}
+function drawIris(d){
+  if (!iris) return;
+  iris.t += d / 0.45;
+  const R = Math.hypot(W, H), k = Math.min(1, iris.t), r = iris.phase === 'close' ? R * (1 - ease(k)) : R * ease(k);
+  screenT(); ctx.fillStyle = '#ff9ccb'; ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.arc(iris.x, iris.y, Math.max(0.1, r), 0, Math.PI * 2, true); ctx.fill('evenodd');
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(iris.x, iris.y, Math.max(0.1, r), 0, 7); ctx.stroke();
+  for (let i = 0; i < 10; i++){ const a = i / 10 * Math.PI * 2 + iris.t * 2; heart(ctx, iris.x + Math.cos(a) * (r + 22), iris.y + Math.sin(a) * (r + 22), 14, PASTEL[i % 6]); }
+  if (k >= 1){
+    if (iris.phase === 'close'){ const f = iris.then; iris = {t:0, x:W / 2, y:H / 2, phase:'open'}; f && f(); }
+    else iris = null;
+  }
+}
+
+/* ============================================================ girdi */
+const pos = e => { const r = cv.getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; };
+cv.addEventListener('contextmenu', e => e.preventDefault());
+let ptrDown = false;
+cv.addEventListener('pointerdown', e => {
+  audioCtx();
+  if (modalOpen() || iris || !e.isPrimary) return;   // ikinci parmak sürüklenen şeyi kaçırmasın
+  try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+  ptrDown = true;
+  const p = pos(e), t = now();
+  if (game){ game.G.down && game.G.down(p, e, t); return; }
+  if (finale) return;
+  hitWorld(p.x, p.y, t);
+});
+cv.addEventListener('pointermove', e => { if (!ptrDown || iris || !e.isPrimary) return; if (game && game.G.move) game.G.move(pos(e), e, now()); });
+const endPtr = e => { if (!ptrDown || !e.isPrimary) return; ptrDown = false; if (game && game.G.up) game.G.up(pos(e), e, now()); };
+cv.addEventListener('pointerup', endPtr); cv.addEventListener('pointercancel', endPtr);
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){ if (modalOpen() && store.storySeen) closeModal(); return; }
+  if (modalOpen() || game || finale || iris) return;
+  if (e.key === 'ArrowRight'){ e.preventDefault(); walkTo(mila.x + 3); }
+  else if (e.key === 'ArrowLeft'){ e.preventDefault(); walkTo(mila.x - 3); }
+  else if (e.key === 'Enter' || e.code === 'Space'){ e.preventDefault(); const s = STATIONS.find(s => Math.abs(s.x - mila.x) < 6); if (s) goStation(s); }
+});
+
+/* ============================================================ döngü */
+function resize(){
+  const r = $('#stage').getBoundingClientRect(); DPR = Math.min(2, window.devicePixelRatio || 1);
+  W = Math.max(50, r.width); H = Math.max(50, r.height);
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  layoutWorld(); if (game) game.G.lay();
+}
+let last = performance.now();
+function tick(d, t){
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  if (game){ game.t += d; if (!game.closing && game.G.update) game.G.update(d, t); screenT(); game.G.draw(t); drawParts(d); }
+  else { updateWorld(d, t); drawWorld(t, d); }
+  drawIris(d);
+}
+function frame(nowMs){
+  const d = Math.min(0.05, (nowMs - last) / 1000); last = nowMs;
+  if (W) tick(d, nowMs / 1000 + simT);
+  requestAnimationFrame(frame);
+}
+
+/* ============================================================ başlat */
+$('#menuBtn').onclick = showMenu;
+$('#list').onclick = () => showList(true);
+$('#stars').onclick = () => { if (!game && !finale) showShop(); };
+$('#say').onclick = () => { if (sayId) voice(sayId); };
+$('#backBtn').onclick = () => closeGame();
+MilaFM.init({button:$('#radioBtn'), host:$('#stage')});
+if (window.MGMobil) MGMobil.init({yatay:true, yatayNeden:'Yol ve köy kocaman görünür, Mila\'yı parmağınla çok daha rahat yürütürsün.'});
+renderList(); saveLook();
+new ResizeObserver(resize).observe($('#stage'));
+resize(); cam.x = mila.x + 2;
+if (!store.storySeen) showStory(() => showList(true, () => { if (!store.helpSeen) showHelp(); else sayLine('yola'); }));
+else if (!store.helpSeen) showHelp();
+else if (!store.finished && doneCount() >= STATIONS.length) setTimeout(() => { if (!game && !finale && !modalOpen()) startFinale(); }, 1500);   // final yarıda kaldıysa yeniden başlar
+else setTimeout(() => { const nx = nextStation(); if (nx && !store.finished) toast(`Sıradaki durak: ${nx.e} ${nx.name}`); }, 600);
+requestAnimationFrame(frame);
+
+// Konsoldan deneme için küçük bir API
+window.__ovk = {get store(){ return store; }, get game(){ return game; }, mila, cam, openGame, closeGame, winGame, startFinale, walkTo, GAMES, STATIONS, get finale(){ return finale; },
+  step(sec){ for (let i = 0; i < sec * 30; i++){ simT += 1 / 30; tick(1 / 30, now()); } },
+  tap(x, y, type = 'touch'){ const r = cv.getBoundingClientRect(); for (const ev of ['pointerdown', 'pointerup']) cv.dispatchEvent(new PointerEvent(ev, {pointerId:9, pointerType:type, isPrimary:true, button:0, buttons:ev === 'pointerdown' ? 1 : 0, clientX:r.left + x, clientY:r.top + y, bubbles:true})); },
+  drag(pts, type = 'touch'){ const r = cv.getBoundingClientRect(); pts.forEach(([x, y], i) => cv.dispatchEvent(new PointerEvent(i === 0 ? 'pointerdown' : i === pts.length - 1 ? 'pointerup' : 'pointermove', {pointerId:9, pointerType:type, isPrimary:true, button:i === 0 || i === pts.length - 1 ? 0 : -1, buttons:i === pts.length - 1 ? 0 : 1, clientX:r.left + x, clientY:r.top + y, bubbles:true}))); },
+  win(id){ if (game) winGame(game.id); }, skip(id){ store.done[id] = true; for (const k of ST[id].items) store.items[k] = true; saveStore(); renderList(); }};
+})();
+</script>
+</body>
+</html>

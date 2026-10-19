@@ -1,0 +1,266 @@
+{
+ "aferin": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Aferin sana!",
+  "ozet": "901429eacccd"
+ },
+ "bebek": {
+  "konusan": "bebek",
+  "ses": "Leda",
+  "metin": "Agu! Pasta! Agu agu!",
+  "ozet": "7fb13354e5a8"
+ },
+ "bitti": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mila sepetini mutfağa taşıdı. Dışarıda rüzgâr uğulduyor ama şato sıcacık. Şimdi sıra pastada!",
+  "ozet": "6a619feeb7e5"
+ },
+ "butik": {
+  "konusan": "lale",
+  "ses": "Sulafat",
+  "metin": "Prenses Butiği’ne hoş geldin! Yıldızlarınla elbise ve taç alabilirsin.",
+  "ozet": "29aee862916f"
+ },
+ "cikartma": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yeni bir çıkartma buldun!",
+  "ozet": "5632b610fba1"
+ },
+ "cilek_bitti": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Sepetim çilek doldu! Mis gibi kokuyorlar!",
+  "ozet": "957a1737cc05"
+ },
+ "cilek_gel": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Ooo, çilek tarlası! Kıpkırmızı olanları toplayalım.",
+  "ozet": "cf9521000d4b"
+ },
+ "cilek_nasil": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kırmızı çileklere dokun. Yeşil olanlar henüz olmamış, biraz beklemek lazım. Yaprakların altına da bak!",
+  "ozet": "206956dab533"
+ },
+ "cilek_olmadi": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Bu daha yeşil, biraz bekleyelim!",
+  "ozet": "dcc6f3409dfb"
+ },
+ "findik_bic": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Parmağını buğdayların üstünden kaydır, hepsini biç!",
+  "ozet": "c8c15b7aaec2"
+ },
+ "findik_bitti": {
+  "konusan": "findik",
+  "ses": "Fenrir",
+  "metin": "Yaşasın! Bembeyaz un oldu! Afiyet olsun prenses!",
+  "ozet": "b75e0a6a1b8f"
+ },
+ "findik_gel": {
+  "konusan": "findik",
+  "ses": "Fenrir",
+  "metin": "Merhaba prenses! Ben değirmenci Fındık. Un mu lazım? Önce buğdayları biçelim!",
+  "ozet": "f0a49ac3baed"
+ },
+ "findik_ruzgar": {
+  "konusan": "findik",
+  "ses": "Fenrir",
+  "metin": "Eyvah, bugün hiç rüzgâr yok! Değirmenin kanatlarını parmağınla çevirir misin?",
+  "ozet": "f959b780f0d2"
+ },
+ "firtina": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Rüzgâr çıktı! Fırtına geliyor, eve dönmeliyim!",
+  "ozet": "e1d8140e61d1"
+ },
+ "harika": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Harika!",
+  "ozet": "f2777b8fd0f8"
+ },
+ "hikaye": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bir varmış bir yokmuş... Yarın unicorn Pamuk'un doğum günü! Prenses Mila ona kocaman bir pasta yapmak istiyor. Ama şatonun mutfağında ne un kalmış ne de yumurta! Kraliçe anne Mila'ya resimli bir liste verdi: Ormandan ve köyden bunları topla tatlım. Ama akşama fırtına çıkacakmış, hava kararmadan dön! Mila sepetini kaptı ve yola koyuldu.",
+  "ozet": "33810afd31c0"
+ },
+ "kelebek": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Kelebek! Ne kadar güzel!",
+  "ozet": "22becdada231"
+ },
+ "kral_gel": {
+  "konusan": "kral",
+  "ses": "Puck",
+  "metin": "Mila! Çabuk arabaya atla, seni eve götüreyim!",
+  "ozet": "758f84ff7c77"
+ },
+ "kralice_aferin": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Aferin benim akıllı kızıma! Hepsini getirmişsin!",
+  "ozet": "0d583fba6adc"
+ },
+ "kumes_altin": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Altın yumurta! Vay canına!",
+  "ozet": "97029f34a086"
+ },
+ "kumes_bitti": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Altı yumurta tamam! Teşekkürler tavuklar!",
+  "ozet": "bbdd6bc2f49b"
+ },
+ "kumes_civciv": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Aaa, minik bir civciv! Ne tatlı!",
+  "ozet": "40fe29bf2e7b"
+ },
+ "kumes_gel": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Gıdak gıdak! Tavuklar yumurtaları saklamış!",
+  "ozet": "9e681bd27513"
+ },
+ "kumes_nasil": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Tavuklara dokun. Kalkınca altındaki yumurtayı al, kutuya koy.",
+  "ozet": "22e12af4b9d3"
+ },
+ "lale_bitti": {
+  "konusan": "lale",
+  "ses": "Sulafat",
+  "metin": "Ne güzel düzenledin! Al, bu şeker senin. Bu lolipop da benden hediye!",
+  "ozet": "89270d9afd17"
+ },
+ "lale_gel": {
+  "konusan": "lale",
+  "ses": "Sulafat",
+  "metin": "Mila, hoş geldin! Ah, şekerlerim karıştı! Renklerine göre kavanozlara koyar mısın?",
+  "ozet": "f581993b9df2"
+ },
+ "lale_yanlis": {
+  "konusan": "lale",
+  "ses": "Sulafat",
+  "metin": "O kavanoz değil, rengine bak!",
+  "ozet": "9e51c84cc156"
+ },
+ "liste": {
+  "konusan": "kralice",
+  "ses": "Aoede",
+  "metin": "Listemiz şöyle: un, yumurta, şeker, süt ve tereyağı. Bir de çilek, vanilya ve çikolata! Dikkatli ol tatlım!",
+  "ozet": "29005579ad3c"
+ },
+ "mila_ayran": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Mmm! Ayran bıyığım oldu!",
+  "ozet": "d8c8c1ea6f46"
+ },
+ "mila_baba": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Babacığım! Sepetim dopdolu!",
+  "ozet": "d04526ad94ee"
+ },
+ "nine_ayran": {
+  "konusan": "nine",
+  "ses": "Gacrux",
+  "metin": "Al kızım, yayıktan taze ayran!",
+  "ozet": "dbf0315419c0"
+ },
+ "nine_bitti": {
+  "konusan": "nine",
+  "ses": "Gacrux",
+  "metin": "Süt de tereyağı da hazır. Pamuk'a çok selam söyle!",
+  "ozet": "80a2e291f2ba"
+ },
+ "nine_gel": {
+  "konusan": "nine",
+  "ses": "Gacrux",
+  "metin": "Hoş geldin güzel kızım! Benekli acıkmış, ona biraz yonca verir misin?",
+  "ozet": "d8ace25e1e08"
+ },
+ "nine_sut": {
+  "konusan": "nine",
+  "ses": "Gacrux",
+  "metin": "Benekli çok sevindi! Bak ne güzel süt verdi.",
+  "ozet": "35b521f48944"
+ },
+ "nine_yayik": {
+  "konusan": "nine",
+  "ses": "Gacrux",
+  "metin": "Şimdi yayığı sallayalım, tereyağı olsun! Parmağınla sağa sola salla!",
+  "ozet": "fed90d713707"
+ },
+ "peri_aferin": {
+  "konusan": "peri",
+  "ses": "Laomedeia",
+  "metin": "Harikasın! Çiçekler açıldı!",
+  "ozet": "fae463afd22d"
+ },
+ "peri_bitti": {
+  "konusan": "peri",
+  "ses": "Laomedeia",
+  "metin": "Vanilya da çikolata da senin! Pamuk'a benden de sevgiler!",
+  "ozet": "626b1cf093ce"
+ },
+ "peri_dinle": {
+  "konusan": "peri",
+  "ses": "Laomedeia",
+  "metin": "Önce ben çalayım, sonra sen aynısını çal!",
+  "ozet": "3c48a68c78a3"
+ },
+ "peri_gel": {
+  "konusan": "peri",
+  "ses": "Laomedeia",
+  "metin": "Merhaba prenses! Ben Peri Işıltı. Vanilya çiçeklerim şarkı söylemeyi çok sever!",
+  "ozet": "986a9237e079"
+ },
+ "peri_sira": {
+  "konusan": "peri",
+  "ses": "Laomedeia",
+  "metin": "Sıra sende!",
+  "ozet": "78d3df33a356"
+ },
+ "peri_tekrar": {
+  "konusan": "peri",
+  "ses": "Laomedeia",
+  "metin": "Hımm, bir daha dinleyelim!",
+  "ozet": "4602b4802d0c"
+ },
+ "peri_yagmur": {
+  "konusan": "peri",
+  "ses": "Laomedeia",
+  "metin": "Şimdi sihirli bulutum çikolata yağdıracak. Sepetinle yakala!",
+  "ozet": "6164964dd9ab"
+ },
+ "yardim": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Gitmek istediğin yere dokun, Mila oraya yürüsün. Parlayan yerlere dokunursan Mila orada yardım eder ve malzemeleri sepetine koyar. Yolda kelebekleri, yıldızları ve saklanan hayvanları da bulabilirsin!",
+  "ozet": "f7e26e30e5bd"
+ },
+ "yola": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Hadi bakalım, malzeme toplamaya!",
+  "ozet": "71c99d7037b4"
+ }
+}

@@ -25,7 +25,8 @@ import urllib.request
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OYUNLAR = os.path.join(KOK, 'oyunlar')
 MODEL = 'gemini/gemini-3.1-flash-tts-preview/{}'
-SESLER = {'anlatici': 'Zephyr', 'mila': 'Leda', 'kral': 'Puck', 'kralice': 'Aoede', 'bebek': 'Leda'}
+SESLER = {'anlatici': 'Zephyr', 'mila': 'Leda', 'kral': 'Puck', 'kralice': 'Aoede', 'bebek': 'Leda',
+          'peri': 'Laomedeia', 'findik': 'Fenrir', 'nine': 'Gacrux', 'lale': 'Sulafat'}
 
 EMOJI = re.compile('[\U0001F000-\U0001FAFF☀-➿️‍⬀-⯿]')
 SATIR = re.compile(r"""(\w+):\s*\['(\w+)',\s*(?:'([^']*)'|"([^"]*)")\]""")

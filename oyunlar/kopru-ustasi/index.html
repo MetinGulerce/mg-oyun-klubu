@@ -2,8 +2,15 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Köprü Ustası</title>
+<meta name="theme-color" content="#fff6fb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MG Oyun">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../ikonlar/ikon-180.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌉</text></svg>">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Titan+One&display=swap">
 <style>
 :root{
@@ -12,12 +19,13 @@
   --danger:#e5533f; --ok:#3fbf86;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--text);font:14px/1.4 "Fredoka","Nunito","Segoe UI",system-ui,sans-serif;overflow:hidden;user-select:none;-webkit-user-select:none}
-#app{display:flex;flex-direction:column;height:100%}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+body{background:var(--bg);color:var(--text);font:14px/1.4 "Fredoka","Nunito","Segoe UI",system-ui,sans-serif;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+/* yerleşim: başlık / sahne / araç rafları. Masaüstünde raflar altta tek sıra, dik telefonda iki sıra, yatay telefonda iki yanda */
+#app{position:fixed;inset:0;display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"h h h" "s s s" "l l r"}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 
-header{display:flex;align-items:center;gap:10px 18px;padding:8px 14px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header{grid-area:h;display:flex;align-items:center;gap:10px 18px;padding:calc(8px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) 8px calc(14px + env(safe-area-inset-left));background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
 .brand{font-weight:800;font-size:17px;letter-spacing:.2px;white-space:nowrap}
 .brand span{color:var(--accent)}
 #levels{display:flex;align-items:center;gap:1px;padding:3px 10px;border-radius:999px;background:var(--panel2);border:1.5px solid var(--line)}
@@ -29,7 +37,7 @@ header{display:flex;align-items:center;gap:10px 18px;padding:8px 14px;background
 .stop.cur span{font-size:19px;filter:drop-shadow(0 1px 2px rgba(120,40,90,.4))}
 .stop.end{font-size:18px;cursor:default}
 .story{text-align:center}
-.story .big{font-size:64px;line-height:1.1}
+.story .bigE{font-size:64px;line-height:1.1}
 .story p{font-size:15px;line-height:1.55}
 .myCake{display:flex;align-items:center;gap:12px;margin:10px auto 0;padding:8px 14px;border-radius:16px;background:var(--panel2);max-width:340px;text-align:left;font-size:13px;font-weight:600;color:var(--text);text-decoration:none}
 .myCake img{width:96px;height:80px;object-fit:contain;flex:none;filter:drop-shadow(0 3px 5px rgba(120,40,90,.25))}
@@ -87,21 +95,28 @@ a.myCake:hover{outline:2px solid var(--accent)}
 .deco canvas{width:100%;height:56px;border-radius:8px;background:linear-gradient(#d9f0ff,#ffe9f4)}
 #helpBtn{width:32px;height:32px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);font-weight:700}
 
-#stage{position:relative;flex:1;min-height:0}
+#stage{grid-area:s;position:relative;min-height:0;min-width:0}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
-#hint{position:absolute;left:12px;top:12px;max-width:min(440px,calc(100% - 24px));padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(180,80,130,.15);font-size:13px;pointer-events:none;backdrop-filter:blur(3px)}
+#hint{position:absolute;left:12px;top:12px;max-width:min(440px,calc(100% - 84px));padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(180,80,130,.15);font-size:13px;pointer-events:none;backdrop-filter:blur(3px)}
 #hint b{color:var(--accent)}
+body.dragging #hint,body.dragging #zoomUI{opacity:.18;pointer-events:none}
+#hint,#zoomUI{transition:opacity .15s}
+#hint.mini{width:46px;height:46px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:22px;background:rgba(255,255,255,.92)}
+#hint.mini::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--accent);opacity:.55;animation:hintPulse 2.4s ease-out infinite}
+@keyframes hintPulse{0%{transform:scale(.9);opacity:.7}70%,100%{transform:scale(1.25);opacity:0}}
 #toast{position:absolute;left:50%;bottom:16px;transform:translate(-50%,20px);padding:9px 16px;border-radius:10px;background:#fff;border:1.5px solid var(--accent);opacity:0;transition:.2s;pointer-events:none;width:max-content;max-width:calc(100% - 24px);text-align:center;z-index:6}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
-footer{display:flex;align-items:center;padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)}
 *{scrollbar-width:thin;scrollbar-color:#f3b9d4 transparent}
 *::-webkit-scrollbar{width:8px;height:8px}
 *::-webkit-scrollbar-thumb{background:#f3b9d4;border-radius:8px}
 *::-webkit-scrollbar-track{background:transparent}
-#buildBar,#driveBar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;width:100%;padding:2px 2px 4px}
-body.sim #buildBar,body:not(.sim) #driveBar{display:none}
-#mats,.tiles{display:flex;gap:6px;flex:none}
+/* araç rafları: .b kurarken, .d sürerken görünür */
+.rail{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--panel);border-top:1px solid var(--line)}
+#railL{grid-area:l;padding-left:calc(12px + env(safe-area-inset-left))}
+#railR{grid-area:r;justify-content:flex-end;padding-right:calc(12px + env(safe-area-inset-right))}
+body.sim .rail .b,body:not(.sim) .rail .d,body:not(.trans) #padJump{display:none!important}
+#mats{display:flex;gap:6px;flex:none}
 .sep{width:2px;height:48px;border-radius:2px;background:var(--line);flex:none}
 .tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:70px;height:66px;border-radius:18px;background:var(--panel2);border:3px solid transparent;flex:none;transition:transform .12s}
 .tile .ic{font-size:29px;line-height:1.05}
@@ -124,8 +139,7 @@ body.sim #buildBar,body:not(.sim) #driveBar{display:none}
 #padFast{background:linear-gradient(180deg,#ffc36b,#ff7eb6);color:#fff}
 #hornBtn{background:#d9c4ff}
 #padFwd{background:linear-gradient(180deg,#b6f2cf,#6fd6a0)}
-#padJump{background:#ffd6a8;display:none}
-body.trans #padJump{display:flex}
+#padJump{background:#ffd6a8}
 @media (hover:none){.keyhelp{display:none}}
 .gt{position:relative}
 .gt .dd{position:absolute;right:5px;top:2px;font-size:10px;color:var(--muted)}
@@ -176,7 +190,7 @@ body.trans #padJump{display:flex}
 
 #modal{position:absolute;inset:0;display:grid;place-items:center;background:rgba(74,37,69,.38);z-index:5;padding:16px}
 #modal[hidden]{display:none}
-.card{max-height:100%;overflow:auto;width:min(460px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:0 20px 60px rgba(120,40,90,.35)}
+.card{max-height:100%;overflow:auto;width:min(460px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px;--cpb:22px;box-shadow:0 20px 60px rgba(120,40,90,.35)}
 .card.wide{width:min(780px,100%)}
 .kid{display:grid;gap:10px;margin:12px 0}
 .kid div{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:14px;background:var(--panel2);font-size:15px;font-weight:600}
@@ -191,7 +205,7 @@ body.trans #padJump{display:flex}
 .card .stat{background:var(--panel2);border-radius:10px;padding:8px 12px}
 .card .stat small{display:block;color:var(--muted);font-size:11px}
 .card .stat b{font-size:16px;font-variant-numeric:tabular-nums}
-.card .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.card .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap;position:sticky;bottom:calc(-1 * var(--cpb));margin-bottom:calc(-1 * var(--cpb));padding:10px 0 var(--cpb);background:linear-gradient(rgba(255,246,251,0),var(--panel) 38%)}   /* düğmeler kısa ekranda da hep görünür */
 .card .row button{padding:9px 16px;border-radius:10px;background:var(--panel2);font-weight:650}
 .card .row button.primary{background:var(--accent);color:var(--accent-ink)}
 #celebrate{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:4;overflow:hidden;animation:milaOut .6s ease-in 3s forwards}
@@ -225,31 +239,93 @@ body.trans #padJump{display:flex}
   .chip{width:28px;height:28px}
   #budget{min-width:180px}
 }
+#stopBtn{order:9}
+/* dik telefon ya da dar pencere: başlık iki sıra, raflar altta iki sıra */
 @media (max-width:720px){
-  #budget{min-width:100%;margin-left:0;order:9}
-  header{padding:6px 8px}
-  .brand{display:none}
-  #levels{flex:1;justify-content:space-between;padding:3px 8px}
+  #app{grid-template-rows:auto minmax(0,1fr) auto auto;grid-template-areas:"h h h" "s s s" "l l l" "r r r"}
+  header{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;grid-template-areas:"lv lv lv rd mn" "vh bk bd bd bd";gap:6px;padding:calc(6px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 6px calc(8px + env(safe-area-inset-left))}
+  .brand,#levelInfo,#muteBtn,#helpBtn,.lbl{display:none}
+  #levels{grid-area:lv;justify-content:space-between;padding:3px 8px;min-width:0}
   .stop{width:auto;flex:1}
-  #muteBtn,#helpBtn{display:none}
-  #budgetText{font-size:11px}
-  #buildBar{flex-wrap:wrap;row-gap:6px}
-  #mats{width:100%;justify-content:space-between}
-  #buildBar .sep{display:none}
-  .tiles .tile{width:54px}
-  #driveBar{justify-content:space-between;gap:5px}
-  #stopBtn{width:100%;height:46px;margin-left:0;justify-content:center;font-size:16px}
-  #stopBtn .ic{font-size:20px}
-  #vehBtn,#bank,#menuBtn,#radioBtn{padding:5px 9px;font-size:13px}
-  .tile{width:58px;height:58px;border-radius:15px}
+  #radioBtn{grid-area:rd} #menuBtn{grid-area:mn} #vehBtn{grid-area:vh} #bank{grid-area:bk}
+  #budget{grid-area:bd;min-width:0;margin-left:0}
+  #budgetText{font-size:11px;white-space:nowrap}
+  #budgetLbl span{display:none}
+  #vehBtn,#bank,#menuBtn,#radioBtn{padding:5px 11px;font-size:13px;min-height:34px;justify-content:center}
+  .rail{gap:6px;padding:7px calc(8px + env(safe-area-inset-right)) 7px calc(8px + env(safe-area-inset-left))}
+  #railL{justify-content:space-between}
+  #railR{border-top:0;padding-top:0;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+  #mats{display:contents}
+  #railL .sep{display:none}
+  .tile{flex:1 1 0;width:auto;min-width:0;max-width:86px;height:58px;border-radius:15px}
   .tile .ic{font-size:24px}
   .tile .tl{font-size:11px}
-  .big{height:58px;padding:0 16px;font-size:18px}
+  .big{flex:1.5 1 0;height:58px;padding:0 12px;font-size:18px;justify-content:center;margin-left:0}
   .big .ic{font-size:24px}
-  .pad{width:calc((100% - 25px) / 6);min-width:46px;height:58px;font-size:11px;border-radius:16px}
-  .pad .ic{font-size:24px}
-  #hint{font-size:12px;max-width:calc(100% - 84px)}
+  .pad{flex:1 1 0;width:auto;min-width:0;height:60px;font-size:11.5px;border-radius:16px}
+  .pad .ic{font-size:25px}
+  #padFwd{order:1;flex:1.7 1 0}
+  #padFast{order:2}
+  #padJump{order:3}
+  #hint{font-size:12px}
+  #zoomUI{gap:6px}
   #zoomUI button{width:42px;height:42px;font-size:19px}
+}
+/* yatay telefon: başlık ince tek sıra, araçlar iki yanda (başparmakların altında), sahne kocaman */
+@media (orientation:landscape) and (max-height:520px){
+  #app{grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr);grid-template-areas:"h h h" "l s r"}
+  header{display:flex;flex-wrap:nowrap;gap:6px;padding:calc(4px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) 4px calc(10px + env(safe-area-inset-left))}
+  .brand,#levelInfo,#muteBtn,#helpBtn,.lbl{display:none}
+  #levels{flex:1 1 auto;min-width:0;justify-content:space-between;padding:1px 8px}
+  .stop{width:auto;flex:1;min-width:14px;height:26px}
+  #budget{flex:0 1 210px;min-width:130px;margin-left:0}
+  #budgetText{font-size:11px;white-space:nowrap}
+  #budgetLbl span{display:none}
+  #bar{height:5px;margin-top:2px}
+  #vehBtn,#bank,#menuBtn,#radioBtn{padding:0 11px;font-size:13px;height:32px;min-height:0;display:flex;align-items:center}
+  .rail{flex-direction:column;flex-wrap:nowrap;justify-content:center;gap:6px;border-top:0;padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+  #railL{border-right:1px solid var(--line);padding-left:calc(8px + env(safe-area-inset-left))}
+  #railR{border-left:1px solid var(--line);padding-right:calc(8px + env(safe-area-inset-right));justify-content:flex-end}
+  #mats{display:flex;flex-direction:column;gap:6px}
+  .sep{width:44px;height:2px}
+  .tile{flex:none;width:64px;max-width:none;border-radius:14px;height:clamp(38px,calc((100vh - 96px) / 5 - 6px),56px)}
+  .tile{height:clamp(38px,calc((100dvh - 96px) / 5 - 6px),56px)}
+  .tile .ic{font-size:21px}
+  .tile .tl{font-size:10.5px}
+  .tile.active{transform:scale(1.06)}
+  .big{flex:none;flex-direction:column;justify-content:center;gap:0;width:68px;height:68px;padding:0;margin:0;border-radius:18px;font-size:14px}
+  .big .ic{font-size:26px;line-height:1.1}
+  #testBtn{margin-top:auto}
+  .pad{flex:none;width:68px;border-radius:18px;font-size:11px;height:clamp(46px,calc((100vh - 72px) / 4 - 6px),70px)}
+  .pad{height:clamp(46px,calc((100dvh - 72px) / 4 - 6px),70px)}
+  .pad .ic{font-size:24px}
+  #stopBtn{order:-1;margin-bottom:auto;height:58px;font-size:11px;white-space:normal;text-align:center;line-height:1.1}
+  #padJump{order:1} #padFast{order:2} #padFwd{order:3;flex:none}   /* İleri en altta, sağ başparmağın altında */
+  #stopBtn .ic{font-size:22px}
+  #hint{font-size:12px;left:8px;top:8px}
+  #zoomUI{right:8px;top:8px;gap:6px}
+  #zoomUI button{width:38px;height:38px;font-size:17px}
+  #picker{left:6px;right:6px;bottom:6px;max-height:calc(100% - 12px);flex-direction:column;padding:8px 10px 10px}
+  #picker:not([hidden]){display:flex}
+  #picker .ph{margin-bottom:6px;font-size:15px}
+  #picker .pl{max-height:none;flex:1;min-height:0;grid-template-columns:repeat(auto-fill,minmax(122px,1fr))}
+  .pc .pd{display:none}
+  .pc{padding:6px 8px}
+  .pc canvas{height:18px}
+  .pc .pe{font-size:22px;line-height:22px}
+  .pc .pn{margin:3px 0 1px;font-size:13px}
+  .pc .pm{line-height:14px}
+  #modal{padding:8px}
+  .card{padding:14px 18px;--cpb:14px}
+  .card h2{font-size:18px}
+  .card .row{margin-top:10px}
+  .story .bigE{font-size:40px}
+  .story p{font-size:14px;line-height:1.45}
+  .myCake{margin-top:6px;padding:6px 10px}
+  .myCake img{width:70px;height:56px}
+  .kid{gap:6px;margin:8px 0}
+  .kid div{padding:5px 10px;font-size:14px}
+  .kid b{font-size:24px}
 }
 </style>
 </head>
@@ -265,8 +341,8 @@ body.trans #padJump{display:flex}
       <div id="budgetText"><span>Maliyet <b id="costVal">0 ₺</b></span><span id="budgetLbl">Bütçe <b id="budgetVal">0 ₺</b></span></div>
       <div id="bar"><div id="barFill"></div></div>
     </div>
-    <button id="radioBtn" title="Radyo: Mila FM">📻 Radyo</button>
-    <button id="menuBtn" title="Menü: kaydet, yükle, sıfırdan başla">☰ Menü</button>
+    <button id="radioBtn" title="Radyo: Mila FM">📻<span class="lbl"> Radyo</span></button>
+    <button id="menuBtn" title="Menü: kaydet, yükle, sıfırdan başla">☰<span class="lbl"> Menü</span></button>
     <button id="muteBtn" title="Ses aç/kapat">🔊</button>
     <button id="helpBtn" title="Nasıl oynanır?">?</button>
   </header>
@@ -282,29 +358,28 @@ body.trans #padJump{display:flex}
     <div id="modal" hidden><div class="card" id="card"></div></div>
   </main>
 
-  <footer>
-    <div id="buildBar">
-      <div id="mats"></div>
-      <div class="sep"></div>
-      <div class="tiles">
-        <button class="tile" id="delBtn" title="Silgi: dokunduğun parçayı siler (sağ tık da siler)"><span class="ic">🧽</span><span class="tl">Silgi</span></button>
-        <button class="tile" id="undoBtn" title="Geri al (Ctrl+Z)"><span class="ic">↩️</span><span class="tl">Geri al</span></button>
-        <button class="tile" id="clearBtn" title="Bütün köprüyü sil"><span class="ic">🧹</span><span class="tl">Temizle</span></button>
-      </div>
-      <button id="testBtn" class="big go" title="Arabayı köprüden geçir (Boşluk)"><span class="ic">🚗</span>Sür!</button>
-    </div>
-    <div id="driveBar">
-      <button class="pad" id="padBack" title="Geri git (←)"><span class="ic">⏪</span>Geri</button>
-      <button class="pad" id="padBrake" title="Fren (↓)"><span class="ic">✋</span>Dur</button>
-      <button class="pad" id="padFwd" title="İleri git (→)"><span class="ic">▶️</span>İleri</button>
-      <button class="pad" id="padFast" title="Hızlı git (Ctrl + →)"><span class="ic">🚀</span>Hızlı</button>
-      <button class="pad" id="padJump" title="Zıpla (↑)"><span class="ic">⤴️</span>Zıpla</button>
-      <button class="pad" id="hornBtn" title="Korna (Shift, basılı tut)"><span class="ic">📯</span>Korna</button>
-      <button id="stopBtn" class="big back" title="Köprüye geri dön (Boşluk)"><span class="ic">🔧</span>Köprüye dön</button>
-    </div>
-  </footer>
+  <!-- araç rafları: .b kurarken, .d sürerken görünür -->
+  <nav id="railL" class="rail">
+    <div id="mats" class="b"></div>
+    <div class="sep b"></div>
+    <button class="tile b" id="delBtn" title="Silgi: dokunduğun parçayı siler; parmağını gezdirirsen yolundakileri siler (sağ tık da siler)"><span class="ic">🧽</span><span class="tl">Silgi</span></button>
+    <button class="pad d" id="padBack" title="Geri git (←)"><span class="ic">⏪</span>Geri</button>
+    <button class="pad d" id="padBrake" title="Fren (↓)"><span class="ic">✋</span>Dur</button>
+    <button class="pad d" id="hornBtn" title="Korna (Shift, basılı tut)"><span class="ic">📯</span>Korna</button>
+  </nav>
+  <nav id="railR" class="rail">
+    <button class="tile b" id="undoBtn" title="Geri al (Ctrl+Z)"><span class="ic">↩️</span><span class="tl">Geri al</span></button>
+    <button class="tile b" id="clearBtn" title="Bütün köprüyü sil"><span class="ic">🧹</span><span class="tl">Temizle</span></button>
+    <button id="testBtn" class="big go b" title="Arabayı köprüden geçir (Boşluk)"><span class="ic">🚗</span>Sür!</button>
+    <button id="stopBtn" class="big back d" title="Köprüye geri dön (Boşluk)"><span class="ic">🔧</span><span>Köprüye dön</span></button>
+    <button class="pad d" id="padJump" title="Zıpla (↑)"><span class="ic">⤴️</span>Zıpla</button>
+    <button class="pad d" id="padFast" title="Hızlı git (Ctrl + →)"><span class="ic">🚀</span>Hızlı</button>
+    <button class="pad d" id="padFwd" title="İleri git (→)"><span class="ic">▶️</span>İleri</button>
+  </nav>
 </div>
 
+<script src="../../ortak/mobil.js"></script>
+<script src="../../ortak/mila-gorunum.js"></script>
 <script>
 (() => {
 'use strict';
@@ -440,7 +515,7 @@ let mode = 'build';
 let drag = null, hoverNode = null, hoverBeam = null;
 const mouse = {x:0, y:0, inside:false};
 let undoStack = [];
-let sim = null, trans = null, hornT = -9, sceneDX = 0, sceneDY = 0;
+let sim = null, trans = null, hornT = -9, sceneDX = 0, sceneDY = 0, camSave = null;
 const keys = {right:false, left:false, down:false, fast:false};
 let padFwd = false, structs = [];
 const fwdHeld = () => keys.right || padFwd || boost;
@@ -517,15 +592,19 @@ function noise(dur, vol, freq){
   src.connect(fl); fl.connect(g); g.connect(a.destination); src.start();
 }
 /* seslendirme: ses/<anahtar>.mp3 — dosya yoksa sessizce geçer */
-let narr = null, vq = [];
-function stopVoice(){ vq = []; if (narr){ try { narr.pause(); } catch (e) {} narr = null; } duck(false); }
+// tek oynatıcı (ortak/mobil.js): iPhone/iPad'de ilk dokunuştan sonra kurtarma sahnesindeki replikler de çalar
+let narr = null, vq = [], narrTok = 0;
+function stopVoice(){ vq = []; narrTok++; if (narr){ try { narr.pause(); } catch (e) {} narr = null; } duck(false); }
 function voice(id, queue){
   if (store.muted) return;
   if (queue && narr){ vq.push(id); return; }
   if (!queue) stopVoice();
-  const a = new Audio(`ses/${id}.mp3`); narr = a; duck(true);
-  const done = () => { if (narr !== a) return; narr = null; if (vq.length) voice(vq.shift(), false); else duck(false); };
-  a.onended = done; a.onerror = done; a.play().catch(done);
+  playVoice(id);
+}
+function playVoice(id){   // kuyruk boşaltılmadan sıradaki satır
+  const a = window.MGMobil ? MGMobil.oynatici() : new Audio(), tok = ++narrTok; narr = a; duck(true);
+  const done = () => { if (tok !== narrTok) return; narr = null; if (vq.length) playVoice(vq.shift()); else duck(false); };
+  a.onended = done; a.onerror = done; a.src = `ses/${id}.mp3`; const p = a.play(); if (p && p.catch) p.catch(done);
 }
 let ducked = false;
 function duck(on){ if (ducked === on) return; ducked = on; radioVolume(); }
@@ -545,6 +624,7 @@ const SFX = {
   build(){ tone(220, .12, 'square', .06); noise(.2, .18, 700); tone(440, .15, 'triangle', .07, .08); },
   jump(){ tone(300, .28, 'sine', .12, 0, 520); },
   bump(){ if (lim('bump', 200)){ noise(.2, .25, 500); tone(150, .16, 'square', .05, 0, -60); } },
+  tick(){ if (lim('tick', 35)) tone(1500, .025, 'sine', .035); },
 };
 
 const fmt = n => Math.round(n).toLocaleString('tr-TR') + ' ₺';
@@ -615,19 +695,19 @@ function addStruct(pl){
   structs.push(st); rects = makeRects(level, structs);
   SFX.build(); persist();
 }
-function structAt(p){
+function structAt(p, tol = 0){
   for (let i = structs.length - 1; i >= 0; i--){
     const q = structs[i];
-    if (q.t === 'destek' && Math.hypot(p.x - q.x, p.y - q.y) < 0.45) return i;
-    if (q.t === 'kule' && Math.abs(p.x - q.x) < 0.5 && p.y > q.y - 0.45 && p.y < groundTopAt(q.x)) return i;
-    if (q.t === 'ayak' && p.x > q.x - 0.9 && p.x < q.x + 0.9 && p.y > q.y - 0.45 && p.y < level.water + 3) return i;
+    if (q.t === 'destek' && Math.hypot(p.x - q.x, p.y - q.y) < 0.45 + tol) return i;
+    if (q.t === 'kule' && Math.abs(p.x - q.x) < 0.5 + tol && p.y > q.y - 0.45 - tol && p.y < groundTopAt(q.x)) return i;
+    if (q.t === 'ayak' && p.x > q.x - 0.9 - tol && p.x < q.x + 0.9 + tol && p.y > q.y - 0.45 - tol && p.y < level.water + 3) return i;
   }
   return -1;
 }
-function removeStruct(i){
+function removeStruct(i, push = pushUndo){
   const q = structs[i], dead = new Set([q]);
   if (q.t === 'ayak') for (const o of structs) if (o !== q && o.x >= q.x - 0.95 && o.x <= q.x + 0.95 && o.y <= q.y + 0.01) dead.add(o);   // üstündekiler de gider
-  pushUndo();
+  push();
   const dn = new Set([...dead].map(o => o.node));
   beams = beams.filter(b => !dn.has(b.a) && !dn.has(b.b)); nodes = nodes.filter(n => !dn.has(n));
   structs = structs.filter(o => !dead.has(o)); rects = makeRects(level, structs);
@@ -648,7 +728,7 @@ function setLevel(i, quiet){
   applyDesign(store.designs[levelIndex] || {});
   undoStack = []; drag = null; resetCam();
   store.level = levelIndex; saveStore();
-  computeView(); updateUI();
+  computeView(); hintOpen(false); if (beams.length) hintClose(); updateUI();
   if (!quiet && !store.storySeen[levelIndex]) showStory(levelIndex);
 }
 
@@ -700,25 +780,41 @@ function commitBeam(from, target, type){
   if (!to){ to = {x:target.x, y:target.y, fixed:false}; nodes.push(to); }
   const ex = beams.find(b => (b.a === from && b.b === to) || (b.a === to && b.b === from));
   if (ex) ex.type = type; else beams.push({a:from, b:to, type});
-  SFX.place(); persist();
+  SFX.place(); persist(); hintClose();
   return to;
 }
 function cleanupOrphans(){
   const used = new Set(); for (const b of beams){ used.add(b.a); used.add(b.b); }
   nodes = nodes.filter(n => n.fixed || used.has(n));
 }
-function deleteAt(p){
-  const si = structAt(p); if (si >= 0){ removeStruct(si); return; }
-  const n = nodeAt(p, 0.4);
+// silgi. st: bir silgi darbesi — dokunmatikte alan geniştir, parmak gezdirilince yolundaki parçalar silinir, darbe tek adımda geri alınır
+function deleteAt(p, st){
+  const k = st && st.touch ? 1 : 0, push = () => { if (!st || !st.pushed){ pushUndo(); if (st) st.pushed = true; } };
+  const si = structAt(p, k * Math.max(0, 14 / view.s - 0.1)); if (si >= 0){ removeStruct(si, push); return; }
+  const n = nodeAt(p, Math.max(0.4, k * 24 / view.s));
   if (n){
     const att = beams.filter(b => b.a === n || b.b === n);
     if (!att.length) return;
-    pushUndo(); beams = beams.filter(b => !att.includes(b));
+    push(); beams = beams.filter(b => !att.includes(b));
   } else {
-    const b = beamAt(p); if (!b) return;
-    pushUndo(); beams = beams.filter(x => x !== b);
+    const b = beamAt(p, Math.max(0.35, k * 18 / view.s)); if (!b) return;
+    push(); beams = beams.filter(x => x !== b);
   }
   SFX.del(); cleanupOrphans(); hoverBeam = null; hoverNode = null; persist();
+}
+function eraseAlong(p0, p1, st){   // parmağın iki konumu arasındaki çizgiye değen kirişler
+  const r = Math.max(0.3, (st.touch ? 16 : 6) / view.s);
+  const hit = beams.filter(b => segSegDist(p0, p1, b.a, b.b) < r);
+  if (!hit.length) return;
+  if (!st.pushed){ pushUndo(); st.pushed = true; }
+  beams = beams.filter(b => !hit.includes(b));
+  SFX.del(); cleanupOrphans(); hoverBeam = null; hoverNode = null; persist();
+}
+function segSegDist(p, q, a, b){
+  const cr = (o, u, v) => (u.x - o.x) * (v.y - o.y) - (u.y - o.y) * (v.x - o.x);
+  const d1 = cr(a, b, p), d2 = cr(a, b, q), d3 = cr(p, q, a), d4 = cr(p, q, b);
+  if (((d1 > 0) !== (d2 > 0)) && ((d3 > 0) !== (d4 > 0))) return 0;   // kesişiyorlar
+  return Math.min(segDist(p, a, b), segDist(q, a, b), segDist(a, p, q), segDist(b, p, q));
 }
 
 /* --------------------------------------------------------------- fizik */
@@ -739,11 +835,14 @@ function startSim(){
   sim = {nodes:sn, beams:sb, t:0, V, kind:store.vehicle, car:{wheels:[mk(-2.5 - V.wb), mk(-2.5)]}, drive:true,
          maxStress:0, broken:0, result:null, shown:false, particles:[], cost:totalCost(), lastX:-99, lastMoveT:0,
          puffs:[], rings:[], rescue:null, puffAcc:0, sparkAcc:0, bubAcc:0, bubT:0, splashN:0, started:false, lastGround:0};
+  camSave = {z:cam.z, cx:cam.cx, cy:cam.cy, user:cam.user};
   mode = 'sim'; drag = null; document.body.classList.add('sim'); updateUI();
 }
 function stopSim(){
   if (sim && sim.rescue) stopVoice();
-  hornStop(); sim = null; boost = false; padFwd = false; keys.right = keys.left = keys.down = keys.fast = false; if (trans){ trans = null; resetCam(); computeView(); } mode = 'build'; document.body.classList.remove('sim', 'trans'); closeModal(); stopCelebrate(); updateUI();
+  hornStop(); sim = null; boost = false; padFwd = false; keys.right = keys.left = keys.down = keys.fast = false;
+  if (trans){ trans = null; resetCam(); computeView(); } else if (camSave){ Object.assign(cam, camSave); computeView(); }
+  camSave = null; mode = 'build'; document.body.classList.remove('sim', 'trans'); closeModal(); stopCelebrate(); updateUI();
 }
 
 function collideWheel(wh, ax, ay, bx, by, na, nb){
@@ -1075,14 +1174,14 @@ function drawCakeOnCar(c, kind){
 }
 function showStory(i, then){
   const L = LEVELS[i]; store.storySeen[i] = true; saveStore();
-  showModal(`<div class="story"><div class="big">${L.emoji}</div><h2>${L.name}</h2><p>${L.story}</p>${i === 0 ? cakeCard() : ''}</div>`,
+  showModal(`<div class="story"><div class="bigE">${L.emoji}</div><h2>${L.name}</h2><p>${L.story}</p>${i === 0 ? cakeCard() : ''}</div>`,
     [{label:'🔈 Dinle', action:() => voice('story' + i)},
      {label:i === 0 ? 'Hadi başlayalım! ▶' : 'Köprüyü kuralım! ▶', primary:true, action:() => { stopVoice(); closeModal(); if (then) then(); }}]);
   voice('story' + i);
 }
 function showEnding(){
   closeModal(); stopCelebrate(); launchFireworks(30, 10); SFX.win();
-  showModal(`<div class="story"><div class="big">🏰🎂🦄</div><h2>Mutlu son!</h2><p>${ENDING}</p>${cakeImg ? `<img src="${cakeImg.src}" alt="Mila'nın pastası" style="max-width:220px;max-height:180px;filter:drop-shadow(0 6px 10px rgba(120,40,90,.3))">` : ''}<p style="font-size:12px;color:var(--muted)">İstersen yoldaki köprülere geri dönüp daha ağır arabalarla daha çok para kazanabilirsin.</p></div>`,
+  showModal(`<div class="story"><div class="bigE">🏰🎂🦄</div><h2>Mutlu son!</h2><p>${ENDING}</p>${cakeImg ? `<img src="${cakeImg.src}" alt="Mila'nın pastası" style="max-width:220px;max-height:180px;filter:drop-shadow(0 6px 10px rgba(120,40,90,.3))">` : ''}<p style="font-size:12px;color:var(--muted)">İstersen yoldaki köprülere geri dönüp daha ağır arabalarla daha çok para kazanabilirsin.</p></div>`,
     [{label:'🔈 Dinle', action:() => voice('ending')}, {label:'Yaşasın! 🎉', primary:true, action:() => { stopVoice(); stopSim(); launchFireworks(10, 3); }}]);
   setTimeout(() => voice('ending'), 700);
 }
@@ -1194,11 +1293,12 @@ function showMenu(){
     [store.muted ? '🔇' : '🔊', store.muted ? 'Sesi aç' : 'Sesi kapat', () => { store.muted = !store.muted; saveStore(); updateUI(); if (!store.muted) SFX.pick(); showMenu(); }],
     ['📤', 'Kaydı dosyaya indir', exportSave],
     ['📥', 'Dosyadan kayıt yükle', importSave],
+    window.MGMobil && MGMobil.tamEkranVar ? ['⛶', MGMobil.tamEkranda() ? 'Tam ekrandan çık' : 'Tam ekran', () => { MGMobil.tamEkran(); closeModal(); }] : null,
     ['🌱', 'Sıfırdan başla', () => confirmBox('🌱 Sıfırdan başlayalım mı?', 'Bütün köprülerin, kumbaradaki paran ve aldığın süsler silinir; hikâye en baştan başlar. Kayıt yuvalarındaki oyunlar <b>silinmez</b>.', 'Evet, sıfırdan başla', () => {
       const muted = store.muted; store = freshStore(); store.muted = muted; store.seenHelp = true; saveStore(); undoStack = []; closeModal(); setLevel(0); toast('🌱 Yeni bir macera başladı!'); }), true],
   ];
   const ml = $('#menuList');
-  for (const [e, label, fn, danger] of items){ const b = document.createElement('button'); b.className = 'mi' + (danger ? ' danger' : ''); b.innerHTML = `<span class="e">${e}</span><span>${label}</span>`; b.onclick = fn; ml.appendChild(b); }
+  for (const [e, label, fn, danger] of items.filter(Boolean)){ const b = document.createElement('button'); b.className = 'mi' + (danger ? ' danger' : ''); b.innerHTML = `<span class="e">${e}</span><span>${label}</span>`; b.onclick = fn; ml.appendChild(b); }
   const sl = $('#slots');
   for (let n = 1; n <= 3; n++){
     const d = readSlot(n), row = document.createElement('div'); row.className = 'slot';
@@ -1227,6 +1327,7 @@ function showHelp(){
     <li><b>Amaç:</b> aracı karşı kıyıdaki bayrağa ulaştıracak bir köprü kur — bütçeyi aşmadan.</li>
     <li>Noktaya bir kez dokunup sonra hedeflere dokunarak zincirleme de çizebilirsin (Esc ile bırak). Sağ tık siler, Ctrl+Z geri alır, 1–4 malzeme grubu seçer (gruba bir daha dokununca çeşitleri açılır), Boşluk sürer/durdurur.</li>
     <li>Yakınlaştırma: fare tekerleği, iki parmak, ➕ ➖ 🏠 düğmeleri ya da + − 0 tuşları. Boş yerde sürükleyince ekran kayar.</li>
+    <li><b>Telefonda:</b> parçayı sürüklerken parmağın üstünde bir büyüteç çıkar ve parçanın tam nereye konacağını gösterir; kenara gelince ekran kendiliğinden kayar. Bir noktaya dokunup bırakırsan seçilir, sonra gideceği yere basıp bırakarak zincirleme koyarsın. Silgiyle parmağını gezdirince yolundaki parçalar silinir (tek “Geri al” hepsini getirir). Yapılar basılı tutup kaydırılarak yerleştirilir. Telefonu yan çevirince araçlar iki yana geçer, köprü alanı büyür. Tarayıcı çubukları olmadan oynamak için ☰ Menü → <b>Tam ekran</b> (Android) ya da Safari’de <b>Paylaş → Ana Ekrana Ekle</b>.</li>
     <li>Sürüş: → ileri, Ctrl + → hızlı, ← geri, ↓ fren, Shift korna (basılı tut). Köprüler arasındaki yolda ↑ ya da Boşluk ile zıplanır ve düşen bonuslar toplanır. Dokunmatikte alttaki büyük düğmeler.</li>
     <li>Yapılar: 📍 destek noktası kıyıya ya da kayaya, 🗼 kule yere (dokunduğun yükseklikte), 🏛️ köprü ayağı suya konur. Silgiyle dokununca kaldırılır.</li>
     <li>Ağır araçlar daha çok para kazandırır; 🐷 kumbara bütçeye eklenir, garajdaki süs dükkânında da harcanır.</li>
@@ -1296,8 +1397,20 @@ function showResult(){
   }
 }
 
+/* ipucu kutusu: küçük ekranda bir süre sonra (ya da ilk parça konunca) 💡 düğmesine küçülür; dokununca açılır ve okunur */
+let hintMini = false, hintTimer = 0;
+const smallStage = () => W < 700 || H < 460;
+function hintOpen(autoClose){
+  hintMini = false; clearTimeout(hintTimer);
+  if (autoClose && smallStage()) hintTimer = setTimeout(() => { hintMini = true; updateHint(); }, 14000);
+  updateHint();
+}
+function hintClose(){ if (!smallStage() || hintMini) return; clearTimeout(hintTimer); hintMini = true; updateHint(); }
 function updateHint(){
-  const h = $('#hint');
+  const h = $('#hint'), mini = hintMini && mode === 'build' && !trans;
+  h.classList.toggle('mini', mini);
+  if (mini){ h.innerHTML = '💡'; h.title = 'İpucu: dokun, dinle'; return; }
+  h.title = '';
   if (trans) h.innerHTML = `🪙 Yol bonusu: <b>${fmt(trans.bonus)}</b><span class="keyhelp"> · <b>→</b> ileri · <b>Ctrl+→</b> hızlı · <b>↑</b> zıpla · <b>Shift</b> korna</span>`;
   else if (mode === 'sim' && sim){
     h.innerHTML = `💪 Yük: <b>%${Math.min(100, Math.round(sim.maxStress * 100))}</b> · 💥 <b>${sim.broken}</b><span class="keyhelp"> · <b>→</b> ileri · <b>Ctrl+→</b> hızlı · <b>←</b> geri · <b>↓</b> fren · <b>Shift</b> korna</span>`;
@@ -1312,7 +1425,7 @@ function updateUI(){
   $('#budgetLbl').innerHTML = `Bütçe${bonus ? ` <span title="Kumbaradan eklenen">(🐷 +${fmt(bonus)})</span>` : ''} <b id="budgetVal">${fmt(B)}</b>`;
   $('#budget').classList.toggle('over', c > B);
   $('#barFill').style.width = Math.min(100, c / B * 100) + '%';
-  $('#vehBtn').textContent = `${V.icon} ${V.name} ▾`;
+  $('#vehBtn').innerHTML = `${V.icon}<span class="lbl"> ${V.name}</span> ▾`;
   $('#bank').textContent = `🐷 ${fmt(wallet())}`;
   $('#muteBtn').textContent = store.muted ? '🔇' : '🔊';
   $('#levelName').textContent = `${level.emoji} ${level.name}`; renderJourney();
@@ -1387,7 +1500,7 @@ function buildUI(){
   };
   $('#testBtn').onclick = () => startSim();
   $('#stopBtn').onclick = () => stopSim();
-  $('#hint').addEventListener('click', () => { if (mode === 'build') voice('hint' + levelIndex); });
+  $('#hint').addEventListener('click', () => { if (mode !== 'build') return; hintOpen(true); voice('hint' + levelIndex); });
   $('#radioBtn').onclick = toggleRadio;
   $('#zIn').onclick = () => zoomAt(W / 2, H / 2, 1.35);
   $('#zOut').onclick = () => zoomAt(W / 2, H / 2, 1 / 1.35);
@@ -1545,30 +1658,43 @@ cv.addEventListener('wheel', e => {
   if (e.ctrlKey || Math.abs(e.deltaY) >= Math.abs(e.deltaX)) zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-clamp(e.deltaY, -120, 120) * (e.ctrlKey ? 0.01 : 0.0022)));
   else panBy(-e.deltaX, 0);
 }, {passive:false});
+const isTouch = e => e.pointerType === 'touch' || e.pointerType === 'pen';
+const stagePt = e => { const r = cv.getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; };
+const vib = ms => { try { window.MGMobil && MGMobil.titret(ms); } catch (e) {} };
+let erase = null, structDrag = false, dragPtr = null, pulseT = -9;
+function setTarget(p){   // sürüklerken hedef; ızgarada yeni noktaya geçince minik bir tık
+  const t = dragTarget(drag.from, p, tool), o = drag.target;
+  if (o && (o.x !== t.x || o.y !== t.y)){ SFX.tick(); if (drag.touch) vib(6); }
+  drag.target = t;
+}
+const unchain = () => { drag = drag && drag.chain ? {from:drag.from, sticky:true, target:null, touch:true} : drag && drag.sticky ? drag : null; };
 cv.addEventListener('pointerdown', e => {
   ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
   if (ptrs.size === 2){   // ikinci parmak: çizimi bırak, yakınlaştırmaya geç
-    if (drag && !drag.sticky) drag = null;
+    unchain(); erase = null; structDrag = false; mouse.inside = false; dragPtr = null;
     padFwd = false; pan = null; pinch = pinchInfo(); try { cv.setPointerCapture(e.pointerId); } catch (_) {}
     return;
   }
   if (ptrs.size > 2) return;
   if (mode === 'sim'){ if (e.button === 0){ padFwd = true; try { cv.setPointerCapture(e.pointerId); } catch (_) {} } return; }
   if (mode !== 'build') return;
-  const p = toWorld(e); mouse.x = p.x; mouse.y = p.y; mouse.inside = true;
+  const p = toWorld(e), touch = isTouch(e), cap = () => { try { cv.setPointerCapture(e.pointerId); } catch (_) {} };
+  mouse.x = p.x; mouse.y = p.y; mouse.inside = true;
   if (e.button === 2){ if (drag) drag = null; else deleteAt(p); return; }
   if (e.button !== 0) return;
   if (pickerG){ closePicker(); return; }
-  if (tool === 'delete'){ deleteAt(p); return; }
-  if (STRUCT[tool]){ addStruct(structPlan(tool, p)); return; }
+  dragPtr = stagePt(e);
+  if (tool === 'delete'){ erase = {touch, pushed:false, last:p}; deleteAt(p, erase); cap(); return; }
+  if (STRUCT[tool]){ if (touch){ structDrag = true; cap(); } else addStruct(structPlan(tool, p)); return; }   // dokunmatik: bas, kaydırıp yerini seç, bırak
   if (drag && drag.sticky){
+    if (touch){ drag = {from:drag.from, sticky:false, moved:true, chain:true, touch, sx:e.clientX, sy:e.clientY, target:null}; setTarget(p); cap(); return; }   // dokunmatik zincir: parmak kalkınca konur
     const t = dragTarget(drag.from, p, tool), to = commitBeam(drag.from, t, tool);
     drag = to ? {from:to, sticky:true, target:null} : null;
     return;
   }
-  const n = nodeAt(p);
-  if (!n){ pan = {x:e.clientX, y:e.clientY, sx:e.clientX, sy:e.clientY, moved:false, p}; try { cv.setPointerCapture(e.pointerId); } catch (_) {} return; }
-  if (n){ drag = {from:n, sticky:false, moved:false, sx:e.clientX, sy:e.clientY, target:null}; try { cv.setPointerCapture(e.pointerId); } catch (_) {} }
+  const n = nodeAt(p, touch ? Math.max(0.5, 30 / view.s) : 0.5);   // dokunmatikte parmak kadar geniş alan
+  if (!n){ pan = {x:e.clientX, y:e.clientY, sx:e.clientX, sy:e.clientY, moved:false, p, touch}; cap(); return; }
+  drag = {from:n, sticky:false, moved:false, touch, sx:e.clientX, sy:e.clientY, target:null}; cap();
 });
 cv.addEventListener('pointermove', e => {
   if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
@@ -1576,35 +1702,98 @@ cv.addEventListener('pointermove', e => {
     const q = pinchInfo(); panBy(q.mx - pinch.mx, q.my - pinch.my); zoomAt(q.mx, q.my, q.d / pinch.d); pinch = q; return;
   }
   if (pan){
-    if (!pan.moved && Math.hypot(e.clientX - pan.sx, e.clientY - pan.sy) > 6) pan.moved = true;
+    if (!pan.moved && Math.hypot(e.clientX - pan.sx, e.clientY - pan.sy) > (pan.touch ? 10 : 6)) pan.moved = true;
     if (pan.moved){ panBy(e.clientX - pan.x, e.clientY - pan.y); pan.x = e.clientX; pan.y = e.clientY; }
     return;
   }
   const p = toWorld(e); mouse.x = p.x; mouse.y = p.y; mouse.inside = true;
   if (mode !== 'build') return;
+  if (ptrs.has(e.pointerId)) dragPtr = stagePt(e);
+  if (erase){ eraseAlong(erase.last, p, erase); erase.last = p; return; }
+  if (structDrag) return;
   if (drag){
-    if (!drag.sticky && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 6) drag.moved = true;
-    drag.target = dragTarget(drag.from, p, tool);
+    if (!drag.sticky && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > (drag.touch ? 10 : 6)) drag.moved = true;
+    setTarget(p);
   }
   hoverNode = nodeAt(p); hoverBeam = hoverNode ? null : beamAt(p);
 });
-cv.addEventListener('pointercancel', e => { padFwd = false; ptrs.delete(e.pointerId); pinch = null; pan = null; });
+function endPointer(){ erase = null; dragPtr = null; if (structDrag){ structDrag = false; mouse.inside = false; } }
+cv.addEventListener('pointercancel', e => { padFwd = false; ptrs.delete(e.pointerId); pinch = null; pan = null; endPointer(); unchain(); });
 cv.addEventListener('pointerup', e => {
   ptrs.delete(e.pointerId);
   if (pinch){ if (ptrs.size < 2) pinch = null; padFwd = false; return; }
-  if (pan){   // kaydırma değil de dokunuşsa: arabaya dokunmak korna çalar
+  if (pan){   // kaydırma değil de dokunuşsa: arabaya dokunmak korna çalar, boşluğa dokunmak başlanacak noktaları gösterir
     const q = pan.p, V = VEHICLES[store.vehicle], moved = pan.moved; pan = null;
-    if (!moved && q.y < 0.1 && q.y > -2.4 && q.x > -2.5 - V.wb - 1 && q.x < -1.5) horn();
+    if (!moved){
+      if (q.y < 0.1 && q.y > -2.4 && q.x > -2.5 - V.wb - 1 && q.x < -1.5) horn();
+      else if (mode === 'build' && MAT[tool]){ pulseT = performance.now() / 1000; if (lim('tapHelp', 6000)) toast('👆 Bir noktaya dokun ve parmağını sürükle!'); }
+    }
     return;
   }
   padFwd = false;
-  if (mode !== 'build' || !drag || drag.sticky || e.button !== 0) return;
+  const wasStruct = structDrag; endPointer();
+  if (isTouch(e)) hoverNode = hoverBeam = null;
+  if (mode !== 'build' || e.button !== 0) return;
+  if (wasStruct){ addStruct(structPlan(tool, toWorld(e))); return; }
+  if (!drag || drag.sticky) return;
   const t = dragTarget(drag.from, toWorld(e), tool);
+  if (drag.chain){   // dokunmatik zincir: geçerli yere bırakınca konur, zincir yeni noktadan sürer
+    const to = t.ok ? commitBeam(drag.from, t, tool) : null;
+    drag = to ? {from:to, sticky:true, target:null, touch:true} : null;
+    if (!to) SFX.nope();
+    return;
+  }
   if (drag.moved && t.ok){ commitBeam(drag.from, t, tool); drag = null; }
   else if (!drag.moved){ drag.sticky = true; drag.target = null; }
   else drag = null;
 });
 cv.addEventListener('pointerleave', () => { mouse.inside = false; hoverNode = hoverBeam = null; });
+
+/* dokunmatik büyüteç: parmağın altında kalan hedef, parmağın üstünde iki kat büyük görünür */
+const loupeCv = document.createElement('canvas'), loupeCtx = loupeCv.getContext('2d');
+let loupeLabel = null;
+function drawLoupe(){
+  if (mode !== 'build' || !drag || !drag.touch || drag.sticky || !drag.moved || !drag.target || !dragPtr) return;
+  const tg = drag.target, R = clamp(Math.min(W, H) * 0.16, 44, 70), mag = 2;
+  const tx = tg.x * view.s + view.ox, ty = tg.y * view.s + view.oy;
+  let lx = dragPtr.x, ly = dragPtr.y - R - 46;
+  if (ly - R < 4){ ly = dragPtr.y; lx = dragPtr.x + (dragPtr.x < W / 2 ? 1 : -1) * (R + 54); }   // üstte yer yoksa yanda
+  lx = clamp(lx, R + 4, W - R - 4); ly = clamp(ly, R + 4, H - R - 4);
+  const sr = R / mag, sw = Math.max(2, Math.round(2 * sr * DPR));
+  if (loupeCv.width !== sw){ loupeCv.width = sw; loupeCv.height = sw; }
+  const x0 = Math.round((tx - sr) * DPR), y0 = Math.round((ty - sr) * DPR);
+  const cx0 = Math.max(0, x0), cy0 = Math.max(0, y0), cx1 = Math.min(cv.width, x0 + sw), cy1 = Math.min(cv.height, y0 + sw);
+  loupeCtx.fillStyle = '#ffe9f3'; loupeCtx.fillRect(0, 0, sw, sw);
+  if (cx1 > cx0 && cy1 > cy0) loupeCtx.drawImage(cv, cx0, cy0, cx1 - cx0, cy1 - cy0, cx0 - x0, cy0 - y0, cx1 - cx0, cy1 - cy0);
+  screenT(); ctx.save();
+  ctx.shadowColor = 'rgba(120,40,90,.35)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 4;
+  ctx.beginPath(); ctx.arc(lx, ly, R, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.save(); ctx.beginPath(); ctx.arc(lx, ly, R - 3, 0, 7); ctx.clip(); ctx.drawImage(loupeCv, 0, 0, sw, sw, lx - R, ly - R, 2 * R, 2 * R); ctx.restore();
+  ctx.lineWidth = 3; ctx.strokeStyle = tg.ok ? '#ff4f9a' : '#ff5a45'; ctx.beginPath(); ctx.arc(lx, ly, R - 1.5, 0, 7); ctx.stroke();
+  ctx.strokeStyle = 'rgba(74,37,69,.55)'; ctx.lineWidth = 1.5; ctx.lineCap = 'round'; ctx.beginPath();
+  for (const [ax, ay] of [[1, 0], [-1, 0], [0, 1], [0, -1]]){ ctx.moveTo(lx + ax * 5, ly + ay * 5); ctx.lineTo(lx + ax * 11, ly + ay * 11); }
+  ctx.stroke();
+  if (loupeLabel){
+    ctx.font = '700 12px Fredoka,system-ui,sans-serif'; const w = ctx.measureText(loupeLabel).width + 16;
+    ctx.fillStyle = tg.ok ? 'rgba(12,21,29,.9)' : '#ff5a45'; rr(lx - w / 2, ly + R - 9, w, 22, 11); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(loupeLabel, lx, ly + R + 2);
+  }
+  ctx.restore();
+}
+function edgePan(d){   // yakınken parmak (ya da fare) kenara gelince ekran o yöne kayar
+  if (mode !== 'build' || !dragPtr || cam.z <= 1.01 || !((drag && !drag.sticky && drag.moved) || structDrag)) return;
+  const m = Math.min(46, W * 0.08), sp = 340 * d; let dx = 0, dy = 0;
+  if (dragPtr.x < m) dx = sp * (1 - dragPtr.x / m); else if (dragPtr.x > W - m) dx = -sp * (1 - (W - dragPtr.x) / m);
+  if (dragPtr.y < m) dy = sp * (1 - dragPtr.y / m); else if (dragPtr.y > H - m) dy = -sp * (1 - (H - dragPtr.y) / m);
+  if (!dx && !dy) return;
+  if (drag && !drag.sticky && MAT[tool]){   // parça en uzun boyuna ulaştıysa daha fazla kaydırmanın anlamı yok
+    const q = {x:(dragPtr.x - view.ox) / view.s, y:(dragPtr.y - view.oy) / view.s};
+    if (Math.hypot(q.x - drag.from.x, q.y - drag.from.y) > MAT[tool].maxLen + 1.5) return;
+  }
+  panBy(dx, dy);
+  const p = {x:(dragPtr.x - view.ox) / view.s, y:(dragPtr.y - view.oy) / view.s}; mouse.x = p.x; mouse.y = p.y;
+  if (drag && !drag.sticky) setTarget(p);
+}
 
 // sürüş: → ileri, Ctrl+→ hızlı, ← geri, ↓ fren, ↑ zıpla (yalnızca köprüler arası yolda), Shift korna
 window.addEventListener('keyup', e => {
@@ -1647,13 +1836,29 @@ function viewFor(L){
   const ymax = L.water + 2.2, sc = Math.min(W / (xmax - xmin), H / (ymax - ymin));
   return {s:sc, ox:W / 2 - (xmin + xmax) / 2 * sc, oy:H / 2 - (ymin + ymax) / 2 * sc};
 }
-const cam = {z:1, cx:null, cy:null};
-function resetCam(){ cam.z = 1; cam.cx = cam.cy = null; }
+const cam = {z:1, cx:null, cy:null, user:false};
+const zMax = b => Math.max(4.5, 95 / b.s);   // en yakın: metre başına ~95 piksel
+function homeBox(L){   // köprünün kurulacağı yer: iki kıyının ucu, bekleyen araba, en yüksek nokta ve su
+  let y0 = Math.min(-2.8, L.rightTop - 2.6), x1 = L.right + 2.8;
+  for (const a of L.anchors) y0 = Math.min(y0, a[1] - 1.6);
+  if (L === level) for (const n of nodes){ y0 = Math.min(y0, n.y - 1.2); x1 = Math.max(x1, n.x + 1.2); }
+  return {x0:-3.4, x1, y0, y1:L.water + 0.7};
+}
+function resetCam(){   // küçük ekranda (telefon) köprü alanına yakın başla; büyük ekranda bütün manzara
+  cam.z = 1; cam.cx = cam.cy = null; cam.user = false;
+  if (!level || !W) return;
+  const b = viewFor(level), hb = homeBox(level), s = Math.min(W / (hb.x1 - hb.x0), H / (hb.y1 - hb.y0));
+  if (b.s < 34 && s > b.s * 1.12){
+    cam.z = Math.min(s / b.s, zMax(b));
+    const visW = W / (b.s * cam.z), extra = visW - (hb.x1 - hb.x0);   // yan tarafta yer artarsa önce bekleyen arabayı göster
+    cam.cx = hb.x0 - clamp(extra, 0, 2.8) + visW / 2; cam.cy = (hb.y0 + hb.y1) / 2;
+  }
+}
 function computeView(){
   if (!level || !W) return;
   const b = viewFor(level);
   if (cam.cx == null){ cam.cx = (W / 2 - b.ox) / b.s; cam.cy = (H / 2 - b.oy) / b.s; }
-  cam.z = clamp(cam.z, 1, 4.5);
+  cam.z = clamp(cam.z, 1, zMax(b));
   const hw = W / 2 / (b.s * cam.z), hh = H / 2 / (b.s * cam.z);   // görünen yarım genişlik/yükseklik (dünya birimi)
   const x0 = -b.ox / b.s, x1 = (W - b.ox) / b.s, y0 = -b.oy / b.s, y1 = (H - b.oy) / b.s;
   cam.cx = clamp(cam.cx, x0 + hw, x1 - hw); cam.cy = clamp(cam.cy, y0 + hh, y1 - hh);
@@ -1662,11 +1867,11 @@ function computeView(){
 function zoomAt(sx, sy, f){
   if (trans) return;
   const wx = (sx - view.ox) / view.s, wy = (sy - view.oy) / view.s, b = viewFor(level);
-  cam.z = clamp(cam.z * f, 1, 4.5);
+  cam.z = clamp(cam.z * f, 1, zMax(b)); cam.user = true;
   const s2 = b.s * cam.z; cam.cx = wx - (sx - W / 2) / s2; cam.cy = wy - (sy - H / 2) / s2;
   computeView();
 }
-function panBy(dx, dy){ if (trans) return; cam.cx -= dx / view.s; cam.cy -= dy / view.s; computeView(); }
+function panBy(dx, dy){ if (trans) return; cam.cx -= dx / view.s; cam.cy -= dy / view.s; cam.user = true; computeView(); }
 function followCam(d){   // yakınken araba (ya da kurtarma sahnesi) takip edilir
   if (!sim || trans || cam.z <= 1.02) return;
   let tx, ty; const R = sim.rescue;
@@ -1676,9 +1881,12 @@ function followCam(d){   // yakınken araba (ya da kurtarma sahnesi) takip edili
 }
 function resize(){
   const r = $('#stage').getBoundingClientRect(); DPR = Math.min(2, window.devicePixelRatio || 1);
+  const changed = Math.abs(W - r.width) > 1 || Math.abs(H - r.height) > 1;
   W = Math.max(50, r.width); H = Math.max(50, r.height);
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  if (changed && !cam.user && mode === 'build') resetCam();   // telefon döndürülünce görünüm yeniden oturur
   computeView();
+  if (hintMini && !smallStage()) hintOpen();
 }
 const worldT = () => ctx.setTransform(DPR * view.s, 0, 0, DPR * view.s, DPR * view.ox, DPR * view.oy);
 const screenT = () => ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -1934,13 +2142,14 @@ function princess(c, x, y, s, hair, force){
   const R = 0.21 * s; hair = hair || '#f7c948';
   c.fillStyle = hair; c.beginPath(); c.ellipse(x - 0.06 * s, y + 0.02 * s, R * 1.22, R * 1.25, 0, 0, 7); c.fill();
   c.beginPath(); c.moveTo(x - R * 1.2, y); c.quadraticCurveTo(x - R * 2.2, y + R * 1.6, x - R * 1.4, y + R * 3.1); c.lineTo(x - R * 0.2, y + R * 2.4); c.lineTo(x - R * 0.2, y); c.fill();
-  c.fillStyle = '#ff9ccb'; c.beginPath(); c.moveTo(x - R * 1.15, y + R * 3.3); c.quadraticCurveTo(x - R * 1.0, y + R * 1.1, x, y + R * 1.0); c.quadraticCurveTo(x + R * 1.0, y + R * 1.1, x + R * 1.15, y + R * 3.3); c.closePath(); c.fill();
+  c.fillStyle = window.MilaGorunum ? MilaGorunum.elbise(c, x, y + R, x, y + R * 3.3) : '#ff9ccb';   // butikte seçilen elbise
+  c.beginPath(); c.moveTo(x - R * 1.15, y + R * 3.3); c.quadraticCurveTo(x - R * 1.0, y + R * 1.1, x, y + R * 1.0); c.quadraticCurveTo(x + R * 1.0, y + R * 1.1, x + R * 1.15, y + R * 3.3); c.closePath(); c.fill();
   circ(c, x, y, R, '#ffdcc2');
   c.fillStyle = hair; c.beginPath(); c.arc(x, y, R * 1.03, Math.PI * 1.02, Math.PI * 1.95); c.quadraticCurveTo(x + R * 0.2, y - R * 0.3, x - R * 1.02, y - R * 0.05); c.fill();
   circ(c, x + R * 0.05, y + R * 0.12, R * 0.1, '#4a2545'); circ(c, x + R * 0.58, y + R * 0.12, R * 0.1, '#4a2545');
   circ(c, x - R * 0.22, y + R * 0.48, R * 0.17, 'rgba(255,110,160,.55)'); circ(c, x + R * 0.78, y + R * 0.46, R * 0.14, 'rgba(255,110,160,.55)');
   c.strokeStyle = '#c2436f'; c.lineWidth = R * 0.12; c.lineCap = 'round'; c.beginPath(); c.arc(x + R * 0.32, y + R * 0.38, R * 0.28, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
-  crown(c, x, y - R * 0.82, R * 1.3);
+  if (window.MilaGorunum) MilaGorunum.tac(c, x, y - R * 0.82, R * 1.3); else crown(c, x, y - R * 0.82, R * 1.3);
 }
 function headlight(c, x, y){ circ(c, x, y, 0.1, '#fff6c9'); c.strokeStyle = '#4a2545'; c.lineWidth = 0.03; c.lineCap = 'round';
   for (const a of [-1.9, -1.5, -1.1]){ c.beginPath(); c.moveTo(x + Math.cos(a) * 0.11, y + Math.sin(a) * 0.11); c.lineTo(x + Math.cos(a) * 0.2, y + Math.sin(a) * 0.2); c.stroke(); } }
@@ -2264,7 +2473,7 @@ function render(t){
     let label = null;
     if (STRUCT[tool] && mouse.inside && !pan && !pinch){
       const pl = structPlan(tool, mouse); drawStructGhost(pl);
-      label = {x:pl.x, y:pl.y - 0.6, text:pl.ok ? `${STRUCT[tool].ic} ${STRUCT[tool].name} · ${fmt(STRUCT[tool].cost)}` : 'buraya olmaz'};
+      label = {x:pl.x, y:pl.y - (structDrag ? 84 / view.s : 0.6), text:pl.ok ? `${STRUCT[tool].ic} ${STRUCT[tool].name} · ${fmt(STRUCT[tool].cost)}` : 'buraya olmaz'};   // dokunmatikte parmağın üstünde
     }
     if (drag){
       const f = drag.from, m = MAT[tool] || MAT.road;
@@ -2274,14 +2483,25 @@ function render(t){
       if (tg && !(tg.x === f.x && tg.y === f.y)){
         ctx.globalAlpha = tg.ok ? 0.75 : 0.35; drawBeam(f.x, f.y, tg.x, tg.y, tool, tg.ok ? 0 : 1); ctx.globalAlpha = 1;
         if (!tg.node){ ctx.beginPath(); ctx.arc(tg.x, tg.y, 0.14, 0, 7); ctx.fillStyle = tg.ok ? '#fff' : '#ff5a45'; ctx.fill(); }
+        if (drag.touch){ ctx.beginPath(); ctx.arc(tg.x, tg.y, Math.max(0.42, 24 / view.s), 0, 7); ctx.lineWidth = Math.max(0.06, 3 / view.s); ctx.strokeStyle = tg.ok ? '#ff4f9a' : '#ff5a45'; ctx.stroke(); }   // parmağın çevresinden görünen halka
         const len = Math.hypot(tg.x - f.x, tg.y - f.y);
         label = {x:(f.x + tg.x) / 2, y:(f.y + tg.y) / 2, text:tg.ok ? `${len.toFixed(1)} m · ${fmt(len * m.cost)}` : 'buraya olmaz'};
       }
     }
+    loupeLabel = null;
+    if (label && drag && drag.touch && drag.moved && !drag.sticky){ loupeLabel = label.text; label = null; }   // dokunmatikte uzunluk büyütecin altında yazar
     for (const n of nodes) drawNode(n, n === hoverNode || (drag && (n === drag.from || (drag.target && drag.target.node === n))));
+    { // boşluğa dokununca (ve köprü boşken arada bir) başlanacak noktalar parlar
+      const pk = !beams.length && !drag ? t % 4.5 : t - pulseT;
+      if (pk >= 0 && pk < 1.4 && MAT[tool]){
+        ctx.lineWidth = Math.max(0.05, 2.5 / view.s);
+        for (const n of nodes){ ctx.globalAlpha = 1 - pk / 1.4; ctx.strokeStyle = n.fixed ? '#ff4f9a' : '#ffffff'; ctx.beginPath(); ctx.arc(n.x, n.y, 0.25 + pk * 0.75, 0, 7); ctx.stroke(); }
+        ctx.globalAlpha = 1;
+      }
+    }
     if (label){
       screenT(); ctx.font = '600 12px system-ui,sans-serif';
-      const x = label.x * view.s + view.ox, y = label.y * view.s + view.oy - 16, w = ctx.measureText(label.text).width + 14;
+      const w = ctx.measureText(label.text).width + 14, x = clamp(label.x * view.s + view.ox, w / 2 + 4, W - w / 2 - 4), y = clamp(label.y * view.s + view.oy - 16, 14, H - 14);
       ctx.fillStyle = 'rgba(12,21,29,.88)'; rr(x - w / 2, y - 11, w, 22, 7); ctx.fill();
       ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label.text, x, y + 1);
     }
@@ -2294,14 +2514,16 @@ let last = performance.now(), acc = 0;
 function frame(now){
   const d = Math.min(0.05, (now - last) / 1000); last = now;
   if (mode === 'sim' && sim){ acc += d; let k = 0; while (sim && acc >= FIXED_DT && k < 3){ simStep(); acc -= FIXED_DT; k++; } if (k === 3) acc = 0; }
-  if (mode === 'sim') followCam(d);
+  if (mode === 'sim') followCam(d); else edgePan(d);
+  document.body.classList.toggle('dragging', mode === 'build' && (!!(drag && !drag.sticky && drag.moved) || structDrag || !!erase));
   if (hornNode) hornT = now / 1000;
   render(now / 1000);
-  drawConfetti(d); drawFireworks(d);
+  drawConfetti(d); drawFireworks(d); drawLoupe();
   requestAnimationFrame(frame);
 }
 
 buildUI();
+if (window.MGMobil) MGMobil.init({yatay:true, yatayNeden:'Köprü alanı kocaman olur, parçaları parmağınla çok daha rahat koyarsın.'});
 new ResizeObserver(resize).observe($('#stage'));
 resize();
 setLevel(unlocked(store.level || 0) ? store.level || 0 : 0, true);

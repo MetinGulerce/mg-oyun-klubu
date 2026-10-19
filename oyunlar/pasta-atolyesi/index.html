@@ -2,8 +2,14 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Pasta Atölyesi</title>
+<meta name="theme-color" content="#fff6fb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MG Oyun">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../ikonlar/ikon-180.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Titan+One&display=swap">
 <style>
@@ -12,12 +18,13 @@
   --text:#4a2545; --muted:#a3748f; --accent:#ff5fa2; --ok:#3fbf86;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--text);font:15px/1.4 "Fredoka","Segoe UI",system-ui,sans-serif;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+body{background:var(--bg);color:var(--text);font:15px/1.4 "Fredoka","Segoe UI",system-ui,sans-serif;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
-#app{display:flex;flex-direction:column;height:100%}
+/* yerleşim: başlık / mutfak / araçlar. Yatay telefonda araçlar sağda bir rafta */
+#app{position:fixed;inset:0;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"h h" "s s" "f f"}
 
-header{display:flex;align-items:center;gap:8px 10px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header{grid-area:h;display:flex;align-items:center;gap:8px 10px;padding:calc(8px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 8px calc(12px + env(safe-area-inset-left));background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
 .brand{font-weight:800;font-size:18px;white-space:nowrap}
 .brand span{color:var(--accent)}
 #steps{display:flex;gap:2px;align-items:center;padding:3px 8px;border-radius:999px;background:var(--panel2);border:1.5px solid var(--line)}
@@ -32,7 +39,7 @@ header{display:flex;align-items:center;gap:8px 10px;padding:8px 12px;background:
 #radioBtn.on{background:linear-gradient(90deg,#ff7eb6,#b26bff);color:#fff}
 #menuBtn{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-#stage{position:relative;flex:1;min-height:0}
+#stage{grid-area:s;position:relative;min-height:0;min-width:0}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 #say{position:absolute;left:50%;top:10px;transform:translateX(-50%);max-width:min(560px,calc(100% - 150px));padding:9px 16px;border-radius:16px;background:rgba(255,255,255,.94);box-shadow:0 3px 12px rgba(160,60,120,.18);font-size:16px;font-weight:600;text-align:center;cursor:pointer;z-index:2}
 #say:empty{display:none}
@@ -45,7 +52,7 @@ header{display:flex;align-items:center;gap:8px 10px;padding:8px 12px;background:
 #toast{position:absolute;left:50%;bottom:14px;transform:translate(-50%,20px);padding:9px 16px;border-radius:12px;background:#fff;border:1.5px solid var(--accent);opacity:0;transition:.2s;pointer-events:none;width:max-content;max-width:calc(100% - 24px);text-align:center;z-index:7}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
-footer{padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)}
+footer{grid-area:f;padding:8px calc(10px + env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left));background:var(--panel);border-top:1px solid var(--line)}
 *{scrollbar-width:thin;scrollbar-color:#f3b9d4 transparent}
 *::-webkit-scrollbar{width:8px;height:8px}
 *::-webkit-scrollbar-thumb{background:#f3b9d4;border-radius:8px}
@@ -70,11 +77,11 @@ footer{padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)
 
 #modal{position:absolute;inset:0;display:grid;place-items:center;background:rgba(74,37,69,.38);z-index:8;padding:16px}
 #modal[hidden]{display:none}
-.card{max-height:100%;overflow:auto;width:min(480px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 24px;box-shadow:0 20px 60px rgba(120,40,90,.35)}
+.card{max-height:100%;overflow:auto;width:min(480px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 24px;--cpb:22px;box-shadow:0 20px 60px rgba(120,40,90,.35)}
 .card.wide{width:min(760px,100%)}
 .card h2{margin:0 0 8px;font-size:22px}
 .card p{margin:6px 0;color:#6b4263}
-.card .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.card .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap;position:sticky;bottom:calc(-1 * var(--cpb));margin-bottom:calc(-1 * var(--cpb));padding:10px 0 var(--cpb);background:linear-gradient(rgba(255,246,251,0),var(--panel) 38%)}   /* düğmeler kısa ekranda da hep görünür */
 .card .row button{padding:10px 16px;border-radius:12px;background:var(--panel2);font-weight:700}
 .card .row button.primary{background:var(--accent);color:#fff}
 .story{text-align:center}
@@ -85,6 +92,10 @@ footer{padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)
 .letter .li b{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:26px;background:#fff;box-shadow:0 1px 5px rgba(0,0,0,.1);flex:none}
 .letter .li b i{display:block;width:26px;height:26px;border-radius:50%}
 .letter .sign{text-align:right;font-weight:700;color:var(--accent)}
+.sepet{display:flex;align-items:center;gap:12px;margin:10px auto 0;padding:8px 14px;border-radius:16px;background:var(--panel2);max-width:360px;text-align:left;font-size:13.5px;font-weight:600;color:var(--text);text-decoration:none}
+.sepet .b{font-size:40px;line-height:1;flex:none}
+.sepet b{font-size:20px;letter-spacing:2px}
+a.sepet:hover{outline:2px solid var(--accent)}
 .final{text-align:center}
 .final img{max-width:min(300px,80%);max-height:34vh;filter:drop-shadow(0 8px 12px rgba(120,40,90,.25))}
 .stars{font-size:36px;letter-spacing:4px;margin:4px 0}
@@ -112,23 +123,60 @@ footer{padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)
 @keyframes milaSpin{to{transform:rotate(360deg)}}
 @keyframes milaOut{to{opacity:0;transform:scale(1.35)}}
 
+/* dik telefon ya da dar pencere: başlık tek sıra, araçlar yedişerli sıralar */
 @media (max-width:720px){
-  header{padding:6px 8px}
-  .brand{display:none}
-  #steps{flex:1;justify-content:space-between;order:5;width:100%}
+  header{flex-wrap:nowrap;gap:6px;padding:calc(6px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 6px calc(8px + env(safe-area-inset-left))}
+  .brand,.spacer,.lbl{display:none}
+  #steps{flex:1;justify-content:space-between;min-width:0;padding:3px 6px}
   .sd{width:30px;height:30px;font-size:16px}
-  .hb{padding:6px 10px;font-size:13px}
-  #tools{gap:6px}
-  .grp{gap:5px;flex-wrap:wrap;flex:1 1 auto;max-width:100%}
+  .hb{padding:6px 12px;font-size:15px}
+  #tools{gap:5px}
+  .grp{display:contents}
   .sep{display:none}
-  .tile{width:52px;height:54px;border-radius:14px}
+  .tile{width:calc((100% - 30px) / 7);height:56px;border-radius:14px;padding:0 1px}
   .tile .ic{font-size:22px}
-  .tile .tl{font-size:10.5px}
-  .tile .sw{width:26px;height:26px}
-  .tile .tl{font-size:11px}
-  .big{height:58px;padding:0 16px;font-size:17px}
-  #say{font-size:14px;max-width:calc(100% - 80px);left:10px;transform:none}
+  .tile .tl{font-size:10px;white-space:normal;line-height:1.05;text-align:center}
+  .tile .sw{width:24px;height:24px}
+  .tile.on{transform:translateY(-2px)}
+  .big{flex:1 1 150px;height:56px;padding:0 14px;font-size:17px;justify-content:center;margin-left:0}
+  .big .ic{font-size:24px}
+  #say{font-size:14px;max-width:calc(100% - 70px);left:8px;transform:none}
   #wish .w{width:38px;height:38px;font-size:20px}
+}
+/* yatay telefon: başlık ince, araçlar sağda (sütun sayısı adıma göre ayarlanır), mutfak kocaman */
+@media (orientation:landscape) and (max-height:520px){
+  #app{grid-template-rows:auto minmax(0,1fr);grid-template-areas:"h h" "s f"}
+  header{flex-wrap:nowrap;gap:6px;padding:calc(4px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) 4px calc(10px + env(safe-area-inset-left))}
+  .brand,.spacer,.lbl{display:none}
+  #steps{flex:1;justify-content:space-between;min-width:0;padding:2px 8px}
+  .sd{width:28px;height:28px;font-size:15px}
+  .hb{padding:0 13px;height:32px;font-size:15px}
+  footer{display:flex;flex-direction:column;justify-content:center;border-top:0;border-left:1px solid var(--line);padding:6px calc(8px + env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) 8px}
+  #tools{display:grid;grid-template-columns:repeat(var(--cols,2),52px);gap:5px;align-content:center;justify-content:center;padding:0}
+  .grp{display:contents}
+  .sep{display:none}
+  .tile{width:52px;height:var(--th,52px);border-radius:13px;padding:0 1px}
+  .tile .ic{font-size:21px}
+  .tile .tl{font-size:9.5px;white-space:normal;line-height:1.02;text-align:center}
+  .tile .sw{width:22px;height:22px}
+  .tile.on{transform:scale(1.07)}
+  .tile.done::after{width:15px;height:15px;font-size:9px;line-height:15px;right:2px;top:2px}
+  .big{grid-column:1/-1;height:54px;padding:0 8px;font-size:15px;justify-content:center;margin:4px 0 0;white-space:normal;line-height:1.05;text-align:left}
+  .big .ic{font-size:22px}
+  #say{font-size:13px;top:6px;padding:6px 12px;max-width:calc(100% - 190px);left:8px;transform:none}
+  #wish{flex-direction:row;align-items:center;top:6px;right:6px;gap:4px}
+  #wish .w{width:34px;height:34px;font-size:18px;border-radius:11px}
+  #wish .w i{width:20px;height:20px}
+  #modal{padding:8px}
+  .card{padding:14px 18px;--cpb:14px}
+  .card h2{font-size:18px}
+  .card .row{margin-top:10px}
+  .story .bigE{font-size:40px}
+  .story p{font-size:14px;line-height:1.45}
+  .letter{padding:8px 14px}
+  .letter .li{margin:4px 0;font-size:15px}
+  .letter .li b{width:32px;height:32px;font-size:20px}
+  .final img{max-height:40vh}
 }
 </style>
 </head>
@@ -138,8 +186,8 @@ footer{padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)
     <div class="brand">🧁 Pasta <span>Atölyesi</span></div>
     <div id="steps"></div>
     <div class="spacer"></div>
-    <button class="hb" id="radioBtn" title="Radyo: Mila FM">📻 Radyo</button>
-    <button class="hb" id="menuBtn" title="Menü">☰ Menü</button>
+    <button class="hb" id="radioBtn" title="Radyo: Mila FM">📻<span class="lbl"> Radyo</span></button>
+    <button class="hb" id="menuBtn" title="Menü">☰<span class="lbl"> Menü</span></button>
   </header>
   <main id="stage">
     <canvas id="cv"></canvas>
@@ -152,6 +200,8 @@ footer{padding:8px 10px;background:var(--panel);border-top:1px solid var(--line)
   <footer><div id="tools"></div></footer>
 </div>
 <script src="../../ortak/mila-fm.js"></script>
+<script src="../../ortak/mobil.js"></script>
+<script src="../../ortak/mila-gorunum.js"></script>
 <script>
 (() => {
 'use strict';
@@ -292,15 +342,19 @@ function playSong(onDone){
 }
 
 /* seslendirme: ses/<anahtar>.mp3 */
-let narr = null, vq = [], speaker = null;
-function stopVoice(){ vq = []; if (narr){ try { narr.pause(); } catch (e) {} narr = null; } speaker = null; MilaFM.duck(false); }
+// tek oynatıcı (ortak/mobil.js): iPhone/iPad'de ilk dokunuştan sonra kendiliğinden başlayan replikler de çalar
+let narr = null, vq = [], speaker = null, narrTok = 0;
+function stopVoice(){ vq = []; narrTok++; if (narr){ try { narr.pause(); } catch (e) {} narr = null; } speaker = null; MilaFM.duck(false); }
 function voice(id, queue){
   if (store.muted || !SAY[id]) return;
   if (queue && narr){ vq.push(id); return; }
   if (!queue) stopVoice();
-  const a = new Audio(`ses/${id}.mp3`); narr = a; speaker = SAY[id][0]; MilaFM.duck(true);
-  const done = () => { if (narr !== a) return; narr = null; speaker = null; if (vq.length) voice(vq.shift(), false); else MilaFM.duck(false); };
-  a.onended = done; a.onerror = done; a.play().catch(done);
+  playVoice(id);
+}
+function playVoice(id){   // kuyruk boşaltılmadan sıradaki satır
+  const a = window.MGMobil ? MGMobil.oynatici() : new Audio(), tok = ++narrTok; narr = a; speaker = SAY[id][0]; MilaFM.duck(true);
+  const done = () => { if (tok !== narrTok) return; narr = null; speaker = null; if (vq.length) playVoice(vq.shift()); else MilaFM.duck(false); };
+  a.onended = done; a.onerror = done; a.src = `ses/${id}.mp3`; const p = a.play(); if (p && p.catch) p.catch(done);
 }
 function sayLine(id, queue){ setSay(SAY[id][1], id); voice(id, queue); }
 let sayId = null;
@@ -333,7 +387,7 @@ function resize(){
   const r = $('#stage').getBoundingClientRect(); DPR = Math.min(2, window.devicePixelRatio || 1);
   W = Math.max(50, r.width); H = Math.max(50, r.height);
   for (const c of [cv, layerCv, frostCv, tierCv]){ c.width = Math.round(W * DPR); c.height = Math.round(H * DPR); }
-  layout();
+  layout(); fitRail();
 }
 function tiers(n = S.layers){
   const out = []; let top = L.base;
@@ -395,11 +449,12 @@ function drawMila(c, x, y, s, t){
   const R = 0.21 * s, talk = speaker === 'mila' ? Math.abs(Math.sin(t * 14)) : 0;
   c.fillStyle = '#f7c948'; c.beginPath(); c.ellipse(x - 0.06 * s, y + 0.02 * s, R * 1.22, R * 1.25, 0, 0, 7); c.fill();
   c.beginPath(); c.moveTo(x - R * 1.2, y); c.quadraticCurveTo(x - R * 2.2, y + R * 1.6, x - R * 1.4, y + R * 3.1); c.lineTo(x - R * 0.2, y + R * 2.4); c.lineTo(x - R * 0.2, y); c.fill();
-  c.fillStyle = '#ff9ccb'; c.beginPath(); c.moveTo(x - R * 1.3, y + R * 4.2); c.quadraticCurveTo(x - R * 1.1, y + R * 1.1, x, y + R * 1.0); c.quadraticCurveTo(x + R * 1.1, y + R * 1.1, x + R * 1.3, y + R * 4.2); c.closePath(); c.fill();
+  c.fillStyle = window.MilaGorunum ? MilaGorunum.elbise(c, x, y + R, x, y + R * 4.2) : '#ff9ccb';   // butikte seçilen elbise
+  c.beginPath(); c.moveTo(x - R * 1.3, y + R * 4.2); c.quadraticCurveTo(x - R * 1.1, y + R * 1.1, x, y + R * 1.0); c.quadraticCurveTo(x + R * 1.1, y + R * 1.1, x + R * 1.3, y + R * 4.2); c.closePath(); c.fill();
   rrc(c, x - R * 0.72, y + R * 1.55, R * 1.44, R * 2.4, R * 0.35, '#ffffff'); heart(c, x, y + R * 2.3, R * 0.9, '#ff7eb6');   // önlük
   circ(c, x, y, R, '#ffdcc2');
   c.fillStyle = '#f7c948'; c.beginPath(); c.arc(x, y, R * 1.03, Math.PI * 1.02, Math.PI * 1.95); c.quadraticCurveTo(x + R * 0.2, y - R * 0.3, x - R * 1.02, y - R * 0.05); c.fill();
-  face(c, x, y, R, talk); crown(c, x, y - R * 0.82, R * 1.3);
+  face(c, x, y, R, talk); if (window.MilaGorunum) MilaGorunum.tac(c, x, y - R * 0.82, R * 1.3); else crown(c, x, y - R * 0.82, R * 1.3);
 }
 function drawQueen(c, x, y, s, t){
   const talk = speaker === 'kralice' ? Math.abs(Math.sin(t * 13)) : 0, babyTalk = speaker === 'bebek', bb = Math.sin(t * 4) * 0.012;
@@ -469,6 +524,20 @@ function drawChars(t){
   const u = L.u, bm = speaker === 'mila' ? Math.sin(t * 9) * u * 0.03 : 0, bq = speaker === 'kralice' || speaker === 'bebek' ? Math.sin(t * 9) * u * 0.03 : 0;
   drawMila(ctx, L.milaX, L.counterY - 1.35 * u + bm, 1.9 * u, t);
   drawQueen(ctx, L.queenX, L.counterY - 2.0 * u + bq, 2.25 * u, t);
+}
+
+/* ============================================================ Orman ve Köy'den gelen sepet (yer varsa Mila'nın yanında, tezgâhta) */
+function drawSepet(t){
+  if (!sepet) return;
+  const u = L.u, B = bowlGeo(), gap = (B.x - B.rx) - (L.milaX + u * 0.7);
+  if (gap < u * 1.15) return;
+  const x = L.milaX + u * 0.7 + gap / 2, y = L.counterY - u * 0.62, w = Math.min(u * 1.25, gap * 0.95), h = w * 0.55;
+  ctx.strokeStyle = '#a0672f'; ctx.lineWidth = w * 0.06; ctx.lineCap = 'round'; ctx.beginPath(); ctx.ellipse(x, y, w * 0.4, w * 0.45, 0, Math.PI * 1.06, Math.PI * 1.94); ctx.stroke();
+  ctx.font = `${w * 0.32}px ${EMO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  sepet.items.slice(0, 6).forEach((k, i) => { const a = (i / 5 - 0.5) * 1.3; ctx.save(); ctx.translate(x + Math.sin(a) * w * 0.32, y - w * 0.04 - Math.cos(a) * w * 0.06); ctx.rotate(a * 0.4); ctx.fillText(SEPET_E[k] || '', 0, 0); ctx.restore(); });
+  ctx.fillStyle = '#d99a52'; ctx.beginPath(); ctx.moveTo(x - w * 0.5, y); ctx.lineTo(x + w * 0.5, y); ctx.lineTo(x + w * 0.4, y + h); ctx.lineTo(x - w * 0.4, y + h); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#b97a3a'; ctx.lineWidth = w * 0.025; for (let i = 1; i < 4; i++){ ctx.beginPath(); ctx.moveTo(x - w * 0.5 + i * w * 0.02, y + h * i / 4); ctx.lineTo(x + w * 0.5 - i * w * 0.02, y + h * i / 4); ctx.stroke(); }
+  rrc(ctx, x - w * 0.53, y - w * 0.035, w * 1.06, w * 0.07, w * 0.035, '#c98843'); heart(ctx, x, y + h * 0.5, w * 0.3, '#ff7eb6');
 }
 
 /* ============================================================ kase */
@@ -868,7 +937,17 @@ function renderTools(){
   else if (id === 'sus') b = bigBtn('Mumlara geç', '🕯️', true);
   else b = bigBtn('İleri', '▶', canNext());
   b.style.setProperty('--p', Math.round(progressOf() * 100) + '%');
-  nextBtn = b; el.appendChild(b);
+  nextBtn = b; el.appendChild(b); fitRail();
+}
+// yatay telefonda sağdaki raf: araç sayısına göre sütun sayısı ve kutu yüksekliği
+const LAND = matchMedia('(orientation:landscape) and (max-height:520px)');
+function fitRail(){
+  const el = $('#tools');
+  if (!LAND.matches){ el.style.removeProperty('--cols'); el.style.removeProperty('--th'); return; }
+  const n = el.querySelectorAll('.tile').length, avail = $('footer').clientHeight - 14 - (n ? 64 : 0);
+  let cols = 2, th = 52;
+  for (; cols <= 5; cols++){ const rows = Math.max(1, Math.ceil(n / cols)); th = Math.floor((avail - (rows - 1) * 5) / rows); if (th >= 44) break; }
+  el.style.setProperty('--cols', Math.min(cols, 5)); el.style.setProperty('--th', clamp(th, 36, 56) + 'px');
 }
 function refreshNext(){ if (!nextBtn) return; const ok = canNext(); if (nextBtn.disabled === ok) renderTools(); else nextBtn.style.setProperty('--p', Math.round(progressOf() * 100) + '%'); }
 
@@ -896,9 +975,15 @@ function showModal(html, buttons, wide){
   $('#modal').hidden = false;
 }
 function closeModal(){ $('#modal').hidden = true; }
+// Orman ve Köy'de toplanan sepet (aynı sitedeki ortak kayıttan)
+let sepet = null;
+try { const d = JSON.parse(localStorage.getItem('mg-kulup-sepet')); if (d && Array.isArray(d.items)) sepet = d; } catch (e) {}
+const SEPET_E = {un:'🌾', yumurta:'🥚', seker:'🍬', sut:'🥛', tereyagi:'🧈', cilek:'🍓', vanilya:'🍦', cikolata:'🍫'};
+const sepetCard = () => sepet ? `<div class="sepet"><span class="b">🧺</span><span>Mila'nın ormandan ve köyden topladığı sepet mutfakta!<br><b>${sepet.items.map(k => SEPET_E[k] || '').join(' ')}</b></span></div>`
+  : `<a class="sepet" href="../orman-ve-koy/"><span class="b">🧺</span><span>Malzemeleri sen toplamak ister misin? <u>Orman ve Köy</u>'de Mila'yla birlikte topla!</span></a>`;
 function showStory(then){
   store.storySeen = true; saveStore();
-  showModal(`<div class="story"><div class="bigE">🏰🌩️🧁</div><h2>Fırtınadan önceki akşam</h2><p>${plain(SAY.hikaye[1])}</p></div>`,
+  showModal(`<div class="story"><div class="bigE">🏰🌩️🧁</div><h2>Fırtınadan önceki akşam</h2><p>${plain(SAY.hikaye[1])}</p>${sepetCard()}</div>`,
     [{label:'🔈 Dinle', action:() => voice('hikaye')}, {label:'Mutfağa gir! ▶', primary:true, action:() => { stopVoice(); closeModal(); then && then(); }}]);
   voice('hikaye');
 }
@@ -923,7 +1008,8 @@ function showMenu(){
     ['🖼️', 'Pasta albümü', showAlbum],
     ['🎂', 'Yeni pasta yap', () => showModal('<h2>🎂 Yeni pasta?</h2><p>Bu pasta yarım kalır, baştan başlarız.</p>', [{label:'Vazgeç', action:showMenu}, {label:'Evet, yeni pasta', primary:true, action:() => { closeModal(); startCake(); }}])],
     [store.muted ? '🔇' : '🔊', store.muted ? 'Sesi aç' : 'Sesi kapat', () => { store.muted = !store.muted; if (store.muted) stopVoice(); saveStore(); showMenu(); }],
-  ];
+    window.MGMobil && MGMobil.tamEkranVar ? ['⛶', MGMobil.tamEkranda() ? 'Tam ekrandan çık' : 'Tam ekran', () => { MGMobil.tamEkran(); closeModal(); }] : null,
+  ].filter(Boolean);
   const ml = $('#ml');
   for (const [e, n, fn] of items){ const b = document.createElement('button'); b.className = 'mi'; b.innerHTML = `<span class="e">${e}</span>${n}`; b.onclick = fn; ml.appendChild(b); }
 }
@@ -973,7 +1059,8 @@ cv.addEventListener('pointerdown', e => {
   else if (id === 'firin'){ if (S.bake >= 1 && hitOven(p)) openOven(); }
   else if (id === 'krema'){ const st = {c:S.brush, w:0.5, pts:[norm(p)], h0:Math.random() * 360}; S.strokes.push(st); drag = {k:'paint', st}; drawStroke(st, 0); cakeDirty = true; SFX.paint(); }
   else if (id === 'sus'){
-    const near = S.tops.map((t, i) => { const [x, y] = denorm(t.nx, t.ny); return {i, d:Math.hypot(x - p.x, y - p.y)}; }).filter(o => o.d < u * (S.tops[o.i].k === 'plaka' ? 0.8 : 0.36)).sort((a, b) => a.d - b.d)[0];
+    const fing = e.pointerType === 'mouse' ? 0 : 24;   // parmakla tutmak için en az bu kadar piksel
+    const near = S.tops.map((t, i) => { const [x, y] = denorm(t.nx, t.ny); return {i, d:Math.hypot(x - p.x, y - p.y)}; }).filter(o => o.d < Math.max(u * (S.tops[o.i].k === 'plaka' ? 0.8 : 0.36), S.tops[o.i].k === 'spr' ? 0 : fing)).sort((a, b) => a.d - b.d)[0];
     if (S.tool === 'sil'){ if (near){ const [x, y] = denorm(S.tops[near.i].nx, S.tops[near.i].ny); S.tops.splice(near.i, 1); SFX.pop(); burst(x, y, 8, PASTEL); renderWish(); } return; }
     if (near && S.tool !== 'spr'){ drag = {k:'move', t:S.tops[near.i], sx:p.x, sy:p.y, moved:false}; return; }
     if (!onCake(p)){ toast('Pastanın üstüne dokun! 🎂'); SFX.nope(); return; }
@@ -1031,7 +1118,7 @@ function draw(t, d){
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   drawKitchen(t); drawChars(t); drawCounter();
   const id = STEPS[S.step].id;
-  if (id === 'malzeme' || id === 'karistir') drawBowl(t);
+  if (id === 'malzeme' || id === 'karistir'){ drawSepet(t); drawBowl(t); }
   else if (id === 'kalip'){ drawPourStream(t); const T = moldTier(); drawMold(ctx, T, S.shape || 'round', S.shape ? S.pour : 0, 0); if (!S.shape){ ctx.font = `${L.u * 0.8}px ${EMO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('👇', L.cx, T.yTop - L.u * 1.2 + Math.sin(t * 5) * L.u * 0.1); } }
   else if (id === 'firin') drawOven(t);
   else drawCakeScene(t);
@@ -1047,6 +1134,7 @@ function frame(now){
 /* ============================================================ başlat */
 function startCake(){ newCake(); goStep(0, true); showLetter(() => sayLine('malzeme')); }
 MilaFM.init({button:$('#radioBtn'), host:$('#stage')});
+if (window.MGMobil) MGMobil.init({});
 $('#menuBtn').onclick = showMenu;
 $('#wish').onclick = () => showLetter();
 $('#say').onclick = () => { if (sayId) voice(sayId); };

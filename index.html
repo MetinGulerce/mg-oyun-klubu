@@ -2,8 +2,14 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MG Oyun Klübü</title>
+<meta name="theme-color" content="#fff4fa">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MG Oyun">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikonlar/ikon-180.png">
 <meta name="description" content="Minik oyuncular için tarayıcıda oynanan oyunlar.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎈</text></svg>">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Titan+One&display=swap">
@@ -18,7 +24,7 @@ body{min-height:100vh;background:
   radial-gradient(circle at 92% 22%,#e3d4ff 0 14%,transparent 15%),
   radial-gradient(circle at 80% 96%,#d4f3ff 0 16%,transparent 17%),var(--bg);
   color:var(--ink);font:16px/1.5 "Fredoka","Segoe UI",system-ui,sans-serif;padding-inline:20px}
-main{max-width:1040px;margin:0 auto;padding-block:36px 48px}
+main{max-width:1040px;margin:0 auto;padding-block:calc(36px + env(safe-area-inset-top)) 48px}
 header{text-align:center;margin-bottom:34px}
 .logo{font-size:56px;line-height:1;display:inline-block;animation:bob 2.4s ease-in-out infinite}
 h1{margin:10px 0 6px;font:400 clamp(38px,8vw,68px)/1.05 "Titan One","Fredoka",sans-serif;letter-spacing:.01em}
@@ -43,6 +49,10 @@ a.game:active{transform:translateY(3px);box-shadow:0 4px 0 var(--line)}
 .saga{max-width:640px;margin:-14px auto 26px;text-align:center;color:var(--muted);font-size:16px}
 .saga b{color:var(--ink)}
 .play{margin-top:auto;align-self:flex-start;padding:10px 22px;border-radius:16px;background:linear-gradient(180deg,#ff86ba,var(--pink));color:#fff;font-weight:700;font-size:18px;box-shadow:0 4px 0 #d63a80}
+.prog{position:absolute;right:12px;top:12px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.92);font-size:13px;font-weight:700;box-shadow:0 2px 6px rgba(160,60,120,.18)}
+.prog.ok{background:#e7fbef;color:#1f7a50}
+.tip{max-width:560px;margin:18px auto 0;padding:10px 14px;border-radius:16px;background:#fff;border:2px dashed var(--line);color:var(--muted);font-size:14px;text-align:center}
+.tip b{color:var(--ink)}
 .soon{opacity:.75;border-style:dashed;box-shadow:none}
 .soon .play{background:#eee;color:#998;box-shadow:none}
 footer{margin-top:40px;text-align:center;color:var(--muted);font-size:14px}
@@ -59,20 +69,26 @@ footer{margin-top:40px;text-align:center;color:var(--muted);font-size:14px}
   </header>
   <p class="saga">📖 <b>Mila'nın Masalı:</b> Prenses Mila, en yakın arkadaşı unicorn Pamuk'un doğum günü için malzeme toplar, pastayı pişirir ve fırtınanın yıktığı köprüleri kurarak Gökkuşağı Şatosu'na yetişir. Oyunları sırayla oyna!</p>
   <section class="grid" id="games"></section>
+  <p class="tip">📱 <b>Telefonda daha rahat oynamak için:</b> Safari’de <b>Paylaş ⬆️ → Ana Ekrana Ekle</b>, Chrome’da <b>⋮ → Ana ekrana ekle</b>. Kulüp, telefonda bir uygulama gibi tam ekran açılır. Köprü Ustası’nı telefonu yan çevirerek oyna!</p>
   <footer>Oyunlar ilerlemeni bu tarayıcıya kaydeder. 💖</footer>
 </main>
 <script>
 // Yeni oyun eklemek için bu listeye bir satır ekle (oyun klasörü: oyunlar/<klasor>/index.html)
 const OYUNLAR = [
-  {ad:'Orman ve Köy', bolum:1, yakinda:true, sahne:['🌲', '🧺', '🏡'], gok:'linear-gradient(#c9f0d4,#fff3c4)',
-   aciklama:'Fırtınadan önce Mila ormandan ve köyden pastanın malzemelerini topluyor.', etiket:['Yakında']},
+  {ad:'Orman ve Köy', bolum:1, klasor:'orman-ve-koy', sahne:['🌲', '🧺', '🐄'], gok:'linear-gradient(#bdeccb,#fff3c4 70%,#c9f0d4 70%)',
+   aciklama:'Fırtınadan önce Mila ormandan ve köyden pastanın malzemelerini topluyor. Çilek topla, buğday biç, Benekli’yi besle!',
+   etiket:['4+ yaş', '🔊 Sesli hikâye', '👗 Prenses Butiği', '📻 Radyo'],
+   ilerleme:() => { const s = oku('orman-ve-koy-v1'); if (!s) return null; const n = Object.keys(s.items || {}).length; return s.finished ? ['✓ Sepet doldu', 1] : n ? [`🧺 ${n}/8 malzeme`] : null; }},
   {ad:'Pasta Atölyesi', bolum:2, klasor:'pasta-atolyesi', sahne:['🥚', '🎂', '🍓'], gok:'linear-gradient(#ffe0f0,#fff3c4 70%,#ffd0e4 70%)',
    aciklama:'Fırtınalı akşam, şatonun mutfağında Pamuk’un doğum günü pastasını pişir ve süsle!',
-   etiket:['4+ yaş', '🔊 Sesli hikâye', '📻 Radyo']},
+   etiket:['4+ yaş', '🔊 Sesli hikâye', '📻 Radyo'],
+   ilerleme:() => { const s = oku('pasta-atolyesi-v1'), n = s && Array.isArray(s.album) ? s.album.length : 0; return n ? [`🎂 ${n} pasta yapıldı`, 1] : null; }},
   {ad:'Köprü Ustası', bolum:3, klasor:'kopru-ustasi', sahne:['🌸', '🚗', '🌉'], gok:'linear-gradient(#a9dcff,#ffe3f1 70%,#bdf0c8 70%)',
    aciklama:'Fırtına köprüleri yıktı! Köprüler kur, pastayı Gökkuşağı Şatosu’na yetiştir.',
-   etiket:['5+ yaş', '🔊 Sesli hikâye', '📻 Radyo']},
+   etiket:['5+ yaş', '🔊 Sesli hikâye', '📻 Radyo'],
+   ilerleme:() => { const s = oku('kopru-ustasi-v1'), n = s && s.done ? Object.keys(s.done).length : 0; return n >= 10 ? ['✓ Şatoya ulaşıldı', 1] : n ? [`🌉 ${n}/10 köprü`] : null; }},
 ];
+function oku(k){ try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 const el = document.getElementById('games');
 for (const o of OYUNLAR){
   const a = document.createElement(o.yakinda ? 'div' : 'a');
@@ -81,6 +97,8 @@ for (const o of OYUNLAR){
   a.innerHTML = `<div class="art"><div class="sky" style="background:${o.gok}"></div><div class="scene">${o.sahne.map(e => `<span>${e}</span>`).join('')}</div></div>
     <div class="body"><span class="chap">${o.bolum}. BÖLÜM</span><h2>${o.ad}</h2><p>${o.aciklama}</p><div class="tags">${o.etiket.map(t => `<span>${t}</span>`).join('')}</div>
     <span class="play">${o.yakinda ? 'Yakında' : '▶ Oyna'}</span></div>`;
+  const p = o.ilerleme && o.ilerleme();   // bu tarayıcıdaki kayıttan ilerleme
+  if (p){ const b = document.createElement('span'); b.className = 'prog' + (p[1] ? ' ok' : ''); b.textContent = p[0]; a.querySelector('.art').appendChild(b); }
   el.appendChild(a);
 }
 </script>
