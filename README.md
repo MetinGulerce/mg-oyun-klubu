@@ -24,7 +24,7 @@ Giriş sayfasındaki kartlar bu tarayıcıdaki ilerlemeyi gösterir (toplanan ma
 
 - **Yerleşim:** Dik telefonda araçlar altta iki sıra, yatay telefonda ekranın iki yanında durur; oyun alanı büyür. Pencerelerin düğmeleri kısa ekranda da hep görünür.
 - **Köprü Ustası:** Küçük ekranda köprü alanına yakın açılır. Noktalar parmak kadar geniş alandan tutulur; sürüklerken parmağın üstünde bir büyüteç hedefi gösterir, kenara gelince ekran kayar. Silgiyle parmak gezdirince yolundaki parçalar silinir, yapılar basılı tutup kaydırarak yerleştirilir. Dik tutulunca "yan çevir" önerisi çıkar.
-- **Tam ekran:** Menüdeki ⛶ Tam ekran (Android). Safari'de Paylaş → Ana Ekrana Ekle ile kulüp, tarayıcı çubukları olmadan bir uygulama gibi açılır (`manifest.webmanifest`, simgeler `ikonlar/`). iPhone'da ana ekrandaki uygulamanın kayıtları Safari'dekinden ayrı tutulur.
+- **Tam ekran:** Telefonda oyuna ilk dokunuşta tarayıcı çubukları kendiliğinden gizlenir; her oyunun başlığındaki ⛶ düğmesi tam ekranı açıp kapatır (düğmeyle çıkılırsa o oturumda bir daha zorlanmaz). iPhone Safari sayfalara tam ekran izni vermediği için düğme orada ana ekrana eklemeyi anlatır. Safari'de Paylaş → Ana Ekrana Ekle ile kulüp, tarayıcı çubukları olmadan bir uygulama gibi açılır (`manifest.webmanifest`, simgeler `ikonlar/`). iPhone'da ana ekrandaki uygulamanın kayıtları Safari'dekinden ayrı tutulur.
 
 ## Klasör yapısı
 

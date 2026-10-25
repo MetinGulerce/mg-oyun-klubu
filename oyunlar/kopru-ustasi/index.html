@@ -164,6 +164,7 @@ body.sim .rail .b,body:not(.sim) .rail .d,body:not(.trans) #padJump{display:none
 #zoomUI button:active{transform:scale(.92)}
 #radioBtn{padding:6px 12px;border-radius:12px;background:#d9c4ff;font-weight:700;white-space:nowrap}
 #radioBtn.on{background:linear-gradient(90deg,#ff7eb6,#b26bff);color:#fff}
+#fsBtn{padding:6px 10px;border-radius:12px;background:var(--panel2);border:1.5px solid var(--line)}
 #radio{position:absolute;left:12px;bottom:12px;z-index:3;width:min(280px,calc(100% - 84px));background:#fff;border-radius:18px;border:2px solid var(--line);box-shadow:0 10px 30px rgba(120,40,90,.25);padding:10px 12px 12px}
 #radio[hidden]{display:none}
 #radio .rh{display:flex;align-items:center;gap:6px;font-weight:800}
@@ -243,15 +244,15 @@ body.sim .rail .b,body:not(.sim) .rail .d,body:not(.trans) #padJump{display:none
 /* dik telefon ya da dar pencere: başlık iki sıra, raflar altta iki sıra */
 @media (max-width:720px){
   #app{grid-template-rows:auto minmax(0,1fr) auto auto;grid-template-areas:"h h h" "s s s" "l l l" "r r r"}
-  header{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;grid-template-areas:"lv lv lv rd mn" "vh bk bd bd bd";gap:6px;padding:calc(6px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 6px calc(8px + env(safe-area-inset-left))}
+  header{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto auto;grid-template-areas:"lv lv lv fs rd mn" "vh bk bd bd bd bd";gap:6px;padding:calc(6px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 6px calc(8px + env(safe-area-inset-left))}
   .brand,#levelInfo,#muteBtn,#helpBtn,.lbl{display:none}
   #levels{grid-area:lv;justify-content:space-between;padding:3px 8px;min-width:0}
   .stop{width:auto;flex:1}
-  #radioBtn{grid-area:rd} #menuBtn{grid-area:mn} #vehBtn{grid-area:vh} #bank{grid-area:bk}
+  #fsBtn{grid-area:fs} #radioBtn{grid-area:rd} #menuBtn{grid-area:mn} #vehBtn{grid-area:vh} #bank{grid-area:bk}
   #budget{grid-area:bd;min-width:0;margin-left:0}
   #budgetText{font-size:11px;white-space:nowrap}
   #budgetLbl span{display:none}
-  #vehBtn,#bank,#menuBtn,#radioBtn{padding:5px 11px;font-size:13px;min-height:34px;justify-content:center}
+  #vehBtn,#bank,#menuBtn,#radioBtn,#fsBtn{padding:5px 11px;font-size:13px;min-height:34px;justify-content:center}
   .rail{gap:6px;padding:7px calc(8px + env(safe-area-inset-right)) 7px calc(8px + env(safe-area-inset-left))}
   #railL{justify-content:space-between}
   #railR{border-top:0;padding-top:0;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
@@ -282,7 +283,7 @@ body.sim .rail .b,body:not(.sim) .rail .d,body:not(.trans) #padJump{display:none
   #budgetText{font-size:11px;white-space:nowrap}
   #budgetLbl span{display:none}
   #bar{height:5px;margin-top:2px}
-  #vehBtn,#bank,#menuBtn,#radioBtn{padding:0 11px;font-size:13px;height:32px;min-height:0;display:flex;align-items:center}
+  #vehBtn,#bank,#menuBtn,#radioBtn,#fsBtn{padding:0 11px;font-size:13px;height:32px;min-height:0;display:flex;align-items:center}
   .rail{flex-direction:column;flex-wrap:nowrap;justify-content:center;gap:6px;border-top:0;padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
   #railL{border-right:1px solid var(--line);padding-left:calc(8px + env(safe-area-inset-left))}
   #railR{border-left:1px solid var(--line);padding-right:calc(8px + env(safe-area-inset-right));justify-content:flex-end}
@@ -341,6 +342,7 @@ body.sim .rail .b,body:not(.sim) .rail .d,body:not(.trans) #padJump{display:none
       <div id="budgetText"><span>Maliyet <b id="costVal">0 ₺</b></span><span id="budgetLbl">Bütçe <b id="budgetVal">0 ₺</b></span></div>
       <div id="bar"><div id="barFill"></div></div>
     </div>
+    <button id="fsBtn" title="Tam ekran" hidden></button>
     <button id="radioBtn" title="Radyo: Mila FM">📻<span class="lbl"> Radyo</span></button>
     <button id="menuBtn" title="Menü: kaydet, yükle, sıfırdan başla">☰<span class="lbl"> Menü</span></button>
     <button id="muteBtn" title="Ses aç/kapat">🔊</button>

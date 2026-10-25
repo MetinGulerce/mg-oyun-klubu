@@ -128,8 +128,9 @@ a.sepet:hover{outline:2px solid var(--accent)}
   header{flex-wrap:nowrap;gap:6px;padding:calc(6px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 6px calc(8px + env(safe-area-inset-left))}
   .brand,.spacer,.lbl{display:none}
   #steps{flex:1;justify-content:space-between;min-width:0;padding:3px 6px}
-  .sd{width:30px;height:30px;font-size:16px}
-  .hb{padding:6px 12px;font-size:15px}
+  .sd{flex:0 1 30px;width:auto;height:auto;min-width:0;aspect-ratio:1;font-size:16px}   /* dar ekranda küçülsün, düğmelerin altına kaymasın */
+  .hb{padding:6px 9px;font-size:15px}
+  #fsBtn{padding:6px 7px}
   #tools{gap:5px}
   .grp{display:contents}
   .sep{display:none}
@@ -186,6 +187,7 @@ a.sepet:hover{outline:2px solid var(--accent)}
     <div class="brand">🧁 Pasta <span>Atölyesi</span></div>
     <div id="steps"></div>
     <div class="spacer"></div>
+    <button class="hb" id="fsBtn" title="Tam ekran" hidden></button>
     <button class="hb" id="radioBtn" title="Radyo: Mila FM">📻<span class="lbl"> Radyo</span></button>
     <button class="hb" id="menuBtn" title="Menü">☰<span class="lbl"> Menü</span></button>
   </header>

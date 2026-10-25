@@ -126,12 +126,13 @@ header{display:flex;align-items:center;gap:8px 10px;padding:calc(7px + env(safe-
 }
 /* dik telefon */
 @media (max-width:600px){
-  header{gap:5px;padding:calc(6px + env(safe-area-inset-top)) calc(7px + env(safe-area-inset-right)) 6px calc(7px + env(safe-area-inset-left))}
+  header{gap:4px;padding:calc(6px + env(safe-area-inset-top)) calc(7px + env(safe-area-inset-right)) 6px calc(7px + env(safe-area-inset-left))}
   .lbl,.spacer{display:none}
   #list{flex:1;justify-content:space-between;padding:3px 5px;gap:1px}
   #list .it{width:28px;height:28px;font-size:16px;flex:0 1 28px;min-width:0}
-  #stars{padding:5px 8px;font-size:14px}
-  .hb{padding:6px 10px;font-size:15px}
+  #stars{padding:5px 6px;font-size:14px}
+  .hb{padding:6px 8px;font-size:15px}
+  #fsBtn{padding:6px 7px}
   #say{font-size:14px;max-width:calc(100% - 20px);top:auto;bottom:10px}
   body.ingame #say{top:58px;bottom:auto}
   #hud .h{font-size:15px;padding:6px 10px}
@@ -170,6 +171,7 @@ header{display:flex;align-items:center;gap:8px 10px;padding:calc(7px + env(safe-
     <div id="list" title="Kraliçe annenin listesi"></div>
     <div id="stars" title="Yıldızlar: Prenses Butiği'nde harcanır">⭐ 0</div>
     <div class="spacer"></div>
+    <button class="hb" id="fsBtn" title="Tam ekran" hidden></button>
     <button class="hb" id="radioBtn" title="Radyo: Mila FM">📻<span class="lbl"> Radyo</span></button>
     <button class="hb" id="menuBtn" title="Menü">☰<span class="lbl"> Menü</span></button>
   </header>
