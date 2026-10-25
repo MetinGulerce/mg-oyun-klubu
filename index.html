@@ -39,6 +39,7 @@ a.game:active{transform:translateY(3px);box-shadow:0 4px 0 var(--line)}
 .art{position:relative;isolation:isolate;height:170px;display:grid;place-items:center;font-size:64px;overflow:hidden}
 .art .scene{display:flex;gap:6px;align-items:flex-end;filter:drop-shadow(0 4px 4px rgba(90,30,70,.18))}
 .art .scene span:nth-child(2){font-size:78px;animation:bob 2s ease-in-out infinite}
+.art .scene img{width:112px;height:112px;border-radius:50%;border:5px solid #f6c445;box-shadow:0 0 0 3px #fff;animation:bob 2s ease-in-out infinite;display:block}
 .art .sky{position:absolute;inset:0;z-index:-1}
 .body{padding:16px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
 .body h2{margin:0;font-size:24px}
@@ -67,7 +68,7 @@ footer{margin-top:40px;text-align:center;color:var(--muted);font-size:14px}
     <h1><span class="a">MG</span> <span class="b">Oyun</span> <span class="c">Klü</span><span class="d">bü</span><span class="e">!</span></h1>
     <p>Minik oyuncular için tarayıcıda oynanan oyunlar</p>
   </header>
-  <p class="saga">📖 <b>Mila'nın Masalı:</b> Prenses Mila, en yakın arkadaşı unicorn Pamuk'un doğum günü için malzeme toplar, pastayı pişirir ve fırtınanın yıktığı köprüleri kurarak Gökkuşağı Şatosu'na yetişir. Oyunları sırayla oyna!</p>
+  <p class="saga">📖 <b>Mila'nın Masalı:</b> Prenses Mila, en yakın arkadaşı unicorn Pamuk'un doğum günü için malzeme toplar, pastayı pişirir ve fırtınanın yıktığı köprüleri kurarak Gökkuşağı Şatosu'na yetişir. Doğum gününde Pamuk'un hediyesi sihirli bir kitaptır: Harf Perileri! Oyunları sırayla oyna!</p>
   <section class="grid" id="games"></section>
   <p class="tip">📱 <b>Telefonda daha rahat oynamak için:</b> Safari’de <b>Paylaş ⬆️ → Ana Ekrana Ekle</b>, Chrome’da <b>⋮ → Ana ekrana ekle</b>. Kulüp, telefonda bir uygulama gibi tam ekran açılır. Köprü Ustası’nı telefonu yan çevirerek oyna!</p>
   <footer>Oyunlar ilerlemeni bu tarayıcıya kaydeder. 💖</footer>
@@ -87,6 +88,10 @@ const OYUNLAR = [
    aciklama:'Fırtına köprüleri yıktı! Köprüler kur, pastayı Gökkuşağı Şatosu’na yetiştir.',
    etiket:['5+ yaş', '🔊 Sesli hikâye', '📻 Radyo'],
    ilerleme:() => { const s = oku('kopru-ustasi-v1'), n = s && s.done ? Object.keys(s.done).length : 0; return n >= 10 ? ['✓ Şatoya ulaşıldı', 1] : n ? [`🌉 ${n}/10 köprü`] : null; }},
+  {ad:'Harf Perileri', bolum:4, klasor:'harf-perileri', sahne:['🧚', 'ortak/resim/mila-yuz.webp', '🔤'], gok:'linear-gradient(#ffe0f0,#efe3ff 70%,#c9efcf 70%)',
+   aciklama:'Sihirli kitaptan uçan harf perilerini bul! Harflerin seslerini tanı, heceleri birleştir, kendi adını yaz.',
+   etiket:['4+ yaş', '🔤 Harfler ve sesler', '⌨️ Klavye', '🔊 Sesli'],
+   ilerleme:() => { const s = oku('harf-perileri-v1'), n = s && s.done ? Object.keys(s.done).length : 0; return n >= 15 ? ['✓ Bütün periler kitapta', 1] : n ? [`🧚 ${n}/15 durak`] : null; }},
 ];
 function oku(k){ try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 const el = document.getElementById('games');
@@ -94,7 +99,7 @@ for (const o of OYUNLAR){
   const a = document.createElement(o.yakinda ? 'div' : 'a');
   a.className = 'game' + (o.yakinda ? ' soon' : '');
   if (!o.yakinda) a.href = `oyunlar/${o.klasor}/`;
-  a.innerHTML = `<div class="art"><div class="sky" style="background:${o.gok}"></div><div class="scene">${o.sahne.map(e => `<span>${e}</span>`).join('')}</div></div>
+  a.innerHTML = `<div class="art"><div class="sky" style="background:${o.gok}"></div><div class="scene">${o.sahne.map(e => /\.(webp|png)$/.test(e) ? `<span><img src="${e}" alt="Mila"></span>` : `<span>${e}</span>`).join('')}</div></div>
     <div class="body"><span class="chap">${o.bolum}. BÖLÜM</span><h2>${o.ad}</h2><p>${o.aciklama}</p><div class="tags">${o.etiket.map(t => `<span>${t}</span>`).join('')}</div>
     <span class="play">${o.yakinda ? 'Yakında' : '▶ Oyna'}</span></div>`;
   const p = o.ilerleme && o.ilerleme();   // bu tarayıcıdaki kayıttan ilerleme

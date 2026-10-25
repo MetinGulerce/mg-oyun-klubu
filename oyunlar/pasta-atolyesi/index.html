@@ -449,13 +449,15 @@ function face(c, x, y, R, open){
 /* ============================================================ karakterler */
 function drawMila(c, x, y, s, t){
   const R = 0.21 * s, talk = speaker === 'mila' ? Math.abs(Math.sin(t * 14)) : 0;
-  c.fillStyle = '#f7c948'; c.beginPath(); c.ellipse(x - 0.06 * s, y + 0.02 * s, R * 1.22, R * 1.25, 0, 0, 7); c.fill();
-  c.beginPath(); c.moveTo(x - R * 1.2, y); c.quadraticCurveTo(x - R * 2.2, y + R * 1.6, x - R * 1.4, y + R * 3.1); c.lineTo(x - R * 0.2, y + R * 2.4); c.lineTo(x - R * 0.2, y); c.fill();
+  const MG = window.MilaGorunum, sac = MG ? MG.sac : '#4f2f22';   // gerçek Mila gibi: koyu kahve saç, iki atkuyruğu
+  c.fillStyle = sac; c.beginPath(); c.ellipse(x, y - R * 0.04, R * 1.1, R * 1.12, 0, 0, 7); c.fill();
+  if (MG) MG.atkuyrugu(c, x, y, R, t);
   c.fillStyle = window.MilaGorunum ? MilaGorunum.elbise(c, x, y + R, x, y + R * 4.2) : '#ff9ccb';   // butikte seçilen elbise
   c.beginPath(); c.moveTo(x - R * 1.3, y + R * 4.2); c.quadraticCurveTo(x - R * 1.1, y + R * 1.1, x, y + R * 1.0); c.quadraticCurveTo(x + R * 1.1, y + R * 1.1, x + R * 1.3, y + R * 4.2); c.closePath(); c.fill();
   rrc(c, x - R * 0.72, y + R * 1.55, R * 1.44, R * 2.4, R * 0.35, '#ffffff'); heart(c, x, y + R * 2.3, R * 0.9, '#ff7eb6');   // önlük
   circ(c, x, y, R, '#ffdcc2');
-  c.fillStyle = '#f7c948'; c.beginPath(); c.arc(x, y, R * 1.03, Math.PI * 1.02, Math.PI * 1.95); c.quadraticCurveTo(x + R * 0.2, y - R * 0.3, x - R * 1.02, y - R * 0.05); c.fill();
+  c.fillStyle = sac; c.beginPath(); c.arc(x, y, R * 1.03, Math.PI * 1.02, Math.PI * 1.95); c.quadraticCurveTo(x + R * 0.2, y - R * 0.3, x - R * 1.02, y - R * 0.05); c.fill();
+  if (MG) MG.kurdele(c, x, y, R);
   face(c, x, y, R, talk); if (window.MilaGorunum) MilaGorunum.tac(c, x, y - R * 0.82, R * 1.3); else crown(c, x, y - R * 0.82, R * 1.3);
 }
 function drawQueen(c, x, y, s, t){

@@ -3,6 +3,11 @@
  *
  *   MilaGorunum.elbise(c, x0, y0, x1, y1)  elbisenin dolgusu (gökkuşağı seçildiyse renk geçişi)
  *   MilaGorunum.tac(c, x, y, s)            Mila'nın tacı (x, y: tacın alt ortası, s: boyut)
+ *   MilaGorunum.sac                        Mila'nın saç rengi (koyu kahve)
+ *   MilaGorunum.atkuyrugu(c, x, y, R, t)   iki yan atkuyruğu; başı çizmeden ÖNCE (x, y: başın merkezi, R: başın yarıçapı)
+ *   MilaGorunum.kurdele(c, x, y, R)        atkuyruklarının pembe kurdeleleri; saçın üstünü çizdikten SONRA
+ *
+ * Gerçek Mila'nın resmi: ortak/resim/mila-prenses.webp (portre), ortak/resim/mila-yuz.webp (yüz)
  */
 (function(){
 'use strict';
@@ -19,8 +24,30 @@ function circ(c, x, y, r, col){ c.beginPath(); c.arc(x, y, r, 0, 7); c.fillStyle
 function heart(c, x, y, s, col){ c.save(); c.translate(x, y); c.scale(s, s); c.beginPath(); c.moveTo(0, 0.38); c.bezierCurveTo(-0.7, -0.1, -0.38, -0.62, 0, -0.26); c.bezierCurveTo(0.38, -0.62, 0.7, -0.1, 0, 0.38); c.fillStyle = col; c.fill(); c.restore(); }
 function star(c, x, y, s, col){ c.beginPath(); for (let i = 0; i < 10; i++){ const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? s * 0.45 : s; c.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } c.closePath(); c.fillStyle = col; c.fill(); }
 
+const SAC = '#4f2f22';
 window.MilaGorunum = {
   look,
+  sac:SAC,
+  atkuyrugu(c, x, y, R, t){
+    const sw = Math.sin((t || 0) * 2.4) * R * 0.06;
+    c.fillStyle = SAC;
+    for (const k of [-1, 1]){
+      const ax = x + k * R * 0.8, ay = y - R * 0.55;
+      c.beginPath(); c.moveTo(ax, ay - R * 0.12);
+      c.bezierCurveTo(ax + k * R * 0.95, ay - R * 0.1, ax + k * R * 0.95 + sw, ay + R * 1.05, ax + k * R * 0.4 + sw, ay + R * 1.5);
+      c.bezierCurveTo(ax + k * R * 0.42, ay + R * 0.95, ax, ay + R * 0.55, ax - k * R * 0.15, ay + R * 0.2);
+      c.closePath(); c.fill();
+    }
+  },
+  kurdele(c, x, y, R){
+    for (const k of [-1, 1]){
+      const bx = x + k * R * 0.86, by = y - R * 0.62, b = R * 0.3;
+      c.fillStyle = '#ff6fae';
+      c.beginPath(); c.moveTo(bx, by); c.lineTo(bx - b, by - b * 0.7); c.lineTo(bx - b, by + b * 0.7); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(bx, by); c.lineTo(bx + b, by - b * 0.7); c.lineTo(bx + b, by + b * 0.7); c.closePath(); c.fill();
+      circ(c, bx, by, b * 0.32, '#ff4f9a');
+    }
+  },
   elbise(c, x0, y0, x1, y1){
     if (look.elbise !== 'rainbow') return look.elbise;
     const g = c.createLinearGradient(x0, y0, x1, y1); RB.forEach((col, i) => g.addColorStop(i / (RB.length - 1), col)); return g;

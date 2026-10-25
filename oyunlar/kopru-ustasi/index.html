@@ -2141,13 +2141,18 @@ function crown(c, x, y, s){
 let hidePrincess = false;
 function princess(c, x, y, s, hair, force){
   if (hidePrincess && !force) return;
-  const R = 0.21 * s; hair = hair || '#f7c948';
-  c.fillStyle = hair; c.beginPath(); c.ellipse(x - 0.06 * s, y + 0.02 * s, R * 1.22, R * 1.25, 0, 0, 7); c.fill();
-  c.beginPath(); c.moveTo(x - R * 1.2, y); c.quadraticCurveTo(x - R * 2.2, y + R * 1.6, x - R * 1.4, y + R * 3.1); c.lineTo(x - R * 0.2, y + R * 2.4); c.lineTo(x - R * 0.2, y); c.fill();
+  const R = 0.21 * s, MG = window.MilaGorunum, mila = !hair && MG;   // Mila: koyu kahve saç, iki atkuyruğu
+  hair = hair || (MG ? MG.sac : '#4f2f22');
+  if (mila){ c.fillStyle = hair; c.beginPath(); c.ellipse(x, y - R * 0.04, R * 1.1, R * 1.12, 0, 0, 7); c.fill(); MG.atkuyrugu(c, x, y, R, performance.now() / 1000); }
+  else {
+    c.fillStyle = hair; c.beginPath(); c.ellipse(x - 0.06 * s, y + 0.02 * s, R * 1.22, R * 1.25, 0, 0, 7); c.fill();
+    c.beginPath(); c.moveTo(x - R * 1.2, y); c.quadraticCurveTo(x - R * 2.2, y + R * 1.6, x - R * 1.4, y + R * 3.1); c.lineTo(x - R * 0.2, y + R * 2.4); c.lineTo(x - R * 0.2, y); c.fill();
+  }
   c.fillStyle = window.MilaGorunum ? MilaGorunum.elbise(c, x, y + R, x, y + R * 3.3) : '#ff9ccb';   // butikte seçilen elbise
   c.beginPath(); c.moveTo(x - R * 1.15, y + R * 3.3); c.quadraticCurveTo(x - R * 1.0, y + R * 1.1, x, y + R * 1.0); c.quadraticCurveTo(x + R * 1.0, y + R * 1.1, x + R * 1.15, y + R * 3.3); c.closePath(); c.fill();
   circ(c, x, y, R, '#ffdcc2');
   c.fillStyle = hair; c.beginPath(); c.arc(x, y, R * 1.03, Math.PI * 1.02, Math.PI * 1.95); c.quadraticCurveTo(x + R * 0.2, y - R * 0.3, x - R * 1.02, y - R * 0.05); c.fill();
+  if (mila) MG.kurdele(c, x, y, R);
   circ(c, x + R * 0.05, y + R * 0.12, R * 0.1, '#4a2545'); circ(c, x + R * 0.58, y + R * 0.12, R * 0.1, '#4a2545');
   circ(c, x - R * 0.22, y + R * 0.48, R * 0.17, 'rgba(255,110,160,.55)'); circ(c, x + R * 0.78, y + R * 0.46, R * 0.14, 'rgba(255,110,160,.55)');
   c.strokeStyle = '#c2436f'; c.lineWidth = R * 0.12; c.lineCap = 'round'; c.beginPath(); c.arc(x + R * 0.32, y + R * 0.38, R * 0.28, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();

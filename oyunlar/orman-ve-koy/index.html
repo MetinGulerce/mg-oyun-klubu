@@ -187,6 +187,7 @@ header{display:flex;align-items:center;gap:8px 10px;padding:calc(7px + env(safe-
 </div>
 <script src="../../ortak/mila-fm.js"></script>
 <script src="../../ortak/mobil.js"></script>
+<script src="../../ortak/mila-gorunum.js"></script>
 <script>
 (() => {
 'use strict';
@@ -447,7 +448,9 @@ function drawMila(c, x, y, s, t, o){
   }
   c.translate(0, -bob);
   // saç (arkası)
-  c.fillStyle = '#f7c948'; c.beginPath(); c.moveTo(-0.16, -0.78); c.quadraticCurveTo(-0.27, -0.6 + Math.sin(ph) * 0.02 * mv, -0.21, -0.43); c.lineTo(-0.06, -0.5); c.lineTo(-0.05, -0.78); c.fill();
+  const MG = window.MilaGorunum, sac = MG ? MG.sac : '#4f2f22';   // gerçek Mila gibi: koyu kahve saç, iki atkuyruğu
+  if (MG) MG.atkuyrugu(c, 0.01, -0.76, 0.16, t + ph * 0.3);
+  else { c.fillStyle = sac; c.beginPath(); c.moveTo(-0.16, -0.78); c.quadraticCurveTo(-0.27, -0.6 + Math.sin(ph) * 0.02 * mv, -0.21, -0.43); c.lineTo(-0.06, -0.5); c.lineTo(-0.05, -0.78); c.fill(); }
   // arka kol
   const armA = mv ? -Math.sin(ph) * 0.5 : 0.15;
   c.save(); c.translate(-0.05, -0.53); c.rotate(armA); line(c, 0, 0, 0, 0.2, '#ffdcc2', 0.05); c.restore();
@@ -470,7 +473,8 @@ function drawMila(c, x, y, s, t, o){
   // baş
   const hx = 0.01, hy = -0.76, R = 0.16;
   circ(c, hx, hy, R, '#ffdcc2');
-  c.fillStyle = '#f7c948'; c.beginPath(); c.arc(hx, hy, R * 1.04, Math.PI * 1.02, Math.PI * 1.97); c.quadraticCurveTo(hx + R * 0.25, hy - R * 0.35, hx - R * 1.03, hy - R * 0.05); c.fill();
+  c.fillStyle = sac; c.beginPath(); c.arc(hx, hy, R * 1.04, Math.PI * 1.02, Math.PI * 1.97); c.quadraticCurveTo(hx + R * 0.25, hy - R * 0.35, hx - R * 1.03, hy - R * 0.05); c.fill();
+  if (MG) MG.kurdele(c, hx, hy, R);
   face(c, hx, hy, R, o.talk ? Math.abs(Math.sin(t * 14)) : 0, blinkAt(t, 1));
   if (o.mustache){   // ayran bıyığı: kocaman, bembeyaz
     c.fillStyle = '#ffffff'; c.strokeStyle = 'rgba(160,190,220,.8)'; c.lineWidth = R * 0.04;

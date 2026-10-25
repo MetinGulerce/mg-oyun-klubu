@@ -4,19 +4,22 @@ Minik oyuncular için tarayıcıda oynanan oyunlar. Kurulum yok; `index.html` do
 
 ## Oyunlar — Mila'nın Masalı
 
-Oyunlar tek bir hikâyenin bölümleridir: Prenses Mila, unicorn Pamuk'un doğum günü için malzeme toplar, pastayı pişirir, fırtınanın yıktığı köprüleri kurup Gökkuşağı Şatosu'na yetişir.
+Oyunlar tek bir hikâyenin bölümleridir: Prenses Mila, unicorn Pamuk'un doğum günü için malzeme toplar, pastayı pişirir, fırtınanın yıktığı köprüleri kurup Gökkuşağı Şatosu'na yetişir. Doğum gününde Pamuk'un hediyesi sihirli bir kitaptır: Harf Perileri.
 
 | Bölüm | Oyun | Açıklama |
 |---|---|---|
 | 1 | [🧺 Orman ve Köy](oyunlar/orman-ve-koy/) | Kraliçe annenin listesindeki malzemeleri topla. Mila şatodan köye yürür, altı durakta yardım eder: 🍓 Çilek Tarlası (olgunları seç), 🧚 Peri Bahçesi (çiçeklerin ezgisini tekrar et, çikolata yağmurunu yakala), 🌾 Değirmen (buğday biç, kanatları çevir), 🐔 Kümes (tavukların altındaki yumurtalar), 🐄 Ahır (Benekli'yi besle, yayık salla), 🍬 Şekerci (renklere göre ayır). Sepet dolunca fırtına çıkar, kral baba Mila'yı faytonla eve götürür. Yolda kelebek, yıldız ve saklı hayvanlar (çıkartma albümü); yıldızlarla Prenses Butiği'nden elbise ve taç. |
 | 2 | [🧁 Pasta Atölyesi](oyunlar/pasta-atolyesi/) | Şatonun mutfağında malzemeleri karıştır, pişir, krema sür, süsle, mumları üfle. Pamuk'un mektubundaki üç dileği yerine getir. |
 | 3 | [🌉 Köprü Ustası](oyunlar/kopru-ustasi/) | 10 durakta köprü kurarak pastayı şatoya yetiştir. Malzemeler dört grupta (Yol, Kirişler, Halatlar, Yapılar); kule, destek noktası ve köprü ayağı eklenebilir. Köprüler arasındaki yolda bonus toplanır, engellerin üstünden zıplanır. |
+| 4 | [🧚 Harf Perileri](oyunlar/harf-perileri/) | Kitaptan uçan harf perilerini bul. Peri Bahçesi'nde 15 durak: önce harfle tanış (harfin adı değil sesi: "mmm"), Ses Avı'nda sesi duyup doğru periyi bul, Gökkuşağı Kaydırağı'nda Mila'yı kaydırıp sesleri heceye birleştir ("mmm-aaa → ma"), sonra resimdeki kelimeyi yaz (MAMA, LAMA, MİLA, BABA, ELMA, ANNE, KEK…). Bilgisayarda gerçek klavyeyle, telefonda büyük harf düğmeleriyle oynanır; ekrandaki klavye Türkçe Q düzenindedir. Serbest Klavye'de her tuş kendi sesini söyler. Anne-baba köşesinde hangi harfin öğrenildiği görünür. |
 
 Oyunlar aynı sitede çalıştığı için bilgileri paylaşır (tarayıcıdaki ortak anahtarlar):
 
 - `mg-kulup-sepet`: Orman ve Köy'de dolan sepet. Pasta Atölyesi'nin hikâye kartında ve tezgâhında görünür.
 - `mg-kulup-pasta`: Pasta Atölyesi'nde bitirilen pastanın resmi. Köprü Ustası'nda arabada görünür.
 - `mg-kulup-mila`: Prenses Butiği'nde seçilen elbise ve taç. Mila bütün oyunlarda bu kıyafetle görünür.
+
+Mila'nın çizgi resmi `ortak/resim/` klasöründedir (`mila-prenses.webp` portre, `mila-yuz.webp` yuvarlak yüz). Oyunlarda çizilen prenses de gerçek Mila gibi koyu kahve saçlı ve iki atkuyrukludur (`ortak/mila-gorunum.js`).
 
 Giriş sayfasındaki kartlar bu tarayıcıdaki ilerlemeyi gösterir (toplanan malzeme, yapılan pasta, geçilen köprü).
 
@@ -36,7 +39,8 @@ oyunlar/<oyun>/index.html   her oyun kendi klasöründe, tek dosya
 oyunlar/<oyun>/ses/         hikâye ve karakter seslendirmeleri (MP3)
 ortak/mila-fm.js            oyunların ortak radyosu (Mila FM)
 ortak/mobil.js              telefon yardımcıları (tam ekran, "yan çevir" önerisi, sayfa büyümesini engelleme)
-ortak/mila-gorunum.js       butikte seçilen elbise ve tacı bütün oyunlarda çizer
+ortak/mila-gorunum.js       butikte seçilen elbise ve tacı, Mila'nın saçını bütün oyunlarda çizer
+ortak/resim/                Mila'nın prenses portresi ve yüzü
 araclar/seslendir.py        seslendirmeleri Gemini TTS ile üreten betik
 ```
 
@@ -56,6 +60,8 @@ $env:TTS_API_KEY = "..."
 python araclar/seslendir.py                  # bütün oyunlar
 python araclar/seslendir.py orman-ve-koy     # tek oyun
 ```
+
+Harf Perileri'nde ses dosyası olmayan satırda oyun sessiz kalır; tarayıcının kendi sesi kullanılmaz (harf seslerini yanlış okur: "mmm" yerine "mi mi"). Harf sesleri `h_`, heceler `s_`, kelimeler `w_` ile başlar.
 
 Seslendirilen metinler her oyundaki `SAY` listesinden (Köprü Ustası'nda ayrıca `LEVELS` ve `ENDING`) okunur. Sesler: anlatıcı *Zephyr*, Mila *Leda*, kral *Puck*, kraliçe *Aoede*, Peri Işıltı *Laomedeia*, değirmenci Fındık *Fenrir*, Nine *Gacrux*, Lale Teyze *Sulafat*. Betik için `ffmpeg` gerekir.
 
