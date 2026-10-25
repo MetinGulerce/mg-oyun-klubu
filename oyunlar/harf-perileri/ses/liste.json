@@ -1,0 +1,598 @@
+{
+ "avi_soru": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Hangi peri böyle diyor?",
+  "ozet": "f0e9897e9db7"
+ },
+ "avi_tekrar": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Hımm, o başka bir peri. Bir daha dinle!",
+  "ozet": "2b311bb64b4d"
+ },
+ "durak_harf": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yaşasın! Peri kitaba geri döndü!",
+  "ozet": "bbd8c1903319"
+ },
+ "durak_kelime": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ne güzel yazdın! Kelimeler de kitaba girdi!",
+  "ozet": "f10916cb57b3"
+ },
+ "h_a": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Aaaaa.",
+  "ozet": "e187d75baf40"
+ },
+ "h_b": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bı.",
+  "ozet": "fb23fefeef56",
+  "kisaltildi": 25
+ },
+ "h_c": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Cı.",
+  "ozet": "64b1768d4a51",
+  "kisaltildi": 25
+ },
+ "h_cc": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Çı.",
+  "ozet": "21e906bd565c",
+  "kisaltildi": 25
+ },
+ "h_d": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Dı.",
+  "ozet": "decb79809dd4",
+  "kisaltildi": 25
+ },
+ "h_e": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Eeeee.",
+  "ozet": "51265cdad926"
+ },
+ "h_f": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Fffff.",
+  "ozet": "7384476b83dc"
+ },
+ "h_g": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Gı.",
+  "ozet": "ebf03f1c4283",
+  "kisaltildi": 25
+ },
+ "h_gg": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yumuşak ge.",
+  "ozet": "a6a253dea294"
+ },
+ "h_h": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Hhhhh.",
+  "ozet": "9f167788d62d"
+ },
+ "h_i": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "İiiii.",
+  "ozet": "718be5252830"
+ },
+ "h_ii": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Iıııı.",
+  "ozet": "bfb880052516"
+ },
+ "h_j": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Jjjjj.",
+  "ozet": "5bd4740e61f9"
+ },
+ "h_k": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kı.",
+  "ozet": "7ada1fcfc326",
+  "kisaltildi": 25
+ },
+ "h_l": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Lllll.",
+  "ozet": "5f6d534b9eaf"
+ },
+ "h_m": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mmmmm.",
+  "ozet": "92ec6d4ee587"
+ },
+ "h_n": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Nnnnn.",
+  "ozet": "7b844b86a405"
+ },
+ "h_o": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ooooo.",
+  "ozet": "65f7284d80d8"
+ },
+ "h_oo": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ööööö.",
+  "ozet": "982d188e81e7"
+ },
+ "h_p": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Pı.",
+  "ozet": "37f01e19b7bf",
+  "kisaltildi": 25
+ },
+ "h_r": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Rrrrr.",
+  "ozet": "a0367f3fb56f"
+ },
+ "h_s": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Sssss.",
+  "ozet": "2165e98cde2a"
+ },
+ "h_ss": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Şşşşş.",
+  "ozet": "9b1b62379138"
+ },
+ "h_t": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Tı.",
+  "ozet": "ae5841367d6f",
+  "kisaltildi": 25
+ },
+ "h_u": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Uuuuu.",
+  "ozet": "0420031560e0"
+ },
+ "h_uu": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Üüüüü.",
+  "ozet": "5990ed36ba6c"
+ },
+ "h_v": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Vvvvv.",
+  "ozet": "09954d787ec9"
+ },
+ "h_y": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yyyyy.",
+  "ozet": "090651d21e64"
+ },
+ "h_z": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Zzzzz.",
+  "ozet": "e196fd0e59bc"
+ },
+ "harita": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Peri Bahçesi'ne hoş geldin! Parlayan çiçeğe dokun, yeni bir periyle tanış.",
+  "ozet": "85a3b75da5ba"
+ },
+ "harita2": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Sıradaki peri seni bekliyor!",
+  "ozet": "7c9b2a1e0c24"
+ },
+ "hepsi_bitti": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bütün periler kitaba geri döndü! Mila artık sesleri tanıyor, heceleri birleştiriyor, kelimeler yazıyor. Pamuk çok gururlu! Serbest klavyede istediğin kelimeyi yazabilirsin.",
+  "ozet": "2e2aeb3e0683"
+ },
+ "hikaye": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Gökkuşağı Şatosu'ndaki doğum günü partisi bitince Pamuk, Mila'ya sihirli bir kitap hediye etti: Harf Perileri kitabı! Mila kitabı açar açmaz minik periler pır pır uçup bahçeye dağıldı. Her perinin kendine ait bir sesi var. Peri Işıltı dedi ki: Perilerin seslerini tanırsan, periler kitaba geri döner. Hadi Mila, perileri bulalım!",
+  "ozet": "ce5a49d676b7"
+ },
+ "kay_ilk": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu bir gökkuşağı kaydırağı! Mila’yı parmağınla kaydır. Periler sırayla sesini söyleyecek, sesler birleşecek!",
+  "ozet": "2456512a2be6"
+ },
+ "kay_tekrar": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kaydır bakalım! Sesler birleşsin!",
+  "ozet": "2c4b2e423f4d"
+ },
+ "kelime_ilk": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Şimdi bir kelime yazalım! Sesi dinle, o sesin perisini bul.",
+  "ozet": "46d9f50b9436"
+ },
+ "mila_ad": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Bu benim adım! Mi-la, Mila!",
+  "ozet": "a6379d78d52f"
+ },
+ "p_aferin": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Aferin!",
+  "ozet": "8c4289af14f5"
+ },
+ "p_bravo": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bravo Mila!",
+  "ozet": "962fb698b5ad"
+ },
+ "p_evet": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Evet, doğru!",
+  "ozet": "2b033d7b0feb"
+ },
+ "p_harika": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Harika!",
+  "ozet": "f2777b8fd0f8"
+ },
+ "p_super": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Süpersin!",
+  "ozet": "f6213995871e"
+ },
+ "q_abla": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu kim? Abla! Hadi abla yazalım!",
+  "ozet": "2ded4b29ffe0"
+ },
+ "q_anne": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu kim? Kraliçe anne! Hadi anne yazalım!",
+  "ozet": "3a0e05ceb519"
+ },
+ "q_baba": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu kim? Kral baba! Hadi baba yazalım!",
+  "ozet": "585ed7c67826"
+ },
+ "q_bal": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Bal! Arıların tatlı balı. Hadi bal yazalım!",
+  "ozet": "bdca4024620f"
+ },
+ "q_bebek": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu kim? Bebek! Hadi bebek yazalım!",
+  "ozet": "413cd0b77ade"
+ },
+ "q_el": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? El! Hadi el yazalım!",
+  "ozet": "bb4baf0d0bc7"
+ },
+ "q_elma": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Kırmızı bir elma! Hadi elma yazalım!",
+  "ozet": "15870a8797d9"
+ },
+ "q_kale": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Kale! Hadi kale yazalım!",
+  "ozet": "3664034dabb6"
+ },
+ "q_kalem": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Kalem! Hadi kalem yazalım!",
+  "ozet": "4fca6ad3b3d8"
+ },
+ "q_kek": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Kek! Hadi kek yazalım!",
+  "ozet": "cb6a62c274e8"
+ },
+ "q_lale": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Lale! Hadi lale yazalım!",
+  "ozet": "9c4cb0eb39a5"
+ },
+ "q_lama": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Lama! Tüylü bir lama. Hadi lama yazalım!",
+  "ozet": "121ac46ee804"
+ },
+ "q_mama": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Mama! Bebeklerin maması. Hadi mama yazalım!",
+  "ozet": "ae0590ebaf17"
+ },
+ "q_mila": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bak, bu kim? Bu sensin, Prenses Mila! Hadi kendi adını yazalım!",
+  "ozet": "448bec98ad11"
+ },
+ "q_nane": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Nane! Hadi nane yazalım!",
+  "ozet": "5984789b2c9e"
+ },
+ "q_nine": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu kim? Nine! Hadi nine yazalım!",
+  "ozet": "f11ebb213c5b"
+ },
+ "s_al": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Al.",
+  "ozet": "2ad3c5b94314"
+ },
+ "s_an": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "An.",
+  "ozet": "ab74d370a75a"
+ },
+ "s_ba": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ba.",
+  "ozet": "030ba17b9ddf"
+ },
+ "s_bi": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bi.",
+  "ozet": "829955944655"
+ },
+ "s_el": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "El.",
+  "ozet": "71552ef1df8f"
+ },
+ "s_ka": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ka.",
+  "ozet": "261edee8115e"
+ },
+ "s_ke": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ke.",
+  "ozet": "6543446de631"
+ },
+ "s_ki": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ki.",
+  "ozet": "819e5033606c"
+ },
+ "s_la": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "La.",
+  "ozet": "230ed4b5db66"
+ },
+ "s_le": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Le.",
+  "ozet": "f9b0a1c9695a"
+ },
+ "s_li": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Li.",
+  "ozet": "455773566d83"
+ },
+ "s_ma": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ma.",
+  "ozet": "e6f04ebfbbb8"
+ },
+ "s_me": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Me.",
+  "ozet": "2d4b3e54751e"
+ },
+ "s_mi": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mi.",
+  "ozet": "61ea063da829"
+ },
+ "s_na": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Na.",
+  "ozet": "e91c7e5282df"
+ },
+ "s_ne": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ne.",
+  "ozet": "cf33843c4e85"
+ },
+ "serbest": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Serbest klavye! İstediğin tuşa bas, periler sesini söylesin. Adını yazabilir misin?",
+  "ozet": "4da8a45d30c4"
+ },
+ "t2_b": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Balon da benim sesimle başlar. Bana dokun, sesimi duy!",
+  "ozet": "7b56fb980d27"
+ },
+ "t2_k": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kelebek de benim sesimle başlar. Bana dokun, sesimi duy!",
+  "ozet": "eedbc1d388d6"
+ },
+ "t_a": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba Mila! Ben A perisiyim. Benim sesim: aaa! Arı da benim sesimle başlar: aaa-rı. Bana dokun ya da klavyede A tuşuna bas, sesimi duy!",
+  "ozet": "104839c0a9ea"
+ },
+ "t_b": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben B perisiyim. Benim sesim çok kısacık, iyi dinle!",
+  "ozet": "80dbcaaa6b4d"
+ },
+ "t_e": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben E perisiyim. Benim sesim: eee! Elma da benim sesimle başlar: eee-lma. Bana dokun, sesimi duy!",
+  "ozet": "6b289cc26342"
+ },
+ "t_i": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben İ perisiyim. Benim sesim: iii! İnek de benim sesimle başlar: iii-nek. Bana dokun, sesimi duy!",
+  "ozet": "2ba47c4a0e21"
+ },
+ "t_k": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben K perisiyim. Benim sesim çok kısacık, iyi dinle!",
+  "ozet": "b8d5121da3c1"
+ },
+ "t_l": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben L perisiyim. Benim sesim: lll! Lale de benim sesimle başlar: lll-ale. Bana dokun, sesimi duy!",
+  "ozet": "de95aa7cc586"
+ },
+ "t_m": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben M perisiyim. Benim sesim: mmm! Bil bakalım kimin adı benim sesimle başlıyor? Mmm-ila! Senin adın! Bana dokun, sesimi duy!",
+  "ozet": "b0cbc43cd224"
+ },
+ "t_n": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben N perisiyim. Benim sesim: nnn! Nota da benim sesimle başlar: nnn-ota. Bana dokun, sesimi duy!",
+  "ozet": "c9c784acfebd"
+ },
+ "tanis_ok": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Harika! Şimdi periler çiçeklerin arkasına saklandı. Sesi dinle, doğru periyi bul!",
+  "ozet": "4b6cb0a912ca"
+ },
+ "w_abla": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Abla!",
+  "ozet": "172bf3b00519"
+ },
+ "w_baba": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Baba!",
+  "ozet": "e565dc65f631"
+ },
+ "w_bal": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bal!",
+  "ozet": "24d517abc695"
+ },
+ "w_el": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "El!",
+  "ozet": "515c5ab621be"
+ },
+ "w_lama": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Lama!",
+  "ozet": "19a31773ba07"
+ },
+ "w_mama": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mama!",
+  "ozet": "f028445c9439"
+ },
+ "w_mila": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mila!",
+  "ozet": "734197375b05"
+ },
+ "yasasin": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Yaşasın!",
+  "ozet": "eb18af56174a"
+ }
+}

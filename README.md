@@ -42,6 +42,7 @@ ortak/mobil.js              telefon yardımcıları (tam ekran, "yan çevir" ön
 ortak/mila-gorunum.js       butikte seçilen elbise ve tacı, Mila'nın saçını bütün oyunlarda çizer
 ortak/resim/                Mila'nın prenses portresi ve yüzü
 araclar/seslendir.py        seslendirmeleri Gemini TTS ile üreten betik
+araclar/sessiz-kisalt.py    kısacık sessizlerin ("bı" → "b") seslerini kırpan betik
 ```
 
 ## Yeni oyun eklemek
@@ -62,6 +63,8 @@ python araclar/seslendir.py orman-ve-koy     # tek oyun
 ```
 
 Harf Perileri'nde ses dosyası olmayan satırda oyun sessiz kalır; tarayıcının kendi sesi kullanılmaz (harf seslerini yanlış okur: "mmm" yerine "mi mi"). Harf sesleri `h_`, heceler `s_`, kelimeler `w_` ile başlar.
+
+Servis b, k, t gibi kısacık sesleri tek başına söyleyemez, hep "bı, kı" der. Bu yüzden Harf Perileri'nin sesleri üretildikten sonra `python araclar/sessiz-kisalt.py harf-perileri` çalıştırılır: kayıtta sessizin patlamasını bulur, ünlü başlamadan keser. Harf Perileri'nde bütün satırları hikâye anlatıcısı (*Zephyr*) okur.
 
 Seslendirilen metinler her oyundaki `SAY` listesinden (Köprü Ustası'nda ayrıca `LEVELS` ve `ENDING`) okunur. Sesler: anlatıcı *Zephyr*, Mila *Leda*, kral *Puck*, kraliçe *Aoede*, Peri Işıltı *Laomedeia*, değirmenci Fındık *Fenrir*, Nine *Gacrux*, Lale Teyze *Sulafat*. Betik için `ffmpeg` gerekir.
 
