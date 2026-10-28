@@ -5,6 +5,12 @@
   "metin": "Balon şenliği! Periler balonlara bindi, gökyüzüne uçuyorlar. Sesi dinle, o sesin balonlarını patlat!",
   "ozet": "494ea8362f62"
  },
+ "ara_dans": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Dans partisi! Pamuk dans etmek istiyor. Perilere dokun, her peri şarkısını söylesin, Pamuk ile Mila dans etsin!",
+  "ozet": "33905bbdef75"
+ },
  "ara_pasta": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -333,6 +339,12 @@
   "metin": "İyi ki doğdun Prenses Mila! İyi ki doğdun!",
   "ozet": "38694ab2f4cd"
  },
+ "pasta_ufle": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bütün mumlar yandı! Şimdi bir dilek tut ve mumları üfle. Pastaya dokun!",
+  "ozet": "685793a663cd"
+ },
  "q_abla": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -531,6 +543,12 @@
   "metin": "Ki.",
   "ozet": "819e5033606c"
  },
+ "s_ko": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ko.",
+  "ozet": "8559d9163283"
+ },
  "s_la": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -584,6 +602,12 @@
   "ses": "Zephyr",
   "metin": "Ne.",
   "ozet": "cf33843c4e85"
+ },
+ "s_ol": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ol.",
+  "ozet": "bdbced4f7b54"
  },
  "serbest": {
   "konusan": "anlatici",

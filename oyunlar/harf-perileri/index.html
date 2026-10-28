@@ -28,6 +28,7 @@ header{display:flex;align-items:center;gap:8px 10px;padding:calc(8px + env(safe-
 .brand span{color:var(--accent)}
 #steps{display:flex;gap:2px;align-items:center;padding:3px 8px;border-radius:999px;background:var(--panel2);border:1.5px solid var(--line)}
 #steps:empty{display:none}
+.hb[hidden]{display:none}
 .sd{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:18px;opacity:.4;position:relative}
 .sd img{width:24px;height:24px;border-radius:50%}
 .sd.done{opacity:1}
@@ -341,8 +342,8 @@ footer[hidden]{display:none}
   header{gap:6px;padding:calc(6px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 6px calc(8px + env(safe-area-inset-left))}
   .brand,.lbl{display:none}
   #steps{min-width:0;padding:2px 5px;flex:0 1 auto}
-  .sd{flex:0 1 28px;min-width:20px;height:28px;font-size:15px}
-  .sd img{width:20px;height:20px}
+  .sd{flex:0 1 26px;min-width:15px;height:26px;font-size:13px}
+  .sd img{width:17px;height:17px}
   .hb{height:38px;min-width:38px;padding:0 9px;font-size:15px;border-width:2.5px}
   #fsBtn{padding:0 6px}
   #say{font-size:14px}
@@ -382,6 +383,7 @@ footer[hidden]{display:none}
 <body>
 <div id="app">
   <header>
+    <button class="hb" id="homeBtn" title="Bahçeye dön" hidden>🏰<span class="lbl"> Bahçe</span></button>
     <div class="brand">🧚 Harf <span>Perileri</span></div>
     <div id="steps"></div>
     <div class="spacer"></div>
@@ -902,7 +904,7 @@ const curStop = () => { const i = DURAKLAR.findIndex(d => !store.done[d.id]); re
 const open = i => store.allOpen || i <= curStop() || !!store.done[DURAKLAR[i].id];
 function clearScene(){ if (act && act.end) act.end(); act = null; scene.innerHTML = ''; scene.className = ''; glowKey(null); setSay(''); $('#milaAv').hidden = mode === 'map'; }
 function setMode(m){
-  mode = m; $('#foot').hidden = m === 'map'; $('#milaAv').hidden = m === 'map';
+  mode = m; $('#foot').hidden = m === 'map'; $('#homeBtn').hidden = m === 'map'; $('#milaAv').hidden = m === 'map';
   MilaFM.duck(m !== 'map');
   requestAnimationFrame(resize);
 }
@@ -1466,6 +1468,7 @@ $('#playBtn').onclick = () => {
 MilaFM.init({button:$('#radioBtn'), host:$('#stage')});
 if (window.MGMobil) MGMobil.init({});
 $('#menuBtn').onclick = showMenu;
+$('#homeBtn').onclick = () => { closeModal(); showMap(); };
 $('#bookBtn').onclick = showBook;
 $('#say').onclick = () => { if (sayId) line(sayId); };
 new ResizeObserver(resize).observe($('#stage'));
