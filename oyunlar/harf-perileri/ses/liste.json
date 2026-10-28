@@ -543,11 +543,23 @@
   "metin": "Ki.",
   "ozet": "819e5033606c"
  },
+ "s_kii": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kı.",
+  "ozet": "7ada1fcfc326"
+ },
  "s_ko": {
   "konusan": "anlatici",
   "ses": "Zephyr",
   "metin": "Ko.",
   "ozet": "8559d9163283"
+ },
+ "s_ku": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ku.",
+  "ozet": "16ac61af326a"
  },
  "s_la": {
   "konusan": "anlatici",
@@ -830,6 +842,12 @@
   "ses": "Zephyr",
   "metin": "Mila!",
   "ozet": "734197375b05"
+ },
+ "w_mum": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mum!",
+  "ozet": "d31e5887e770"
  },
  "w_nane": {
   "konusan": "anlatici",

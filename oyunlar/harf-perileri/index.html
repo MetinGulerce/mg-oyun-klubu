@@ -1436,8 +1436,13 @@ function showParents(){
     [{label:'Kapat', primary:true, action:closeModal}], true);
   $$('#kbSeg button').forEach(b => b.onclick = () => { store.kb = b.dataset.m; save(); renderKb(); showParents(); });
   $('#pOpen').onclick = () => { store.allOpen = !store.allOpen; save(); if (mode === 'map') renderMap(); showParents(); };
-  $('#pReset').onclick = () => showModal('<h2>🗑️ Baştan başla?</h2><p>Bütün periler bahçeye döner, harf istatistikleri silinir.</p>',
-    [{label:'Vazgeç', action:showParents}, {label:'Evet, sıfırla', primary:true, action:() => { store.done = {}; store.letters = {}; store.words = {}; save(); updateBook(); closeModal(); showMap(); }}]);
+  $('#pReset').onclick = () => sifirlaSor(showParents);
+}
+function sifirlaSor(geri){
+  showModal('<h2>🔄 Baştan başla?</h2><p>Bütün periler bahçeye döner, yazılan kelimeler ve harf istatistikleri silinir. Hikâye de baştan anlatılır.</p>',
+    [{label:'Vazgeç', action:geri}, {label:'Evet, baştan başla', primary:true, action:() => {
+      store.done = {}; store.letters = {}; store.words = {}; store.storySeen = false; save(); updateBook(); mapSaid = false; closeModal(); stopAll(); clearScene(); setMode('map'); renderMap(); showStory(showMap);
+    }}]);
 }
 function showMenu(){
   showModal('<h2>☰ Menü</h2><div id="ml"></div>', [{label:'▶ Oyuna dön', primary:true, action:closeModal}]);
@@ -1448,6 +1453,7 @@ function showMenu(){
     ['⌨️', 'Serbest Klavye', () => { closeModal(); startFree(); }],
     ['📜', 'Hikâyeyi tekrar oku', () => showStory()],
     ['👪', 'Anne-baba köşesi', showParents],
+    ['🔄', 'Baştan başla (ilerlemeyi sıfırla)', () => sifirlaSor(showMenu)],
     [store.muted ? '🔇' : '🔊', store.muted ? 'Sesi aç' : 'Sesi kapat', () => { store.muted = !store.muted; if (store.muted) stopAll(); save(); showMenu(); }],
     window.MGMobil && MGMobil.tamEkranVar ? ['⛶', MGMobil.tamEkranda() ? 'Tam ekrandan çık' : 'Tam ekran', () => { MGMobil.tamEkran(); closeModal(); }] : null,
   ].filter(Boolean);
