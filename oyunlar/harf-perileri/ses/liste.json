@@ -29,17 +29,35 @@
   "metin": "Hımm, o başka bir peri. Bir daha dinle!",
   "ozet": "2b311bb64b4d"
  },
+ "balon_peri": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bir peri çıktı! Bak nasıl dans ediyor!",
+  "ozet": "e08060bd4da8"
+ },
  "balon_son": {
   "konusan": "anlatici",
   "ses": "Zephyr",
   "metin": "Yaşasın! Bütün yıldızları topladın. Ne güzel bir balon şenliğiydi!",
   "ozet": "13f3bc246da9"
  },
+ "balon_surpriz": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bak, sürpriz balon! Patlat, içinden ne çıkacak?",
+  "ozet": "47e91e552a62"
+ },
  "balon_yeni": {
   "konusan": "anlatici",
   "ses": "Zephyr",
   "metin": "Şimdi bu sesin balonlarını patlat!",
   "ozet": "1cda22d036dc"
+ },
+ "cikartma": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Sürpriz! Yeni bir çıkartma kazandın. Peri Kitabı’na yapıştırdım!",
+  "ozet": "0a6129c77e65"
  },
  "dans_son": {
   "konusan": "anlatici",
@@ -273,6 +291,12 @@
   "metin": "Gökkuşağı Şatosu'ndaki doğum günü partisi bitince Pamuk, Mila'ya sihirli bir kitap hediye etti: Harf Perileri kitabı! Mila kitabı açar açmaz minik periler pır pır uçup bahçeye dağıldı. Her perinin kendine ait bir sesi var. Peri Işıltı dedi ki: Perilerin seslerini tanırsan, periler kitaba geri döner. Hadi Mila, perileri bulalım!",
   "ozet": "ce5a49d676b7"
  },
+ "hk3_1": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bir sabah bahçeye kar yağdı. Son peri, ö perisi, karların arasında üşüyordu. Mila ona sıcacık, pembe bir önlük getirdi.",
+  "ozet": "259a133bb46a"
+ },
  "kay_ilk": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -285,6 +309,54 @@
   "metin": "Kaydır bakalım! Sesler birleşsin!",
   "ozet": "2c4b2e423f4d"
  },
+ "kek_ciko": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Çikolatalı kek! Nefis!",
+  "ozet": "4022d98da94e"
+ },
+ "kek_cilek": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Çilekli kek! Mis gibi!",
+  "ozet": "e9867fe32f7a"
+ },
+ "kek_hazir": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kek hazır! Mumları da diktim. Hadi üfle: keke dokun!",
+  "ozet": "49bccb73de08"
+ },
+ "kek_ilk": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kek zamanı! Hangisini yapalım: çilekli mi, çikolatalı mı, limonlu mu? Birine dokun.",
+  "ozet": "8a6161fe62af"
+ },
+ "kek_limon": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Limonlu kek! Ne güzel kokuyor!",
+  "ozet": "4efef2eaf400"
+ },
+ "kek_mila": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Ben yaptım! Çok güzel oldu!",
+  "ozet": "2c777cd68fac"
+ },
+ "kek_son": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mis gibi kokuyor! Afiyet olsun, Mila!",
+  "ozet": "c86a9ad56b85"
+ },
+ "kek_sus": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Şimdi süsleyelim! Süslere dokun, keke konsun. İstediğin kadar koy, bitince yıldıza bas.",
+  "ozet": "c46b0c0245a4"
+ },
  "kelime_ilk": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -296,6 +368,18 @@
   "ses": "Leda",
   "metin": "Bu benim adım! Mi-la, Mila!",
   "ozet": "a6379d78d52f"
+ },
+ "oks_1": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Hihi, gıdıklanıyorum!",
+  "ozet": "22e9398764ad"
+ },
+ "oks_2": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ne güzel okşuyorsun!",
+  "ozet": "ed13f9f7271f"
  },
  "p_aferin": {
   "konusan": "anlatici",
@@ -938,6 +1022,12 @@
   "ses": "Zephyr",
   "metin": "Önlük!",
   "ozet": "a588511c8f2c"
+ },
+ "yapboz_ilk": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yapboz zamanı! Resim parçalara ayrılmış. Her parçanın bir harfi var; parçayı aynı harfli yere sürükle.",
+  "ozet": "5ccaf9c98046"
  },
  "yasasin": {
   "konusan": "mila",
