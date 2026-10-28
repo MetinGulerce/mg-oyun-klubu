@@ -5,6 +5,12 @@
   "metin": "Balon şenliği! Periler balonlara bindi, gökyüzüne uçuyorlar. Sesi dinle, o sesin balonlarını patlat!",
   "ozet": "494ea8362f62"
  },
+ "ara_pasta": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bak, kocaman bir çilekli pasta! Mila’nın doğum günü yaklaşıyor. Hadi mumları yakalım! Sesi dinle, o sesin mumuna dokun.",
+  "ozet": "02aa70edb2c4"
+ },
  "avi_soru": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -16,6 +22,12 @@
   "ses": "Zephyr",
   "metin": "Hımm, o başka bir peri. Bir daha dinle!",
   "ozet": "2b311bb64b4d"
+ },
+ "balon_son": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Yaşasın! Bütün yıldızları topladın. Ne güzel bir balon şenliğiydi!",
+  "ozet": "13f3bc246da9"
  },
  "balon_yeni": {
   "konusan": "anlatici",
@@ -314,6 +326,12 @@
   "ses": "Leda",
   "metin": "Dileğimi tuttum! Yaşasın!",
   "ozet": "58d6d7a23da9"
+ },
+ "pasta_son": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "İyi ki doğdun Prenses Mila! İyi ki doğdun!",
+  "ozet": "38694ab2f4cd"
  },
  "q_abla": {
   "konusan": "anlatici",
