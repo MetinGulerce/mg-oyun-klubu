@@ -77,6 +77,13 @@
   "metin": "Ne güzel yazdın! Kelimeler de kitaba girdi!",
   "ozet": "f10916cb57b3"
  },
+ "eglence": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Eğlence Köşesi! İstediğin oyunu seç!",
+  "ozet": "d044912a657d",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
  "h_a": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -291,11 +298,53 @@
   "metin": "Gökkuşağı Şatosu'ndaki doğum günü partisi bitince Pamuk, Mila'ya sihirli bir kitap hediye etti: Harf Perileri kitabı! Mila kitabı açar açmaz minik periler pır pır uçup bahçeye dağıldı. Her perinin kendine ait bir sesi var. Peri Işıltı dedi ki: Perilerin seslerini tanırsan, periler kitaba geri döner. Hadi Mila, perileri bulalım!",
   "ozet": "ce5a49d676b7"
  },
+ "hk1_1": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mila kendi adını yazınca şatonun büyük kapısı gıcırdayarak açıldı. İçeriden tanıdık bir ses geldi: Mila! Buradayım!",
+  "ozet": "11f7d43ad7f0",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "hk1_2": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Pamuk’tu! Boynuzu gökkuşağı gibi parlıyordu. Mila, dedi, periler sana bir hediye bırakmış. Gel, bahçeye bakalım!",
+  "ozet": "909ea2e54c6f",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "hk1_3": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Masanın üstünde minik bir çıkartma defteri duruyordu. Periler fısıldadı: Her oyunda sürprizler var, Mila. Bul, kazan, deftere yapıştır!",
+  "ozet": "67322b94eb6d",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "hk2_1": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Akşam oluyordu. Periler ağaçlara tünedi, hep birlikte şarkı söylediler. Mila da onlara katıldı; sesi bütün bahçede yankılandı.",
+  "ozet": "fcae15d16d09",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "hk2_2": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ama bazı periler hâlâ kayıptı: o, u, ı, ü ve ö. Pamuk kulağına eğildi: Onlar gölün öbür kıyısında saklanıyor. Hadi, yola çıkalım!",
+  "ozet": "19f9253493f9",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
  "hk3_1": {
   "konusan": "anlatici",
   "ses": "Zephyr",
   "metin": "Bir sabah bahçeye kar yağdı. Son peri, ö perisi, karların arasında üşüyordu. Mila ona sıcacık, pembe bir önlük getirdi.",
   "ozet": "259a133bb46a"
+ },
+ "hk3_2": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ö perisi sevinçle havalandı: Teşekkürler Mila! Hadi, beni de kitaba götür! Yıldızlar o gece bahçenin üstünde pırıl pırıl parladı.",
+  "ozet": "24e182f2bfec",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
  },
  "kay_ilk": {
   "konusan": "anlatici",
@@ -380,6 +429,13 @@
   "ses": "Zephyr",
   "metin": "Ne güzel okşuyorsun!",
   "ozet": "ed13f9f7271f"
+ },
+ "oks_3": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Seni çok seviyorum Mila!",
+  "ozet": "3c2848b181ac",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
  },
  "p_aferin": {
   "konusan": "anlatici",
@@ -747,6 +803,48 @@
   "metin": "Serbest klavye! İstediğin tuşa bas, periler sesini söylesin. Adını yazabilir misin?",
   "ozet": "4da8a45d30c4"
  },
+ "sev_baliik": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Balık acıkmış! Yemeklere dokun, balığa yedir. Sevmek için de balığa dokun.",
+  "ozet": "c0555f96f415",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "sev_buulbuul": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bülbül acıkmış! Yemeklere dokun, bülbüle yedir. Sevmek için de bülbüle dokun.",
+  "ozet": "165eaa23c800",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "sev_inek": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bak, inek acıkmış! Yemeklere dokun, ineğe yedir. Sevmek için de ineğe dokun.",
+  "ozet": "422f5035540c",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "sev_koala": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Koala acıkmış! Yemeklere dokun, koalaya yedir. Sevmek için de koalaya dokun.",
+  "ozet": "e69dfd694a4c",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "sev_lama": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Lama acıkmış! Yemeklere dokun, lamaya yedir. Sevmek için de lamaya dokun.",
+  "ozet": "4ed8cccd48a0",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "sev_son": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Karnı doydu, çok mutlu! Sana bir çıkartma hediye etti.",
+  "ozet": "2879bffe7d3a",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
  "t2_b": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -1029,10 +1127,45 @@
   "metin": "Yapboz zamanı! Resim parçalara ayrılmış. Her parçanın bir harfi var; parçayı aynı harfli yere sürükle.",
   "ozet": "5ccaf9c98046"
  },
+ "yapboz_son": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Resim tamamlandı! Ne güzel bir yapboz!",
+  "ozet": "251d2eb72249",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "yapboz_yanlis": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Hımm, orası değil. Harflere bak!",
+  "ozet": "50ca2a889a70",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
  "yasasin": {
   "konusan": "mila",
   "ses": "Leda",
   "metin": "Yaşasın!",
   "ozet": "eb18af56174a"
+ },
+ "yem_1": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mmm, ne lezzetli!",
+  "ozet": "7fa0fdadf4b9",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "yem_2": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ham ham! Teşekkürler Mila!",
+  "ozet": "fcb0585cd9a1",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
+ },
+ "yem_3": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Çok acıkmışım, bir tane daha!",
+  "ozet": "c51e37b808bf",
+  "model": "gemini/gemini-2.5-flash-preview-tts/"
  }
 }

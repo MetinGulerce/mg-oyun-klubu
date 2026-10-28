@@ -24,7 +24,7 @@ import urllib.request
 
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OYUNLAR = os.path.join(KOK, 'oyunlar')
-MODEL = 'gemini/gemini-3.1-flash-tts-preview/{}'
+MODEL = os.environ.get('TTS_MODEL', 'gemini/gemini-3.1-flash-tts-preview/{}')   # 3.1 çökükse: TTS_MODEL='gemini/gemini-2.5-flash-preview-tts/{}'
 SESLER = {'anlatici': 'Zephyr', 'mila': 'Leda', 'kral': 'Puck', 'kralice': 'Aoede', 'bebek': 'Leda',
           'peri': 'Laomedeia', 'findik': 'Fenrir', 'nine': 'Gacrux', 'lale': 'Sulafat'}
 
@@ -111,6 +111,7 @@ def seslendir(oyun, url, key):
                 f.result()
                 kim, m, ozet = isler[k]
                 liste[k] = {'konusan': kim, 'ses': SESLER[kim], 'metin': m, 'ozet': ozet}
+                if 'TTS_MODEL' in os.environ: liste[k]['model'] = os.environ['TTS_MODEL'].format('')   # varsayılan model dışıyla üretildi
                 print(f'✓ {oyun}/{k}', flush=True)
             except Exception as e:
                 print(f'✗ {oyun}/{k}: {e}', flush=True)
