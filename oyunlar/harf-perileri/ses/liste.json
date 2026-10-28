@@ -519,6 +519,12 @@
   "metin": "Bi.",
   "ozet": "829955944655"
  },
+ "s_buu": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bü.",
+  "ozet": "43c0d82bff83"
+ },
  "s_el": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -555,6 +561,12 @@
   "metin": "Ko.",
   "ozet": "8559d9163283"
  },
+ "s_koo": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kö.",
+  "ozet": "1a3bb01f06c7"
+ },
  "s_ku": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -578,6 +590,18 @@
   "ses": "Zephyr",
   "metin": "Li.",
   "ozet": "455773566d83"
+ },
+ "s_lii": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Lı.",
+  "ozet": "f2ea2741ef72"
+ },
+ "s_luu": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Lü.",
+  "ozet": "3c368b21039d"
  },
  "s_ma": {
   "konusan": "anlatici",
@@ -620,6 +644,18 @@
   "ses": "Zephyr",
   "metin": "Ol.",
   "ozet": "bdbced4f7b54"
+ },
+ "s_oon": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ön.",
+  "ozet": "53714c9e6905"
+ },
+ "s_ul": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ul.",
+  "ozet": "37437caf342e"
  },
  "serbest": {
   "konusan": "anlatici",
@@ -777,11 +813,23 @@
   "metin": "Bal!",
   "ozet": "24d517abc695"
  },
+ "w_baliik": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Balık!",
+  "ozet": "f08c6c2b3e5c"
+ },
  "w_bebek": {
   "konusan": "anlatici",
   "ses": "Zephyr",
   "metin": "Bebek!",
   "ozet": "771f18a5b886"
+ },
+ "w_buulbuul": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bülbül!",
+  "ozet": "58c824d93d76"
  },
  "w_el": {
   "konusan": "anlatici",
@@ -794,6 +842,12 @@
   "ses": "Zephyr",
   "metin": "Elma!",
   "ozet": "f5bd987fa873"
+ },
+ "w_kabak": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kabak!",
+  "ozet": "52cacb66f1d0"
  },
  "w_kale": {
   "konusan": "anlatici",
@@ -819,6 +873,12 @@
   "metin": "Koala!",
   "ozet": "6bbece4a74ca"
  },
+ "w_kol": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kol!",
+  "ozet": "8e243822c5bf"
+ },
  "w_lale": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -830,6 +890,12 @@
   "ses": "Zephyr",
   "metin": "Lama!",
   "ozet": "19a31773ba07"
+ },
+ "w_lokum": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Lokum!",
+  "ozet": "937d8a7b3451"
  },
  "w_mama": {
   "konusan": "anlatici",
@@ -860,6 +926,18 @@
   "ses": "Zephyr",
   "metin": "Nine!",
   "ozet": "54f87e9e13da"
+ },
+ "w_okul": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Okul!",
+  "ozet": "8ff6f012d059"
+ },
+ "w_oonluuk": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Önlük!",
+  "ozet": "a588511c8f2c"
  },
  "yasasin": {
   "konusan": "mila",
