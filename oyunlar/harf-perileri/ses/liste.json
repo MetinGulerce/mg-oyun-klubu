@@ -62,7 +62,7 @@
   "ses": "Zephyr",
   "metin": "Eeeee.",
   "ozet": "51265cdad926",
-  "elle": "w_el kaydındaki ünlüden uzatıldı"
+  "elle": "servisten talimatla üretildi (Say only the Turkish vowel 'e' as in 'el', held long and steady...), ilk 1,4 sn"
  },
  "h_f": {
   "konusan": "anlatici",
@@ -94,7 +94,7 @@
   "ses": "Zephyr",
   "metin": "iiiii.",
   "ozet": "17eb9febaff8",
-  "elle": "s_mi kaydındaki ünlüden uzatıldı"
+  "elle": "servisten talimatla üretildi (Say only the Turkish vowel 'i' as in 'inek', held long and steady...), ilk 1,4 sn"
  },
  "h_ii": {
   "konusan": "anlatici",
@@ -516,8 +516,8 @@
  "t_i": {
   "konusan": "anlatici",
   "ses": "Zephyr",
-  "metin": "Merhaba! Ben İ perisiyim. Benim sesim: iii! İnek de benim sesimle başlar: iii-nek. Bana dokun, sesimi duy!",
-  "ozet": "2ba47c4a0e21"
+  "metin": "Merhaba! Ben noktalı i perisiyim. Benim sesim: iii! Bak, inek de benim sesimle başlar: iii-nek. Bana dokun, sesimi duy!",
+  "ozet": "6d4ff4abfa37"
  },
  "t_k": {
   "konusan": "anlatici",
@@ -555,6 +555,12 @@
   "metin": "Abla!",
   "ozet": "172bf3b00519"
  },
+ "w_anne": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Anne!",
+  "ozet": "d11c2c242af4"
+ },
  "w_baba": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -567,11 +573,47 @@
   "metin": "Bal!",
   "ozet": "24d517abc695"
  },
+ "w_bebek": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bebek!",
+  "ozet": "771f18a5b886"
+ },
  "w_el": {
   "konusan": "anlatici",
   "ses": "Zephyr",
   "metin": "El!",
   "ozet": "515c5ab621be"
+ },
+ "w_elma": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Elma!",
+  "ozet": "f5bd987fa873"
+ },
+ "w_kale": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kale!",
+  "ozet": "664f6e97b7dd"
+ },
+ "w_kalem": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kalem!",
+  "ozet": "1dad92354cda"
+ },
+ "w_kek": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Kek!",
+  "ozet": "1f551f8cd635"
+ },
+ "w_lale": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Lale!",
+  "ozet": "17fccf78b875"
  },
  "w_lama": {
   "konusan": "anlatici",
@@ -590,6 +632,18 @@
   "ses": "Zephyr",
   "metin": "Mila!",
   "ozet": "734197375b05"
+ },
+ "w_nane": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Nane!",
+  "ozet": "ecb4e859e4f8"
+ },
+ "w_nine": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Nine!",
+  "ozet": "54f87e9e13da"
  },
  "yasasin": {
   "konusan": "mila",
