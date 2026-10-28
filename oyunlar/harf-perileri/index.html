@@ -247,6 +247,74 @@ footer[hidden]{display:none}
   animation:milaIn .9s cubic-bezier(.2,1.6,.4,1) both,milaWob 1.1s ease-in-out infinite;animation-delay:calc(var(--i)*.13s),calc(.9s + var(--i)*.13s)}
 #celebrate .sub{font:700 clamp(18px,3.4vw,38px)/1 "Fredoka",sans-serif;color:#fff;background:linear-gradient(90deg,#ff5fa2,#b26bff);padding:.35em 1.1em;border-radius:999px;margin-top:.45em;box-shadow:0 .2em 0 rgba(120,30,90,.35);animation:milaIn .7s cubic-bezier(.2,1.6,.4,1) .8s both}
 
+/* ara bölümler: kısa, eğlenceli molalar */
+.stop.ara{background:linear-gradient(160deg,#fff7fc,#ffe1f0);border-color:#ffc0dd;box-shadow:0 6px 0 #ffc0dd}
+.stop.ara .pe{font-size:calc(var(--n)*.56)}
+.stop.ara::before{content:"✨";position:absolute;right:-6px;bottom:-6px;font-size:calc(var(--n)*.28);font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.stop.ara.done{border-color:#8fe3a1;box-shadow:0 6px 0 #8fe3a1}
+.araStars{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:3px;font-size:clamp(20px,5.5vmin,32px);z-index:3;pointer-events:none;white-space:nowrap}
+.araStars i{font-style:normal;filter:grayscale(1);opacity:.3}
+.araStars i.on{filter:none;opacity:1;animation:pop .45s}
+.emo{font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+/* balon şenliği */
+#scene.balon{overflow:hidden}
+.bl{position:absolute;left:0;top:0;width:var(--bw);height:calc(var(--bw)*1.2);margin-left:calc(var(--bw)/-2);border-radius:50% 50% 47% 47%/56% 56% 44% 44%;
+  background:radial-gradient(circle at 33% 27%,rgba(255,255,255,.9) 0 8%,transparent 9%),radial-gradient(circle at 50% 42%,hsl(var(--h) 95% 80%),hsl(var(--h) 72% 58%));
+  box-shadow:inset -7px -10px 16px hsl(var(--h) 70% 42% / .35),0 8px 14px rgba(90,30,70,.18);display:grid;place-items:center;cursor:pointer;touch-action:manipulation}
+.bl b{font:700 calc(var(--bw)*.52)/1 var(--harf);color:#fff;-webkit-text-stroke:calc(var(--bw)*.022) hsl(var(--h) 60% 36%);paint-order:stroke fill;pointer-events:none}
+.bl::before{content:"";position:absolute;left:50%;bottom:-7px;width:12px;height:9px;margin-left:-6px;background:hsl(var(--h) 72% 58%);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.bl::after{content:"";position:absolute;left:50%;top:calc(100% + 2px);width:2px;height:calc(var(--bw)*.85);background:linear-gradient(rgba(140,80,120,.6),rgba(140,80,120,0))}
+.bl.glow{box-shadow:inset -7px -10px 16px hsl(var(--h) 70% 42% / .35),0 0 0 5px #ffe98a,0 0 26px 10px #fff3b0}
+.bl.patla{animation:blPop .28s ease-out forwards;pointer-events:none}
+/* doğum günü pastası */
+.pastaWrap{position:absolute;left:50%;bottom:3%;width:var(--cw,300px);margin-left:calc(var(--cw,300px)/-2);display:flex;flex-direction:column;align-items:center;cursor:pointer;touch-action:manipulation}
+.pastaWrap.hazir{animation:pulse 1.1s ease-in-out infinite}
+.mumlar{display:flex;gap:calc(var(--cw)*.022);align-items:flex-end;padding-top:calc(var(--cw)*.13);margin-bottom:calc(var(--cw)*-.02);position:relative;z-index:2}
+.mum{position:relative;width:calc(var(--cw)*.12);height:calc(var(--cw)*.25);border-radius:calc(var(--cw)*.024) calc(var(--cw)*.024) 4px 4px;
+  background:repeating-linear-gradient(-35deg,hsl(var(--h) 90% 80%) 0 8px,#fff 8px 14px);box-shadow:inset -4px 0 0 hsl(var(--h) 60% 55% / .3),0 4px 8px rgba(90,30,70,.15);display:grid;place-items:center;cursor:pointer}
+.mum b{width:calc(var(--cw)*.105);height:calc(var(--cw)*.105);border-radius:50%;display:grid;place-items:center;background:hsl(var(--h) 75% 60%);box-shadow:0 0 0 2px #fff;
+  font:700 calc(var(--cw)*.08)/1 var(--harf);color:#fff;pointer-events:none}
+.mum::before{content:"";position:absolute;left:50%;top:calc(var(--cw)*-.035);width:2px;margin-left:-1px;height:calc(var(--cw)*.035);background:#6b4a3a}
+.mum .alev{position:absolute;left:50%;bottom:calc(100% + var(--cw)*.03);width:calc(var(--cw)*.065);height:calc(var(--cw)*.095);margin-left:calc(var(--cw)*-.0325);border-radius:50% 50% 50% 50%/62% 62% 38% 38%;
+  background:radial-gradient(circle at 50% 72%,#fff 0 16%,#ffe25c 30%,#ff9a2e 68%,rgba(255,120,40,0) 71%);opacity:0;transform:scale(.2);transform-origin:50% 100%;transition:opacity .25s,transform .35s cubic-bezier(.2,1.6,.4,1);pointer-events:none;filter:drop-shadow(0 0 8px #ffd25c)}
+.mum.yan .alev{opacity:1;transform:none;animation:alev .45s ease-in-out infinite alternate}
+.mum.glow{animation:periGlow 1s ease-in-out infinite}
+.mum.wig{animation:wig .45s}
+.kat{position:relative;border-radius:calc(var(--cw)*.045) calc(var(--cw)*.045) calc(var(--cw)*.02) calc(var(--cw)*.02)}
+.kat.k1{width:74%;height:calc(var(--cw)*.19);background:linear-gradient(#fff6fa 0 24%,#ffb3d1 24%);box-shadow:inset 0 -6px 0 rgba(200,60,120,.14)}
+.kat.k2{width:94%;height:calc(var(--cw)*.23);background:linear-gradient(#fff6fa 0 19%,#ff8fbf 19%);box-shadow:inset 0 -6px 0 rgba(200,60,120,.18)}
+.kat::after{content:"";position:absolute;inset:34% 5% 16%;background:radial-gradient(circle,#ffe95c 0 3px,transparent 4px) 0 0/30px 22px,radial-gradient(circle,#7cc8ff 0 3px,transparent 4px) 15px 11px/30px 22px;opacity:.9}
+.kat .cl{position:absolute;top:-30%;font-size:calc(var(--cw)*.075);line-height:1}
+#scene.pasta.yatay .mumlar{padding-top:calc(var(--cw)*.1)}
+#scene.pasta.yatay .mum{height:calc(var(--cw)*.17)}
+#scene.pasta.yatay .kat.k1{height:calc(var(--cw)*.12)}
+#scene.pasta.yatay .kat.k2{height:calc(var(--cw)*.14)}
+.tabak{width:104%;height:calc(var(--cw)*.05);border-radius:50%;background:#fff;box-shadow:0 6px 10px rgba(90,30,70,.18)}
+/* Pamuk'la dans */
+#scene.dans{display:flex;flex-direction:column;align-items:center;overflow:hidden}
+.disko{position:absolute;left:50%;top:-70%;width:220%;aspect-ratio:1;margin-left:-110%;background:repeating-conic-gradient(rgba(255,150,210,.24) 0 7deg,transparent 7deg 20deg,rgba(150,200,255,.2) 20deg 27deg,transparent 27deg 40deg);animation:milaSpin 16s linear infinite;pointer-events:none}
+.dSahne{position:relative;flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;gap:5%;padding-top:40px}
+.pamuk{font-size:var(--ps,140px);line-height:1;filter:drop-shadow(0 10px 10px rgba(90,30,70,.25));pointer-events:none}
+.pamuk .u{display:inline-block}
+.dMila{width:calc(var(--ps,140px)*.58);aspect-ratio:1;border-radius:50%;border:4px solid #fff;box-shadow:0 6px 14px rgba(90,30,70,.25);object-fit:cover}
+.idle .u,img.idle{animation:bob 1.2s ease-in-out infinite}
+.m0 .u,img.m0{animation:dHop .6s}
+.m1 .u,img.m1{animation:dSpin .7s}
+.m2 .u,img.m2{animation:dWig .6s}
+.m3 .u,img.m3{animation:dFlip .7s}
+.pamuk.son .u{animation:dSpin .8s 3}
+.dPeri{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px;padding:6px 10px 46px}
+.dPeri .peri{--s:var(--fs,70px)}
+#scene.dans.yatay{flex-direction:row;justify-content:center;padding:46px 12px 44px}
+#scene.dans.yatay .dSahne{flex:0 0 auto;width:auto;padding:0 3%}
+#scene.dans.yatay .dPeri{flex:0 1 auto;max-width:55%;padding:0}
+@keyframes blPop{to{transform:scale(1.6);opacity:0}}
+@keyframes alev{from{transform:scale(1) rotate(-4deg)}to{transform:scale(1.07,1.16) rotate(4deg)}}
+@keyframes dHop{0%,100%{transform:none}40%{transform:translateY(-30%) scale(1.05,.95)}70%{transform:translateY(0) scale(1.1,.9)}}
+@keyframes dSpin{to{transform:rotate(360deg)}}
+@keyframes dWig{0%,100%{transform:none}25%{transform:rotate(-16deg) translateX(-10%)}75%{transform:rotate(16deg) translateX(10%)}}
+@keyframes dFlip{0%,100%{transform:none}50%{transform:scaleX(-1) translateY(-18%)}}
+
 @keyframes milaIn{from{transform:translateY(-130%) scale(.2) rotate(-30deg);opacity:0}to{transform:none;opacity:1}}
 @keyframes milaWob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9%) rotate(4deg) scale(1.06)}}
 @keyframes milaSpin{to{transform:rotate(360deg)}}
@@ -374,33 +442,59 @@ const hue = L => SESLI.has(L) ? SESLI_H[L] : SESSIZ_H[ALFABE.indexOf(L) % SESSIZ
 const HARFLER = {
   A:{e:'🐝', k:'ARI'}, M:{img:1, k:'MİLA'}, L:{e:'🌷', k:'LALE'}, 'İ':{e:'🐄', k:'İNEK'},
   B:{e:'🎈', k:'BALON'}, E:{e:'🍎', k:'ELMA'}, N:{e:'🎵', k:'NOTA'}, K:{e:'🦋', k:'KELEBEK'},
+  O:{e:'🚌', k:'OTOBÜS'}, U:{e:'✈️', k:'UÇAK'}, I:{e:'💡', k:'IŞIK'}, 'Ü':{e:'🍇', k:'ÜZÜM'}, 'Ö':{e:'🦆', k:'ÖRDEK'},
 };
 const KELIMELER = {
   MAMA:{e:'🥣'}, LAMA:{e:'🦙'}, 'MİLA':{img:1}, BAL:{e:'🍯'}, BABA:{e:'🤴'}, ABLA:{e:'👧'},
   EL:{e:'✋'}, ELMA:{e:'🍎'}, LALE:{e:'🌷'}, ANNE:{e:'👸'}, NANE:{e:'🌿'}, 'NİNE':{e:'👵'},
   KEK:{e:'🧁'}, BEBEK:{e:'👶'}, KALEM:{e:'✏️'}, KALE:{e:'🏰'},
+  KOL:{e:'💪'}, KOALA:{e:'🐨'}, MUM:{e:'🕯️'}, OKUL:{e:'🏫'}, LOKUM:{e:'🍬'}, BALIK:{e:'🐟'}, KABAK:{e:'🎃'},
+  'BÜLBÜL':{e:'🐦'}, 'ÖNLÜK':{e:'🥼'},
 };
 // Peri Bahçesi'ndeki duraklar: önce harfle tanış, sonra o harfle hece ve kelime kur.
-// Sıra: Mila'nın adındaki harfler (A, M, L, İ), sonra B ve okulun ilk harf grubundan E, N, K.
+// Sıra: Mila'nın adındaki harfler (A, M, L, İ), sonra B ve okulun ilk harf grubundan E, N, K, sonra öteki ünlüler.
+// ara: oyunun arasında kısa, eğlenceli bir mola (balon, pasta, dans); yanlışı yok, hep kazanılır.
 const DURAKLAR = [
   {id:'a', harf:'A'},
   {id:'m', harf:'M'},
   {id:'ma', hece:['MA'], kelime:['MAMA'], ikon:'MAMA'},
+  {id:'ara1', ara:'balon'},
   {id:'l', harf:'L'},
   {id:'la', hece:['LA', 'AL'], kelime:['LAMA'], ikon:'LAMA'},
   {id:'i', harf:'İ'},
   {id:'mi', hece:['Mİ', 'Lİ'], kelime:['MİLA'], ikon:'MİLA'},
+  {id:'ara2', ara:'dans'},
   {id:'b', harf:'B'},
   {id:'ba', hece:['BA', 'Bİ'], kelime:['BAL', 'BABA', 'ABLA'], ikon:'BABA'},
   {id:'e', harf:'E'},
   {id:'el', hece:['EL', 'LE', 'ME'], kelime:['EL', 'ELMA', 'LALE'], ikon:'ELMA'},
+  {id:'ara3', ara:'pasta'},
   {id:'n', harf:'N'},
   {id:'na', hece:['NA', 'NE', 'AN'], kelime:['ANNE', 'NANE', 'NİNE'], ikon:'ANNE'},
   {id:'k', harf:'K'},
   {id:'ka', hece:['KA', 'KE', 'Kİ'], kelime:['KEK', 'BEBEK', 'KALEM', 'KALE'], ikon:'KEK'},
+  {id:'ara4', ara:'balon'},
+  {id:'o', harf:'O'},
+  {id:'ko', hece:['KO', 'OL'], kelime:['KOL', 'KOALA'], ikon:'KOALA'},
+  {id:'u', harf:'U'},
+  {id:'mu', hece:['MU', 'KU', 'UL'], kelime:['MUM', 'OKUL', 'LOKUM'], ikon:'MUM'},
+  {id:'ara5', ara:'dans'},
+  {id:'ii', harf:'I'},
+  {id:'ki', hece:['KI', 'LI'], kelime:['BALIK', 'KABAK'], ikon:'BALIK'},
+  {id:'uu', harf:'Ü'},
+  {id:'bu', hece:['BÜ', 'LÜ'], kelime:['BÜLBÜL'], ikon:'BÜLBÜL'},
+  {id:'ara6', ara:'pasta'},
+  {id:'oo', harf:'Ö'},
+  {id:'on', hece:['ÖN', 'KÖ'], kelime:['ÖNLÜK'], ikon:'ÖNLÜK'},
+  {id:'ara7', ara:'dans'},
 ];
+const ARA = {
+  balon:{e:'🎈', ad:'Balon Şenliği'},
+  pasta:{e:'🎂', ad:'Doğum Günü Pastası'},
+  dans:{e:'🦄', ad:'Pamuk’la Dans'},
+};
 const knownAt = i => DURAKLAR.slice(0, i + 1).filter(d => d.harf).map(d => d.harf);
-const SONRAKI = DURAKLAR.filter(d => d.harf).map(d => d.harf).concat([...'OUSRTD']);
+const SONRAKI = DURAKLAR.filter(d => d.harf).map(d => d.harf).concat([...'SRTDYZ']);
 
 // Seslendirilen satırlar: araclar/seslendir.py bu listeyi okuyup ses/<anahtar>.mp3 dosyalarını üretir.
 // h_: harfin sesi (adı değil!), s_: hece, w_: kelime, q_: kelime sorusu, t_: harfle tanışma.
@@ -419,6 +513,16 @@ const SAY = {
   t_n: ['anlatici', 'Merhaba! Ben N perisiyim. Benim sesim: nnn! Nota da benim sesimle başlar: nnn-ota. Bana dokun, sesimi duy!'],
   t_k: ['anlatici', 'Merhaba! Ben K perisiyim. Benim sesim çok kısacık, iyi dinle!'],
   t2_k: ['anlatici', 'Kelebek de benim sesimle başlar. Bana dokun, sesimi duy!'],
+  t_o: ['anlatici', 'Merhaba! Ben o perisiyim. Sesimi iyi dinle!'],
+  t2_o: ['anlatici', 'Otobüs de benim sesimle başlar. Bana dokun, sesimi duy!'],
+  t_u: ['anlatici', 'Merhaba! Ben u perisiyim. Sesimi iyi dinle!'],
+  t2_u: ['anlatici', 'Uçak da benim sesimle başlar. Bana dokun, sesimi duy!'],
+  t_ii: ['anlatici', 'Merhaba! Ben noktasız ı perisiyim. Noktam yok ama çok güzel bir sesim var. Dinle!'],
+  t2_ii: ['anlatici', 'ışık da benim sesimle başlar. Bana dokun, sesimi duy!'],
+  t_uu: ['anlatici', 'Merhaba! Ben ü perisiyim. Sesimi iyi dinle!'],
+  t2_uu: ['anlatici', 'Üzüm de benim sesimle başlar. Bana dokun, sesimi duy!'],
+  t_oo: ['anlatici', 'Merhaba! Ben ö perisiyim. Sesimi iyi dinle!'],
+  t2_oo: ['anlatici', 'Ördek de benim sesimle başlar. Bana dokun, sesimi duy!'],
   tanis_ok: ['anlatici', 'Harika! Şimdi periler çiçeklerin arkasına saklandı. Sesi dinle, doğru periyi bul!'],
   avi_soru: ['anlatici', 'Hangi peri böyle diyor?'],
   avi_tekrar: ['anlatici', 'Hımm, o başka bir peri. Bir daha dinle!'],
@@ -441,6 +545,15 @@ const SAY = {
   q_bebek: ['anlatici', 'Bu kim? Bebek! Hadi bebek yazalım!'],
   q_kalem: ['anlatici', 'Bu ne? Kalem! Hadi kalem yazalım!'],
   q_kale: ['anlatici', 'Bu ne? Kale! Hadi kale yazalım!'],
+  q_kol: ['anlatici', 'Bu ne? Kol! Güçlü bir kol. Hadi kol yazalım!'],
+  q_koala: ['anlatici', 'Bu kim? Sevimli bir koala! Hadi koala yazalım!'],
+  q_mum: ['anlatici', 'Bu ne? Mum! Pastanın mumu. Hadi mum yazalım!'],
+  q_okul: ['anlatici', 'Bu ne? Okul! Hadi okul yazalım!'],
+  q_lokum: ['anlatici', 'Bu ne? Tatlı bir lokum! Hadi lokum yazalım!'],
+  q_baliik: ['anlatici', 'Bu ne? Balık! Suda yüzen balık. Hadi balık yazalım!'],
+  q_kabak: ['anlatici', 'Bu ne? Kocaman bir kabak! Hadi kabak yazalım!'],
+  q_buulbuul: ['anlatici', 'Bu kim? Bülbül! Şarkı söyleyen minik kuş. Hadi bülbül yazalım!'],
+  q_oonluuk: ['anlatici', 'Bu ne? Önlük! Anaokulunda giydiğin önlük. Hadi önlük yazalım!'],
   p_evet: ['anlatici', 'Evet, doğru!'],
   p_aferin: ['anlatici', 'Aferin!'],
   p_harika: ['anlatici', 'Harika!'],
@@ -452,6 +565,15 @@ const SAY = {
   durak_kelime: ['anlatici', 'Ne güzel yazdın! Kelimeler de kitaba girdi!'],
   hepsi_bitti: ['anlatici', 'Bütün periler kitaba geri döndü! Mila artık sesleri tanıyor, heceleri birleştiriyor, kelimeler yazıyor. Pamuk çok gururlu! Serbest klavyede istediğin kelimeyi yazabilirsin.'],
   serbest: ['anlatici', 'Serbest klavye! İstediğin tuşa bas, periler sesini söylesin. Adını yazabilir misin?'],
+  ara_balon: ['anlatici', 'Balon şenliği! Periler balonlara bindi, gökyüzüne uçuyorlar. Sesi dinle, o sesin balonlarını patlat!'],
+  balon_yeni: ['anlatici', 'Şimdi bu sesin balonlarını patlat!'],
+  balon_son: ['anlatici', 'Yaşasın! Bütün yıldızları topladın. Ne güzel bir balon şenliğiydi!'],
+  ara_pasta: ['anlatici', 'Bak, kocaman bir çilekli pasta! Mila’nın doğum günü yaklaşıyor. Hadi mumları yakalım! Sesi dinle, o sesin mumuna dokun.'],
+  pasta_ufle: ['anlatici', 'Bütün mumlar yandı! Şimdi bir dilek tut ve mumları üfle. Pastaya dokun!'],
+  pasta_son: ['anlatici', 'İyi ki doğdun Prenses Mila! İyi ki doğdun!'],
+  pasta_mila: ['mila', 'Dileğimi tuttum! Yaşasın!'],
+  ara_dans: ['anlatici', 'Dans partisi! Pamuk dans etmek istiyor. Perilere dokun, her peri şarkısını söylesin, Pamuk ile Mila dans etsin!'],
+  dans_son: ['anlatici', 'Ne güzel dans ettiniz! Pamuk çok mutlu. Periler de bayıldı!'],
   h_a: ['anlatici', 'Aaaaa.'],
   h_b: ['anlatici', 'Bı.'],
   h_c: ['anlatici', 'Cı.'],
@@ -497,6 +619,17 @@ const SAY = {
   s_ka: ['anlatici', 'Ka.'],
   s_ke: ['anlatici', 'Ke.'],
   s_ki: ['anlatici', 'Ki.'],
+  s_ko: ['anlatici', 'Ko.'],
+  s_ol: ['anlatici', 'Ol.'],
+  s_mu: ['anlatici', 'Mu.'],
+  s_ku: ['anlatici', 'Ku.'],
+  s_ul: ['anlatici', 'Ul.'],
+  s_kii: ['anlatici', 'Kı.'],
+  s_lii: ['anlatici', 'Lı.'],
+  s_buu: ['anlatici', 'Bü.'],
+  s_luu: ['anlatici', 'Lü.'],
+  s_oon: ['anlatici', 'Ön.'],
+  s_koo: ['anlatici', 'Kö.'],
   w_mama: ['anlatici', 'Mama!'],
   w_lama: ['anlatici', 'Lama!'],
   w_mila: ['anlatici', 'Mila!'],
@@ -513,6 +646,15 @@ const SAY = {
   w_bebek: ['anlatici', 'Bebek!'],
   w_kalem: ['anlatici', 'Kalem!'],
   w_kale: ['anlatici', 'Kale!'],
+  w_kol: ['anlatici', 'Kol!'],
+  w_koala: ['anlatici', 'Koala!'],
+  w_mum: ['anlatici', 'Mum!'],
+  w_okul: ['anlatici', 'Okul!'],
+  w_lokum: ['anlatici', 'Lokum!'],
+  w_baliik: ['anlatici', 'Balık!'],
+  w_kabak: ['anlatici', 'Kabak!'],
+  w_buulbuul: ['anlatici', 'Bülbül!'],
+  w_oonluuk: ['anlatici', 'Önlük!'],
 };
 const PRAISE = ['p_evet', 'p_aferin', 'p_harika', 'p_super', 'p_bravo'];
 
@@ -653,7 +795,7 @@ function resize(){
   if (mode === 'map') renderMap();
 }
 // Sahne resmi: harita kale bahçesi, her etkinlik kendi köşesi (resimler ortak/resim/sahne)
-const SAHNE = {map:'kale-bahce', tanis:'cardak', avi:'teras', kay:'gol-kenari', kelime:'sato-salonu', serbest:'balkon'};
+const SAHNE = {map:'kale-bahce', tanis:'cardak', avi:'teras', kay:'gol-kenari', kelime:'sato-salonu', serbest:'balkon', balon:'kale-gol', pasta:'bahce-terasi', dans:'gece'};
 const BUYUK = new Set(['kale-bahce', 'kale-gol']);   // diğerleri küçük kesit: hafif bulanık, büyütülmüş belli olmasın
 let bgAd = '', bgKat = 0;
 function sahne(k){
@@ -768,14 +910,14 @@ function updateBook(){ $('#bookN').textContent = DURAKLAR.filter(d => d.harf && 
 function renderSteps(){
   const el = $('#steps'); if (mode === 'map' || mode === 'serbest'){ el.innerHTML = ''; return; }
   el.innerHTML = tasks.map((T, i) => {
-    const ic = T.k === 'tanis' ? '🧚' : T.k === 'avi' ? '🌸' : T.k === 'kay' ? '🌈' : KELIMELER[T.w].img ? `<img src="${YUZ}" alt="">` : KELIMELER[T.w].e;
+    const ic = ARA[T.k] ? ARA[T.k].e : T.k === 'tanis' ? '🧚' : T.k === 'avi' ? '🌸' : T.k === 'kay' ? '🌈' : KELIMELER[T.w].img ? `<img src="${YUZ}" alt="">` : KELIMELER[T.w].e;
     return `<div class="sd ${i < taskIdx ? 'done' : ''} ${i === taskIdx ? 'cur' : ''}">${ic}</div>`;
   }).join('');
 }
 function startStop(i){
   if (!open(i)){ toast('Önce parlayan çiçekteki periyi bul! 🌸'); return; }
   stopAll(); clearScene(); stopIdx = i; const D = DURAKLAR[i];
-  tasks = D.harf ? [{k:'tanis', L:D.harf}, {k:'avi', L:D.harf}] : [...D.hece.map(h => ({k:'kay', h})), ...D.kelime.map(w => ({k:'kelime', w}))];
+  tasks = D.ara ? [{k:D.ara}] : D.harf ? [{k:'tanis', L:D.harf}, {k:'avi', L:D.harf}] : [...D.hece.map(h => ({k:'kay', h})), ...D.kelime.map(w => ({k:'kelime', w}))];
   taskIdx = 0; kbLetters = knownAt(i); setMode('oyun'); renderKb(); runTask();
   // sesleri önceden yükle
   const ids = new Set(); kbLetters.forEach(L => ids.add('h_' + aid(L)));
@@ -790,6 +932,17 @@ async function stopDone(){
   const D = DURAKLAR[stopIdx], first = !store.done[D.id];
   store.done[D.id] = true; (D.kelime || []).forEach(w => { store.words[w] = true; }); save(); updateBook(); renderSteps();
   const k = tok, all = DURAKLAR.every(d => store.done[d.id]);
+  if (D.ara){
+    const A = ARA[D.ara];
+    const govde = `<div class="final"><h2><span class="emo">${A.e}</span> ${A.ad}</h2><p style="font-size:44px;margin:10px 0" class="emo">🎉 ⭐ 💖</p>`;
+    if (all && first){
+      showModal(govde + `<p><b>${SAY.hepsi_bitti[1]}</b></p></div>`, [{label:'⌨️ Serbest Klavye', action:() => { closeModal(); startFree(); }}, {label:'🗺️ Bahçeye dön ▶', primary:true, action:() => { closeModal(); showMap(); }}]);
+      line('hepsi_bitti'); return;
+    }
+    showModal(govde + `<p>Ne eğlenceliydi! Sıradaki peri seni bekliyor.</p></div>`,
+      [{label:'🔁 Bir daha', action:() => { closeModal(); startStop(stopIdx); }}, {label:'🗺️ Bahçeye dön ▶', primary:true, action:() => { closeModal(); showMap(); }}]);
+    return;
+  }
   if (D.harf){ celebrate(D.harf, '🧚 PERİ KİTABA DÖNDÜ!'); setTimeout(() => { $('#bookBtn').classList.add('bump'); setTimeout(() => $('#bookBtn').classList.remove('bump'), 600); }, 900); }
   else { confettiRain(); SFX.win(); }
   await line(D.harf ? 'durak_harf' : 'durak_kelime'); if (k !== tok) return;
@@ -837,12 +990,12 @@ ACT.tanis = T => {
 
 // 2) Ses avı: üç peri çiçeklerin üstünde, ses duyulur, doğru periye dokun
 ACT.avi = (T, first) => {
-  const L = T.L, known = knownAt(stopIdx), k = tok, ROUNDS = 5; let round = 0, target = L, wrong = 0, busy = true, idle = null, gen = 0;
+  const L = T.L, known = knownAt(stopIdx), k = tok, ROUNDS = 4; let round = 0, target = L, wrong = 0, busy = true, idle = null, gen = 0;
   scene.className = 'avi';
   scene.innerHTML = `<div class="tur" id="tur"></div><div class="cicekler" id="cc"></div>`;
   const alive = g => k === tok && g === gen;
   function pickTarget(){
-    if (!(round === 2 || round === 4) || known.length < 2) return L;
+    if (round !== 2 || known.length < 2) return L;
     const pool = known.filter(x => x !== L), w = pool.map(x => { const s = store.letters[x] || {ok:0, miss:0}; return (1 + s.miss * 2) / (1 + s.ok * 0.3); });
     let r = Math.random() * w.reduce((a, b) => a + b, 0); for (let i = 0; i < pool.length; i++){ r -= w[i]; if (r <= 0) return pool[i]; } return pool[0];
   }
@@ -874,7 +1027,7 @@ ACT.avi = (T, first) => {
       el.classList.add('sing'); burstAt(el, 22); SFX.twinkle(); await harfSes(x); if (!alive(g)) return;
       round++; $('#tur').children[round - 1] && $('#tur').children[round - 1].classList.add('on');
       if (round >= ROUNDS){ await praise(); if (!alive(g)) return; taskDone(); return; }
-      if (round % 2 === 0){ await praise(); if (!alive(g)) return; }
+      if (round === 2){ await praise(); if (!alive(g)) return; }
       await sleep(350); if (!alive(g)) return; newRound();
     } else {
       wrong++; if (wrong === 1) stat(target, false);
@@ -1046,6 +1199,162 @@ ACT.serbest = () => {
   show(); line('serbest');
   return {onLetter: add, replay: oku, back(){ $('#fSil').onclick(); }};
 };
+/* ============================================================ ara bölümler (yanlışı yok, hep kazanılır) */
+function araYildiz(n, ic){ return `<div class="araStars emo" id="as">${Array.from({length:n}, () => `<i>${ic}</i>`).join('')}</div>`; }
+function araYak(i){ const e = $('#as') && $('#as').children[i]; if (e) e.classList.add('on'); }
+
+// Balon şenliği: harfli balonlar yükselir; söylenen sesin balonları yıldız kazandırır, ötekiler de patlar, kendi sesini söyler
+ACT.balon = () => {
+  const known = knownAt(stopIdx), k = tok, HEDEF = 6; let target = rnd(known), got = 0, bal = [], spawnT = 0.2, busy = true, done = false, idle = 0;
+  const pool = known.slice(); for (const x of SONRAKI) if (pool.length < 4 && !pool.includes(x)) pool.push(x);
+  scene.className = 'balon'; scene.innerHTML = araYildiz(HEDEF, '⭐');
+  const place = b => { b.el.style.left = b.x + 'px'; b.el.style.top = b.y + 'px'; };
+  function spawn(){
+    const w = scene.clientWidth, h = scene.clientHeight; if (!w || !h) return;
+    const bw = Math.round(Math.max(62, Math.min(108, w * 0.2, h * 0.21)));
+    const hedefVar = bal.some(b => !b.pop && b.L === target && b.y > h * 0.3);
+    const L = !hedefVar || Math.random() < 0.4 ? target : rnd(pool.filter(x => x !== target));
+    let x = 0; for (let t = 0; t < 8; t++){ x = bw / 2 + 6 + Math.random() * Math.max(1, w - bw - 12); if (!bal.some(b => !b.pop && b.y > h - bw * 1.8 && Math.abs(b.x0 - x) < bw * 0.9)) break; }
+    const el = document.createElement('div'); el.className = 'bl'; el.style.setProperty('--h', hue(L)); el.style.setProperty('--bw', bw + 'px'); el.innerHTML = `<b>${L}</b>`;
+    const b = {L, el, x0:x, x, y:h + 8, v:h / (6 + Math.random() * 2.5), ph:Math.random() * 7, boy:bw * 2.1, pop:false};
+    if (L === target && idle > 7) el.classList.add('glow');
+    el.addEventListener('pointerdown', e => { e.preventDefault(); patlat(b); });
+    scene.appendChild(el); bal.push(b); place(b);
+  }
+  function sonBalon(b, ms){ b.pop = true; b.el.classList.add('patla'); setTimeout(() => b.el.remove(), ms || 300); }
+  async function patlat(b){
+    if (b.pop || done) return; sonBalon(b); SFX.pop(); burstAt(b.el, 14);
+    if (busy) return;   // anlatıcı konuşurken yalnızca "pat"
+    if (b.L === target){
+      got++; idle = 0; araYak(got - 1); burstAt(b.el, 16, 'heart'); SFX.twinkle(); bal.forEach(x => x.el.classList.remove('glow'));
+      await harfSes(b.L, true); if (k !== tok) return;
+      if (got >= HEDEF){ finish(); return; }
+      if (got % 2 === 0 && known.length > 1){ busy = true; await praise(); if (k !== tok) return; yeniHedef(); }
+    } else harfSes(b.L, true);
+  }
+  async function yeniHedef(){
+    target = rnd(known.filter(x => x !== target)); busy = true; idle = 0;
+    await sleep(250); if (k !== tok) return; await line('balon_yeni'); if (k !== tok) return;
+    await harfSes(target); busy = false;
+  }
+  async function finish(){
+    done = true; busy = true; glowKey(null);
+    bal.filter(b => !b.pop).forEach((b, i) => setTimeout(() => { if (b.el.isConnected){ SFX.pop(); burstAt(b.el, 10); sonBalon(b); } }, i * 110));
+    confettiRain(); SFX.win(); await sleep(600); if (k !== tok) return;
+    await line('balon_son'); if (k !== tok) return; await sleep(300); if (k !== tok) return; taskDone();
+  }
+  const tick = d => {
+    const h = scene.clientHeight;
+    spawnT -= d; if (spawnT <= 0 && !done){ spawnT = 0.8 + Math.random() * 0.5; if (bal.filter(b => !b.pop).length < 7) spawn(); }
+    for (const b of bal){ if (b.pop) continue; b.y -= b.v * d; b.ph += d * 1.5; b.x = b.x0 + Math.sin(b.ph) * 12; place(b); if (b.y < -b.boy){ b.pop = true; b.el.remove(); } }
+    bal = bal.filter(b => b.el.isConnected);
+    if (!busy && !done){ idle += d; if (idle > 7 && idle - d <= 7){ harfSes(target); bal.forEach(b => b.el.classList.toggle('glow', b.L === target)); } if (idle > 14){ idle = 7.01; harfSes(target); } }
+    if (!h) return;
+  };
+  (async () => { await line('ara_balon'); if (k !== tok) return; await sleep(200); if (k !== tok) return; await harfSes(target); busy = false; })();
+  return {tick, replay(){ if (!busy) harfSes(target); },
+    onLetter(x){ const b = bal.filter(b => !b.pop && b.L === x).sort((p, q) => p.y - q.y)[0]; if (b) patlat(b); else harfSes(x); },
+    end(){ bal.forEach(b => b.el.remove()); bal = []; }};
+};
+
+// Doğum günü pastası: sesi duyulan mumu yak; hepsi yanınca dilek tut, üfle
+ACT.pasta = () => {
+  const known = knownAt(stopIdx), k = tok, N = 5; let busy = true, bitti = false, yanan = 0, target = null, wrong = 0, idle = null, gen = 0;
+  let ls = shuffle(known).slice(0, N); while (ls.length < N) ls.push(rnd(known)); ls = shuffle(ls);
+  scene.className = 'pasta';
+  scene.innerHTML = `<div class="pastaWrap" id="pw"><div class="mumlar">${ls.map((L, i) => `<div class="mum" data-i="${i}" data-l="${L}" style="--h:${hue(L)}"><i class="alev"></i><b>${L}</b></div>`).join('')}</div>
+    <div class="kat k1"><span class="cl emo" style="left:-5%">🍓</span><span class="cl emo" style="right:-5%">🍓</span></div><div class="kat k2"><span class="cl emo" style="left:-3%">🍓</span><span class="cl emo" style="left:44%">💗</span><span class="cl emo" style="right:-3%">🍓</span></div><div class="tabak"></div></div>`;
+  const mums = $$('#pw .mum'), alive = g => k === tok && g === gen, sonmeyen = () => mums.filter(m => !m.classList.contains('yan'));
+  function layout(){
+    const w = scene.clientWidth, h = scene.clientHeight; if (!w || !h) return;
+    const yatay = h < 360 && w > h * 1.5; scene.classList.toggle('yatay', yatay);   // yatay telefonda pasta basık ama geniş
+    $('#pw').style.setProperty('--cw', Math.round(yatay ? Math.min(w * 0.6, (h - 50) / 0.66, 500) : Math.min(w * 0.92, (h - 50) * 0.9, 500)) + 'px');
+  }
+  function armIdle(){ clearTimeout(idle); const g = gen; idle = setTimeout(async () => { if (!alive(g) || busy) return; await harfSes(target); armIdle(); }, 7000); }
+  async function sonraki(){
+    const g = ++gen; wrong = 0; mums.forEach(m => m.classList.remove('glow')); glowKey(null);
+    target = rnd(sonmeyen()).dataset.l; busy = false; await harfSes(target); if (alive(g)) armIdle();
+  }
+  const salla = m => { m.classList.remove('wig'); void m.offsetWidth; m.classList.add('wig'); };
+  async function dokun(m){
+    if (bitti) return;
+    if (yanan === N){ ufle(); return; }
+    if (!m){ if (!busy && target) harfSes(target); return; }
+    if (busy || m.classList.contains('yan')){ salla(m); if (!busy) harfSes(m.dataset.l, true); return; }
+    stopLine(); const g = ++gen; clearTimeout(idle);
+    if (m.dataset.l === target){
+      busy = true; if (!wrong) stat(target, true); glowKey(null); mums.forEach(x => x.classList.remove('glow'));
+      m.classList.add('yan'); yanan++; SFX.twinkle(); burstAt(m, 16);
+      await harfSes(target, true); if (!alive(g)) return;
+      if (yanan === N){ await sleep(300); if (!alive(g)) return; $('#pw').classList.add('hazir'); line('pasta_ufle'); return; }
+      if (yanan === 3){ await praise(); if (!alive(g)) return; }
+      await sleep(250); if (!alive(g)) return; sonraki();
+    } else {
+      wrong++; if (wrong === 1) stat(target, false); salla(m);
+      await harfSes(m.dataset.l, true); if (!alive(g)) return; await sleep(250); if (!alive(g)) return;
+      if (wrong >= 2){ sonmeyen().forEach(x => x.classList.toggle('glow', x.dataset.l === target)); glowKey(target, true); }
+      await harfSes(target); armIdle();
+    }
+  }
+  async function ufle(){
+    if (bitti) return; bitti = true; stopLine(); const g = ++gen; clearTimeout(idle); $('#pw').classList.remove('hazir');
+    for (const m of mums){ m.classList.remove('yan'); tone(900, 0.25, 'sine', 0.04, 0, -500); await sleep(130); }
+    burstAt($('#pw'), 40, 'heart'); celebrate('MİLA', '🎂 İYİ Kİ DOĞDUN! 🎂'); await sleep(700); if (!alive(g)) return;
+    await line('pasta_son'); if (!alive(g)) return; await line('pasta_mila'); if (!alive(g)) return; await sleep(500); if (!alive(g)) return; taskDone();
+  }
+  $('#pw').addEventListener('pointerdown', e => dokun(e.target.closest('.mum')));
+  layout();
+  (async () => { await line('ara_pasta'); if (k !== tok) return; await sleep(200); if (k !== tok) return; sonraki(); })();
+  return {layout, replay(){ if (!busy && target) harfSes(target); },
+    onLetter(x){ if (yanan === N){ ufle(); return; } const m = sonmeyen().find(m => m.dataset.l === x) || mums.find(m => m.dataset.l === x); if (m) dokun(m); else harfSes(x); },
+    end(){ clearTimeout(idle); }, reglow(){ if (wrong >= 2 && target) glowKey(target, true); }};
+};
+
+// Pamuk'la dans: perilere dokundukça şarkılarını söylerler, Pamuk ile Mila dans eder (serbest, yanlışı yok)
+ACT.dans = () => {
+  const known = knownAt(stopIdx), k = tok, HEDEF = 8; let n = 0, bitti = false, giris = true, hareket = 0, vurus = 0, adim = 0;
+  const ls = known.slice(-6), MEL = [523, 659, 784, 659, 587, 698, 880, 698], BAS = [131, 131, 175, 196];
+  scene.className = 'dans'; $('#milaAv').hidden = true;
+  scene.innerHTML = `<div class="disko"></div>${araYildiz(HEDEF, '💖')}<div class="dSahne"><img class="dMila idle" id="dm" src="${YUZ}" alt="Mila"><div class="pamuk emo idle" id="pm"><span class="u">🦄</span></div></div>
+    <div class="dPeri" id="dp">${ls.map((L, i) => peri(L, '', `--d:${i * 0.25}s`)).join('')}</div>`;
+  const oynat = () => {
+    const els = [$('#pm'), $('#dm')], c = 'm' + (hareket++ % 4);
+    for (const e of els){ e.classList.remove('idle', 'm0', 'm1', 'm2', 'm3'); void e.offsetWidth; e.classList.add(c); }
+    clearTimeout(oynat.t); oynat.t = setTimeout(() => { for (const e of els) if (e.isConnected){ e.classList.remove('m0', 'm1', 'm2', 'm3'); e.classList.add('idle'); } }, 760);
+  };
+  async function dokun(L, el){
+    if (bitti) return;
+    oynat(); burstAt($('#pm'), 8, 'heart');
+    if (el){ el.classList.remove('tapped'); void el.offsetWidth; el.classList.add('tapped', 'sing'); setTimeout(() => el.classList.remove('sing'), 450); burstAt(el, 10); }
+    if (giris){ SFX.twinkle(); return; }   // anlatıcı konuşurken yalnızca dans
+    harfSes(L, true); n++; araYak(n - 1);
+    if (n >= HEDEF) finish();
+  }
+  async function finish(){
+    bitti = true; await sleep(500); if (k !== tok) return;
+    $('#pm').classList.remove('idle', 'm0', 'm1', 'm2', 'm3'); $('#pm').classList.add('son'); burstAt($('#pm'), 30, 'heart'); confettiRain(); SFX.win();
+    await sleep(500); if (k !== tok) return; await line('dans_son'); if (k !== tok) return; await sleep(400); if (k !== tok) return; taskDone();
+  }
+  $$('#dp .peri').forEach(e => e.addEventListener('pointerdown', () => dokun(e.dataset.l, e)));
+  function layout(){
+    const w = scene.clientWidth, h = scene.clientHeight; if (!w || !h) return;
+    const yatay = h < 360 && w > h * 1.5; scene.classList.toggle('yatay', yatay);
+    scene.style.setProperty('--ps', Math.round(yatay ? Math.min((h - 90) * 0.85, w * 0.16, 170) : Math.min(h * 0.3, w * 0.36, 180)) + 'px');
+    scene.style.setProperty('--fs', Math.round(yatay ? Math.min((h - 90) * 0.38, w * 0.062, 90) : Math.min(h * 0.14, w * 0.17, 90)) + 'px');
+  }
+  layout();
+  const tick = d => {
+    if (giris || bitti) return;
+    vurus -= d; if (vurus > 0) return; vurus += 0.32;
+    tone(MEL[adim % MEL.length], 0.22, 'triangle', 0.025);
+    if (adim % 2 === 0) tone(BAS[(adim >> 2) % BAS.length], 0.3, 'sine', 0.05);
+    adim++;
+  };
+  (async () => { await line('ara_dans'); if (k !== tok) return; giris = false; })();
+  return {tick, layout, replay(){ line('ara_dans'); },
+    onLetter(x){ dokun(x, $(`#dp .peri[data-l="${x}"]`)); }};
+};
+
 function startFree(){ stopAll(); clearScene(); sahne('serbest'); kbLetters = ALFABE; setMode('serbest'); renderSteps(); renderKb(); act = ACT.serbest(); }
 
 /* ============================================================ harita: Peri Bahçesi */
@@ -1068,8 +1377,9 @@ function renderMap(){
       <path d="${d}" fill="none" stroke="#ffc6df" stroke-width="5" stroke-dasharray="3 14" stroke-linecap="round"/></svg>
     ${DURAKLAR.map((D, i) => {
       const st = store.done[D.id] ? 'done' : '', c = i === cur && !store.done[D.id] ? 'cur' : '', lk = open(i) ? '' : 'lock';
-      const inner = D.harf ? peri(D.harf) : resimHTML(KELIMELER[D.ikon]);
-      return `<button class="stop ${D.harf ? '' : 'kay'} ${st} ${c} ${lk}" style="--n:${nsz}px;left:${pts[i][0]}px;top:${pts[i][1]}px" data-i="${i}" title="${D.harf ? D.harf + ' perisi' : D.kelime.join(', ')}">${inner}</button>`;
+      const inner = D.harf ? peri(D.harf) : D.ara ? `<span class="pe">${ARA[D.ara].e}</span>` : resimHTML(KELIMELER[D.ikon]);
+      const ad = D.harf ? D.harf + ' perisi' : D.ara ? ARA[D.ara].ad : D.kelime.join(', ');
+      return `<button class="stop ${D.harf ? '' : D.ara ? 'ara' : 'kay'} ${st} ${c} ${lk}" style="--n:${nsz}px;left:${pts[i][0]}px;top:${pts[i][1]}px" data-i="${i}" title="${ad}">${inner}</button>`;
     }).join('')}
     <img class="mapMila" src="${YUZ}" alt="Mila" style="--m:${Math.round(nsz * 0.62)}px;left:${pts[cur][0]}px;top:${pts[cur][1] - nsz * 1.08}px">
   </div></div>
@@ -1146,7 +1456,7 @@ function showMenu(){
 /* ============================================================ başlat */
 // başlık ekranında uçuşan periler
 (() => {
-  const t = $('#title'), ls = ['A', 'M', 'L', 'İ', 'B', 'E', 'N', 'K'], spots = [[6, 10], [84, 8], [10, 70], [86, 66], [4, 40], [90, 38], [28, 86], [68, 88]];
+  const t = $('#title'), ls = ['A', 'M', 'Ü', 'İ', 'B', 'O', 'E', 'U'], spots = [[6, 10], [84, 8], [10, 70], [86, 66], [4, 40], [90, 38], [28, 86], [68, 88]];
   ls.forEach((L, i) => { const d = document.createElement('div'); d.className = 'tfly'; d.style.left = spots[i][0] + '%'; d.style.top = spots[i][1] + '%'; d.innerHTML = peri(L, '', `--s:${44 + (i % 3) * 10}px;--d:${i * 0.3}s`); t.appendChild(d); });
 })();
 $('#playBtn').onclick = () => {

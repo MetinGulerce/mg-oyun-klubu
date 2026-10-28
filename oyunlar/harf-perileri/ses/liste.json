@@ -1,4 +1,10 @@
 {
+ "ara_balon": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Balon şenliği! Periler balonlara bindi, gökyüzüne uçuyorlar. Sesi dinle, o sesin balonlarını patlat!",
+  "ozet": "494ea8362f62"
+ },
  "avi_soru": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -10,6 +16,18 @@
   "ses": "Zephyr",
   "metin": "Hımm, o başka bir peri. Bir daha dinle!",
   "ozet": "2b311bb64b4d"
+ },
+ "balon_yeni": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Şimdi bu sesin balonlarını patlat!",
+  "ozet": "1cda22d036dc"
+ },
+ "dans_son": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ne güzel dans ettiniz! Pamuk çok mutlu. Periler de bayıldı!",
+  "ozet": "c6e4df485072"
  },
  "durak_harf": {
   "konusan": "anlatici",
@@ -291,6 +309,12 @@
   "metin": "Süpersin!",
   "ozet": "f6213995871e"
  },
+ "pasta_mila": {
+  "konusan": "mila",
+  "ses": "Leda",
+  "metin": "Dileğimi tuttum! Yaşasın!",
+  "ozet": "58d6d7a23da9"
+ },
  "q_abla": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -315,11 +339,23 @@
   "metin": "Bu ne? Bal! Arıların tatlı balı. Hadi bal yazalım!",
   "ozet": "bdca4024620f"
  },
+ "q_baliik": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Balık! Suda yüzen balık. Hadi balık yazalım!",
+  "ozet": "babdedc2422f"
+ },
  "q_bebek": {
   "konusan": "anlatici",
   "ses": "Zephyr",
   "metin": "Bu kim? Bebek! Hadi bebek yazalım!",
   "ozet": "413cd0b77ade"
+ },
+ "q_buulbuul": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu kim? Bülbül! Şarkı söyleyen minik kuş. Hadi bülbül yazalım!",
+  "ozet": "8de53fd8fcc1"
  },
  "q_el": {
   "konusan": "anlatici",
@@ -332,6 +368,12 @@
   "ses": "Zephyr",
   "metin": "Bu ne? Kırmızı bir elma! Hadi elma yazalım!",
   "ozet": "15870a8797d9"
+ },
+ "q_kabak": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Kocaman bir kabak! Hadi kabak yazalım!",
+  "ozet": "1e194f0911bd"
  },
  "q_kale": {
   "konusan": "anlatici",
@@ -351,6 +393,18 @@
   "metin": "Bu ne? Kek! Hadi kek yazalım!",
   "ozet": "cb6a62c274e8"
  },
+ "q_koala": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu kim? Sevimli bir koala! Hadi koala yazalım!",
+  "ozet": "e67344a35e16"
+ },
+ "q_kol": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Kol! Güçlü bir kol. Hadi kol yazalım!",
+  "ozet": "5035fa5ea793"
+ },
  "q_lale": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -362,6 +416,12 @@
   "ses": "Zephyr",
   "metin": "Bu ne? Lama! Tüylü bir lama. Hadi lama yazalım!",
   "ozet": "121ac46ee804"
+ },
+ "q_lokum": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Tatlı bir lokum! Hadi lokum yazalım!",
+  "ozet": "aebe5d92de79"
  },
  "q_mama": {
   "konusan": "anlatici",
@@ -375,6 +435,12 @@
   "metin": "Bak, bu kim? Bu sensin, Prenses Mila! Hadi kendi adını yazalım!",
   "ozet": "448bec98ad11"
  },
+ "q_mum": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Mum! Pastanın mumu. Hadi mum yazalım!",
+  "ozet": "bc25298c64bc"
+ },
  "q_nane": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -386,6 +452,18 @@
   "ses": "Zephyr",
   "metin": "Bu kim? Nine! Hadi nine yazalım!",
   "ozet": "f11ebb213c5b"
+ },
+ "q_okul": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Okul! Hadi okul yazalım!",
+  "ozet": "6463399e3fe2"
+ },
+ "q_oonluuk": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Bu ne? Önlük! Anaokulunda giydiğin önlük. Hadi önlük yazalım!",
+  "ozet": "b13ddae9bc9e"
  },
  "s_al": {
   "konusan": "anlatici",
@@ -471,6 +549,12 @@
   "metin": "Mi.",
   "ozet": "61ea063da829"
  },
+ "s_mu": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Mu.",
+  "ozet": "66f827651d6b"
+ },
  "s_na": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -495,11 +579,41 @@
   "metin": "Balon da benim sesimle başlar. Bana dokun, sesimi duy!",
   "ozet": "7b56fb980d27"
  },
+ "t2_ii": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "ışık da benim sesimle başlar. Bana dokun, sesimi duy!",
+  "ozet": "9ff69b3fc5a7"
+ },
  "t2_k": {
   "konusan": "anlatici",
   "ses": "Zephyr",
   "metin": "Kelebek de benim sesimle başlar. Bana dokun, sesimi duy!",
   "ozet": "eedbc1d388d6"
+ },
+ "t2_o": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Otobüs de benim sesimle başlar. Bana dokun, sesimi duy!",
+  "ozet": "0ad1d8262ecc"
+ },
+ "t2_oo": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Ördek de benim sesimle başlar. Bana dokun, sesimi duy!",
+  "ozet": "2ff5ebfb32fd"
+ },
+ "t2_u": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Uçak da benim sesimle başlar. Bana dokun, sesimi duy!",
+  "ozet": "eb68a5c51cb1"
+ },
+ "t2_uu": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Üzüm de benim sesimle başlar. Bana dokun, sesimi duy!",
+  "ozet": "25f4e9105a09"
  },
  "t_a": {
   "konusan": "anlatici",
@@ -525,6 +639,12 @@
   "metin": "Merhaba! Ben noktalı i perisiyim. Benim sesim: iii! Bak, inek de benim sesimle başlar: iii-nek. Bana dokun, sesimi duy!",
   "ozet": "6d4ff4abfa37"
  },
+ "t_ii": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben noktasız ı perisiyim. Noktam yok ama çok güzel bir sesim var. Dinle!",
+  "ozet": "84a7b4805ea0"
+ },
  "t_k": {
   "konusan": "anlatici",
   "ses": "Zephyr",
@@ -548,6 +668,30 @@
   "ses": "Zephyr",
   "metin": "Merhaba! Ben N perisiyim. Benim sesim: nnn! Nota da benim sesimle başlar: nnn-ota. Bana dokun, sesimi duy!",
   "ozet": "c9c784acfebd"
+ },
+ "t_o": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben o perisiyim. Sesimi iyi dinle!",
+  "ozet": "0737a4aff09e"
+ },
+ "t_oo": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben ö perisiyim. Sesimi iyi dinle!",
+  "ozet": "a5e218374c95"
+ },
+ "t_u": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben u perisiyim. Sesimi iyi dinle!",
+  "ozet": "75152a1273c9"
+ },
+ "t_uu": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Merhaba! Ben ü perisiyim. Sesimi iyi dinle!",
+  "ozet": "04f751a6a40d"
  },
  "tanis_ok": {
   "konusan": "anlatici",
@@ -614,6 +758,12 @@
   "ses": "Zephyr",
   "metin": "Kek!",
   "ozet": "1f551f8cd635"
+ },
+ "w_koala": {
+  "konusan": "anlatici",
+  "ses": "Zephyr",
+  "metin": "Koala!",
+  "ozet": "6bbece4a74ca"
  },
  "w_lale": {
   "konusan": "anlatici",
