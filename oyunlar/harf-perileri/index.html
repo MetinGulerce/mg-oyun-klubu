@@ -864,25 +864,28 @@ function playBuf(B, from, to){
     const a = AC(), src = a.createBufferSource(), g = a.createGain(), dur = Math.max(0.06, to - from), t = a.currentTime;
     src.buffer = B.b; src.connect(g); g.connect(a.destination);
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(1, t + 0.012); g.gain.setValueAtTime(1, t + Math.max(0.02, dur - 0.05)); g.gain.linearRampToValueAtTime(0, t + dur);
-    src.onended = () => { live.delete(src); res(); }; live.add(src); src.start(t, from, dur + 0.02);
+    let bitti = false; const son = () => { if (bitti) return; bitti = true; clearTimeout(nobet); live.delete(src); res(); };
+    const nobet = setTimeout(son, (dur + 1) * 1000);   // bağlam askıdaysa onended gelmez: oyun takılıp kalmasın
+    src.onended = son; live.add(src); src.start(t, from, dur + 0.02);
   });
 }
 // Ses dosyası yoksa sessiz kalır (yalnızca yazı görünür). Tarayıcının kendi sesi KULLANILMAZ:
 // "Mmmmm" yerine "mi mi mi" der, çocuğa yanlış ses öğretir.
 function silent(text){ return sleep(text ? Math.min(2500, 400 + text.length * 25) : 300); }
+const zamanla = (p, ms, yedek) => Promise.race([p, sleep(ms).then(() => yedek)]);   // beklemeyi sınırla
 async function clip(id, maxDur){
   if (store.muted || !SAY[id]) return;
-  const B = await loadBuf(id);
+  const B = await zamanla(loadBuf(id), 2500, null);
   if (!B) return sleep(250);
   const from = Math.max(0, B.s0 - 0.02), end = Math.min(B.b.duration, B.s1 + 0.06);
   await playBuf(B, from, maxDur ? Math.min(end, B.s0 + maxDur) : end);
 }
-const harfSes = (L, kisa) => clip('h_' + aid(L), kisa ? 0.55 : 0.85);
+const harfSes = (L, kisa) => L ? clip('h_' + aid(L), kisa ? 0.55 : 0.85) : sleep(100);
 // Heceleme için uzatılmış ses: uzayan sesler ~0,75 sn, kısacık sesler (b, k) kendi boyunda.
 // Bir sonraki ses, öncekinin sönmesine binerek başlar: "nnn-iii-nnn-eee" kopmadan akar.
 async function harfUzat(L){
   if (store.muted) return sleep(450);
-  const B = await loadBuf('h_' + aid(L)); if (!B) return sleep(450);
+  const B = await zamanla(loadBuf('h_' + aid(L)), 2500, null); if (!B) return sleep(450);
   const pat = PATLAYAN.has(L), from = Math.max(0, B.s0 - 0.02);
   const to = pat ? Math.min(B.b.duration, B.s1 + 0.06) : Math.min(B.s1, B.s0 + 0.75);
   playBuf(B, from, to);
@@ -920,10 +923,13 @@ function line(id){
   if (store.muted) return Promise.resolve();
   return new Promise(res => {
     stopLine(); hushClips();
-    const a = window.MGMobil ? MGMobil.oynatici() : new Audio(); let fin = false;
-    const done = () => { if (fin) return; fin = true; if (lineAudio === a) lineAudio = null; if (lineDone === done) lineDone = null; speaker = null; talk(false); MilaFM.duck(mode !== 'map'); res(); };
+    const a = window.MGMobil ? MGMobil.oynatici() : new Audio(); let fin = false, nobet = 0;
+    const done = () => { if (fin) return; fin = true; clearTimeout(nobet); if (lineAudio === a) lineAudio = null; if (lineDone === done) lineDone = null; speaker = null; talk(false); MilaFM.duck(mode !== 'map'); res(); };
     const fall = () => { if (fin) return; a.onended = a.onerror = null; silent(SAY[id][1]).then(done); };
     lineAudio = a; lineDone = done; speaker = SAY[id][0]; talk(speaker === 'mila');
+    // ended/error hiç gelmezse (ses kesintisi, askıya alınan sekme) süreye göre yine de bitir
+    nobet = setTimeout(fall, 15000);
+    a.onloadedmetadata = a.ondurationchange = () => { if (fin || !isFinite(a.duration) || !a.duration) return; clearTimeout(nobet); nobet = setTimeout(done, (a.duration + 3) * 1000); };
     a.onended = done; a.onerror = fall; a.src = `ses/${id}.mp3`; MilaFM.duck(true);
     const p = a.play(); if (p && p.catch) p.catch(e => { if (e && e.name === 'NotAllowedError') done(); else fall(); });
   });
@@ -1326,8 +1332,8 @@ ACT.kelime = (T, first) => {
     if (x === hs[i]){
       if (!wrong) stat(x, true); wrong = 0; glowKey(null);
       slots[i].innerHTML = `<span class="lt">${x}</span>`; burstAt(slots[i], 10); i++; cur();
+      if (i === hs.length){ done = true; bitiyor = true; await harfSes(x, true); if (k !== tok) return; finish(); return; }   // son harf: hemen ardından başka tuşa basılsa da bitiş bozulmaz
       await harfSes(x, true); if (!alive(g)) return;
-      if (i === hs.length){ finish(); return; }
       await sleep(250); if (!alive(g)) return; await harfSes(hs[i]); armIdle();
     } else {
       wrong++; if (wrong === 1) stat(hs[i], false);
@@ -1339,7 +1345,7 @@ ACT.kelime = (T, first) => {
     }
   }
   async function finish(){
-    done = true; bitiyor = true; cur(); await sleep(350); if (k !== tok) return;
+    done = true; bitiyor = true; cur(); glowKey(null); clearTimeout(idle); await sleep(350); if (k !== tok) return;
     if (!await oku()) return; const g = gen;
     $('#kp').classList.add('yay'); burstAt($('#kp'), 30, 'heart'); SFX.twinkle();
     await sleep(300); if (!alive(g)) return;
